@@ -48,6 +48,11 @@ private:
 		Ref<Texture2D> mouse;
 		Ref<Texture2D> joypad_button;
 		Ref<Texture2D> joypad_axis;
+		// Redneck Jack 07.04.
+		Ref<Texture2D> audio;
+		Ref<Texture2D> midi;
+		Ref<Texture2D> dmx;
+		Ref<Texture2D> osc;
 	} icon_cache;
 
 	Ref<InputEvent> event;

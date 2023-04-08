@@ -995,7 +995,8 @@ void ResourceLoaderBinary::open(Ref<FileAccess> p_f, bool p_no_resources, bool p
 	print_bl("minor: " + itos(ver_minor));
 	print_bl("format: " + itos(ver_format));
 
-	if (ver_format > FORMAT_VERSION || ver_major > VERSION_MAJOR) {
+	// TMP deactivated
+	if (ver_format > FORMAT_VERSION || ver_major > 3/*VERSION_MAJOR*/) {
 		f.unref();
 		ERR_FAIL_MSG(vformat("File '%s' can't be loaded, as it uses a format version (%d) or engine version (%d.%d) which are not supported by your engine version (%s).",
 				local_path, ver_format, ver_major, ver_minor, VERSION_BRANCH));
@@ -1339,7 +1340,8 @@ Error ResourceFormatLoaderBinary::rename_dependencies(const String &p_path, cons
 		return ResourceFormatSaverBinary::singleton->save(res, p_path);
 	}
 
-	if (ver_format > FORMAT_VERSION || ver_major > VERSION_MAJOR) {
+	// TMP deactivated
+	if (ver_format > FORMAT_VERSION || ver_major > 3/*VERSION_MAJOR*/) {
 		ERR_FAIL_V_MSG(ERR_FILE_UNRECOGNIZED,
 				vformat("File '%s' can't be loaded, as it uses a format version (%d) or engine version (%d.%d) which are not supported by your engine version (%s).",
 						local_path, ver_format, ver_major, ver_minor, VERSION_BRANCH));
@@ -2369,8 +2371,9 @@ Error ResourceFormatSaverBinaryInstance::set_uid(const String &p_path, ResourceU
 		WARN_PRINT("This file is old, so it does not support UIDs, opening and resaving '" + p_path + "'.");
 		return ERR_UNAVAILABLE;
 	}
-
-	if (ver_format > FORMAT_VERSION || ver_major > VERSION_MAJOR) {
+	
+	// TMP deactivated
+	if (ver_format > FORMAT_VERSION || ver_major > 3/*VERSION_MAJOR*/) {
 		ERR_FAIL_V_MSG(ERR_FILE_UNRECOGNIZED,
 				vformat("File '%s' can't be loaded, as it uses a format version (%d) or engine version (%d.%d) which are not supported by your engine version (%s).",
 						local_path, ver_format, ver_major, ver_minor, VERSION_BRANCH));

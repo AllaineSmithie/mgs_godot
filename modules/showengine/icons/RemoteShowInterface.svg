@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+<svg
+   width="16px"
+   height="16px"
+   viewBox="0 0 32 32"
+   stroke="#a60004"
+   fill="none"
+   version="1.1"
+   id="svg6254"
+   sodipodi:docname="DeadlineRemoteInterface.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs6258" />
+  <sodipodi:namedview
+     id="namedview6256"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="27.40625"
+     inkscape:cx="6.713797"
+     inkscape:cy="6.3854048"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6254" />
+  <g
+     id="style=stroke"
+     transform="matrix(1.4225892,0,0,1.4225892,-1.0711228,-2.555048)"
+     style="fill:#a6a6a6;fill-opacity:1">
+    <g
+       id="wifi-twowave"
+       style="fill:#a6a6a6;fill-opacity:1">
+      <path
+         id="vector (Stroke)"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         d="M 21.5416,9.95357 C 15.7517,5.48211 8.24842,5.48211 2.45845,9.95357 2.13062,10.2067 1.65962,10.1462 1.40644,9.81839 1.15327,9.49056 1.21379,9.01956 1.54162,8.76638 c 6.33003,-4.88854 14.58678,-4.88854 20.91688,0 0.3278,0.25318 0.3883,0.72418 0.1351,1.05201 -0.2531,0.32781 -0.7242,0.38831 -1.052,0.13518 z"
+         fill="#000000"
+         style="fill:#a6a6a6;fill-opacity:1" />
+      <path
+         id="vector (Stroke)_2"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         d="m 16.7408,14.083 c -2.8796,-2.2306 -6.6118,-2.2306 -9.49144,0 C 6.92189,14.3366 6.4508,14.2768 6.19715,13.9493 5.9435,13.6219 6.00333,13.1508 6.33079,12.8971 c 3.42038,-2.6494 7.90821,-2.6494 11.32861,0 0.3274,0.2537 0.3873,0.7248 0.1336,1.0522 -0.2537,0.3275 -0.7247,0.3873 -1.0522,0.1337 z"
+         fill="#000000"
+         style="fill:#a6a6a6;fill-opacity:1" />
+      <path
+         id="ellipse (Stroke)"
+         fill-rule="evenodd"
+         clip-rule="evenodd"
+         d="m 10,18 c 0,-1.1046 0.8954,-2 2,-2 h 0.01 c 1.1046,0 2,0.8954 2,2 0,1.1046 -0.8954,2 -2,2 H 12 c -1.1046,0 -2,-0.8954 -2,-2 z"
+         fill="#000000"
+         style="fill:#a6a6a6;fill-opacity:1" />
+    </g>
+  </g>
+</svg>

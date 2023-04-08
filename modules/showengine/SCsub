@@ -1,0 +1,129 @@
+Import('env')
+Import("env_modules")
+
+
+#!/usr/bin/env python
+
+Import("env")
+Import("env_modules")
+
+module_env = env_modules.Clone()
+
+# Thirdparty source files
+
+steinberg_asiosdk_obj = []
+hueplusplus_obj = []
+
+if module_env["platform"] == "windows":
+    steinberg_asiosdk_dir = "#thirdparty/asiosdk/"
+    steinberg_asiosdk_sources = [
+        "common/asio.cpp",
+        "host/asiodrivers.cpp",
+        "host/pc/asiolist.cpp",
+    ]
+    steinberg_asiosdk_sources = [steinberg_asiosdk_dir + file for file in steinberg_asiosdk_sources]
+
+    module_env.Prepend(CPPPATH=[steinberg_asiosdk_dir])
+    module_env.AppendUnique(CPPPATH=[steinberg_asiosdk_dir + "common"])
+    module_env.AppendUnique(CPPPATH=[steinberg_asiosdk_dir + "host"])
+    module_env.AppendUnique(CPPPATH=[steinberg_asiosdk_dir + "host/pc"])
+
+    env_steinberg_asiosdk = module_env.Clone()
+    env_steinberg_asiosdk.disable_warnings()
+    env_steinberg_asiosdk.add_source_files(steinberg_asiosdk_obj, steinberg_asiosdk_sources)
+    env.modules_sources += steinberg_asiosdk_obj
+    
+    
+# Hue Plus Plus
+hueplusplus_dir = "#thirdparty/hueplusplus/"
+hueplusplus_src_dir = hueplusplus_dir + "src/"
+hueplusplus_sources = [
+    "Action.cpp",
+    "APICache.cpp",
+    "BaseDevice.cpp",
+    "BaseHttpHandler.cpp",
+    "Bridge.cpp",
+    "BridgeConfig.cpp",
+    "CLIPSensors.cpp",
+    "ColorUnits.cpp",
+    "EntertainmentMode.cpp",
+    "ExtendedColorHueStrategy.cpp",
+    "ExtendedColorTemperatureStrategy.cpp",
+    "Group.cpp",
+    "HueCommandAPI.cpp",
+    "HueDeviceTypes.cpp",
+    "HueException.cpp",
+    "Light.cpp",
+    "ModelPictures.cpp",
+    "NewDeviceList.cpp",
+    "Rule.cpp",
+    "Scene.cpp",
+    "Schedule.cpp",
+    "Sensor.cpp",
+    "SimpleBrightnessStrategy.cpp",
+    "SimpleColorHueStrategy.cpp",
+    "SimpleColorTemperatureStrategy.cpp",
+    "StateTransaction.cpp",
+    "TimePattern.cpp",
+    "UPnP.cpp",
+    "Utils.cpp",
+    "ZLLSensors.cpp",
+]
+# on windows we want to compile the WinHttpHandler
+if module_env["platform"] == "windows":
+    hueplusplus_sources.append("WinHttpHandler.cpp")
+
+# whereas on linux we want the LinHttpHandler
+if module_env["platform"] == "linux":
+    hueplusplus_sources.append("LinHttpHandler.cpp")
+
+if module_env["platform"] == "esp_platform":
+    hueplusplus_sources.append("LinHttpHandler.cpp")
+
+module_env.Prepend(CPPPATH=[hueplusplus_dir + "include/"])
+#module_env.Prepend(CPPPATH=[hueplusplus_dir + "include/json"])
+#module_env.Prepend(CPPPATH=[hueplusplus_dir + "hueplusplus"])
+
+if env["builtin_mbedtls"]:
+    module_env.Prepend(CPPPATH=["#thirdparty/mbedtls/include/"])
+
+hueplusplus_sources = [hueplusplus_src_dir + file for file in hueplusplus_sources]
+
+env_hueplusplus = module_env.Clone()
+env_hueplusplus.disable_warnings()
+env_hueplusplus.add_source_files(hueplusplus_obj, hueplusplus_sources)
+env.modules_sources += hueplusplus_obj
+
+
+# DigiShow source files
+
+module_obj = []
+
+module_env.Append(CPPDEFINES = ["LINK_PLATFORM_WINDOWS", "ASIO_HEADER_ONLY"])
+module_env.Prepend(CPPPATH = ["./digishow/DigiShow/modules/ableton/link/include"])
+module_env.Prepend(CPPPATH = ["./digishow/DigiShow/modules/ableton/link/modules/asio-standalone/asio/include"])
+module_env.Prepend(CPPPATH = ["./digishow/DigiShow/modules/osc"])
+module_env.Prepend(CPPPATH = ["./digishow/DigiShow/shared"])
+module_env.AppendUnique(CPPPATH = ["./digishow"])
+
+module_env.add_source_files(module_obj, "*.cpp")
+if env.editor_build:
+    module_env.add_source_files(module_obj, "./editor/*.cpp")
+module_env.add_source_files(module_obj, "./digishow/DigiShow/*.cpp")
+module_env.add_source_files(module_obj, "./digishow/DigiShow/shared/*.cpp")
+module_env.add_source_files(module_obj, "./digishow/DigiShow/modules/osc/osc/*.cpp")
+module_env.add_source_files(module_obj, "./digishow/DigiShow/modules/osc/osc/reader/*.cpp")
+module_env.add_source_files(module_obj, "./digishow/DigiShow/modules/osc/osc/reader/types/*.cpp")
+module_env.add_source_files(module_obj, "./digishow/DigiShow/modules/osc/osc/exceptions/*.cpp")
+module_env.add_source_files(module_obj, "./digishow/DigiShow/modules/osc/osc/composer/*.cpp")
+module_env.add_source_files(module_obj, "./digishow/DigiShow/modules/osc/tools/*.cpp")
+module_env.add_source_files(module_obj, "./digishow/DigiShow/modules/osc/tools/exceptions/*.cpp")
+
+# Deactivated as build with header only
+# module_env.add_source_files(module_obj, "./digishow/DigiShow/modules/ableton/link/modules/asio-standalone/asio/src/*.cpp")
+
+env.modules_sources += module_obj
+
+# Needed to force rebuilding the module files when the thirdparty library is updated.
+env.Depends(module_obj, steinberg_asiosdk_obj)
+env.Depends(module_obj, hueplusplus_obj)

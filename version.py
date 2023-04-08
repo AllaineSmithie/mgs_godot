@@ -1,10 +1,10 @@
-short_name = "godot"
-name = "Godot Engine"
-major = 4
+short_name = "mgs"
+name = "Metro Gaya System"
+major = 0
 minor = 0
 patch = 1
-status = "stable"
+status = "alpha"
 module_config = ""
 year = 2023
-website = "https://godotengine.org"
-docs = "4.0"
+website = "https://deadline-entertainment.com"
+docs = "0.1"

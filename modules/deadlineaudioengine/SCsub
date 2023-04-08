@@ -1,0 +1,8 @@
+Import('env')
+
+module_env = env.Clone()
+
+
+module_env.Append(CPPDEFINES=['JUCE_DEBUG=0','JucePlugin_Build_VST=0','JucePlugin_Build_VST3=0','JucePlugin_Build_AU=0','JucePlugin_Build_AUv3=0','JucePlugin_Build_AAX=0','JucePlugin_Build_Standalone=0','JucePlugin_Build_Unity=0','JucePlugin_Build_LV2=0','_LIB','JUCER_VS2022_78A503E=1','JUCE_APP_VERSION=1.0.0','JUCE_APP_VERSION_HEX=0x10000'])
+module_env.AppendUnique(CPPPATH=["JUCE/modules", "JuceLibraryCode"])
+module_env.add_source_files(env.modules_sources, "*.cpp") #this will add all the cpp files

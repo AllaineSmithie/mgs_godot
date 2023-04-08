@@ -1767,3 +1767,139 @@ String InputEventShortcut::to_string() {
 
 	return vformat("InputEventShortcut: shortcut=%s", shortcut->get_as_text());
 }
+
+void InputEventAudio::set_channel(const int p_channel_index)
+{
+	channel_index = p_channel_index;
+}
+
+int InputEventAudio::get_channel() const
+{
+	return channel_index;
+}
+
+void InputEventAudio::set_threshold_db(const double p_threshold)
+{
+	threshold = p_threshold;
+}
+
+double InputEventAudio::get_threshold_db() const
+{
+	return threshold;
+}
+
+String InputEventAudio::as_text() const
+{
+	return vformat(RTR("Audio Input Trigger on Channel %s, Trigger-Threshold: %s db"), itos(channel_index), itos(threshold));
+}
+
+String InputEventAudio::to_string()
+{
+	return vformat("InputEventAudio: num_channels=%d, num_samples=%d, magnitude=%d", channel_index, threshold);
+}
+
+
+void InputEventAudio::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("set_channel", "num_channels"), &InputEventAudio::set_channel);
+	ClassDB::bind_method(D_METHOD("get_channel"), &InputEventAudio::get_channel);
+	ClassDB::bind_method(D_METHOD("set_threshold_db", "num_samples"), &InputEventAudio::set_threshold_db);
+	ClassDB::bind_method(D_METHOD("get_threshold_db"), &InputEventAudio::get_threshold_db);
+
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "channel_index"), "set_channel", "get_channel");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "threshold"), "set_threshold_db", "get_threshold_db");
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void InputEventDMX::set_universe(const int p_universe)
+{
+	universe = p_universe;
+}
+
+int InputEventDMX::get_universe() const
+{
+	return universe;
+}
+
+void InputEventDMX::set_channel(const int p_channel)
+{
+	channel = p_channel;
+}
+
+int InputEventDMX::get_channel() const
+{
+	return channel;
+}
+
+void InputEventDMX::set_value(const int p_value)
+{
+	value = p_value;
+}
+
+int InputEventDMX::get_value() const
+{
+	return value;
+}
+
+String InputEventDMX::as_text() const
+{
+	return vformat(RTR("DMX Input: Universe=%s, Channel=%s, Value=%s"), itos(universe), itos(channel), itos(value));
+}
+
+String InputEventDMX::to_string()
+{
+	return vformat("InputEventDMX: universe=%d, channel=%d, value=%d", universe, channel, value);
+}
+
+
+void InputEventDMX::_bind_methods()
+{
+	ClassDB::bind_method(D_METHOD("set_universe", "universe"), &InputEventDMX::set_universe);
+	ClassDB::bind_method(D_METHOD("get_universe"), &InputEventDMX::get_universe);
+	ClassDB::bind_method(D_METHOD("set_channel", "channel"), &InputEventDMX::set_channel);
+	ClassDB::bind_method(D_METHOD("get_channel"), &InputEventDMX::get_channel);
+	ClassDB::bind_method(D_METHOD("set_value", "value"), &InputEventDMX::set_value);
+	ClassDB::bind_method(D_METHOD("get_value"), &InputEventDMX::get_value);
+
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "universe"), "get_universe", "set_universe");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "channel"), "set_channel", "get_channel");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "value"), "set_value", "get_value");
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void InputEventOSC::set_message(const String p_message)
+{
+	message = p_message;
+}
+
+String InputEventOSC::get_message() const
+{
+	return message;
+}
+
+String InputEventOSC::as_text() const
+{
+	return vformat(RTR("OSC Input Message: %s"), message);
+}
+
+String InputEventOSC::to_string()
+{
+	return vformat("InputEventOSC: message=%s", message);
+}
+
+
+void InputEventOSC::_bind_methods()
+{
+	ClassDB::bind_method(D_METHOD("set_message", "universe"), &InputEventDMX::set_universe);
+	ClassDB::bind_method(D_METHOD("get_message"), &InputEventDMX::get_universe);
+	ClassDB::bind_method(D_METHOD("set_channel", "channel"), &InputEventDMX::set_channel);
+	ClassDB::bind_method(D_METHOD("get_channel"), &InputEventDMX::get_channel);
+	ClassDB::bind_method(D_METHOD("set_value", "value"), &InputEventDMX::set_value);
+	ClassDB::bind_method(D_METHOD("get_value"), &InputEventDMX::get_value);
+
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "universe"), "get_universe", "set_universe");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "channel"), "set_channel", "get_channel");
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "value"), "set_value", "get_value");
+}

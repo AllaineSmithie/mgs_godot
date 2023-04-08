@@ -175,7 +175,7 @@ opts.Add(
 opts.Add(BoolVariable("debug_symbols", "Build with debugging symbols", False))
 opts.Add(BoolVariable("separate_debug_symbols", "Extract debugging symbols to a separate file", False))
 opts.Add(EnumVariable("lto", "Link-time optimization (production builds)", "none", ("none", "auto", "thin", "full")))
-opts.Add(BoolVariable("production", "Set defaults to build Godot for use in production", False))
+opts.Add(BoolVariable("production", "Set defaults to build MGS for use in production", False))
 
 # Components
 opts.Add(BoolVariable("deprecated", "Enable compatibility code for deprecated and removed features", True))
@@ -200,7 +200,7 @@ opts.Add(EnumVariable("warnings", "Level of compilation warnings", "all", ("extr
 opts.Add(BoolVariable("werror", "Treat compiler warnings as errors", False))
 opts.Add("extra_suffix", "Custom extra suffix added to the base filename of all generated binary files", "")
 opts.Add(BoolVariable("vsproj", "Generate a Visual Studio solution", False))
-opts.Add("vsproj_name", "Name of the Visual Studio solution", "godot")
+opts.Add("vsproj_name", "Name of the Visual Studio solution", "metro_gaya_system")
 opts.Add(BoolVariable("disable_3d", "Disable 3D nodes for a smaller executable", False))
 opts.Add(BoolVariable("disable_advanced_gui", "Disable advanced GUI nodes and behaviors", False))
 opts.Add("build_profile", "Path to a file containing a feature build profile", "")
@@ -283,21 +283,21 @@ else:
 if selected_platform in ["macos", "osx"]:
     if selected_platform == "osx":
         # Deprecated alias kept for compatibility.
-        print('Platform "osx" has been renamed to "macos" in Godot 4.0. Building for platform "macos".')
+        print('Platform "osx" has been renamed to "macos" in Metro Gaya System 0.1. Building for platform "macos".')
     # Alias for convenience.
     selected_platform = "macos"
 
 if selected_platform in ["ios", "iphone"]:
     if selected_platform == "iphone":
         # Deprecated alias kept for compatibility.
-        print('Platform "iphone" has been renamed to "ios" in Godot 4.0. Building for platform "ios".')
+        print('Platform "iphone" has been renamed to "ios" in Metro Gaya System 0.1. Building for platform "ios".')
     # Alias for convenience.
     selected_platform = "ios"
 
 if selected_platform in ["linux", "bsd", "x11"]:
     if selected_platform == "x11":
         # Deprecated alias kept for compatibility.
-        print('Platform "x11" has been renamed to "linuxbsd" in Godot 4.0. Building for platform "linuxbsd".')
+        print('Platform "x11" has been renamed to "linuxbsd" in Metro Gaya System 0.1. Building for platform "linuxbsd".')
     # Alias for convenience.
     selected_platform = "linuxbsd"
 

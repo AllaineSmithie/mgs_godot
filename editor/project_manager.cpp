@@ -305,7 +305,7 @@ private:
 		String sp = _test_path();
 		if (!sp.is_empty()) {
 			// If the project name is empty or default, infer the project name from the selected folder name
-			if (project_name->get_text().strip_edges().is_empty() || project_name->get_text().strip_edges() == TTR("New Game Project")) {
+			if (project_name->get_text().strip_edges().is_empty() || project_name->get_text().strip_edges() == TTR("New Project")) {
 				sp = sp.replace("\\", "/");
 				int lidx = sp.rfind("/");
 
@@ -768,7 +768,7 @@ public:
 				project_path->set_text(d->get_current_dir());
 				fdialog->set_current_dir(d->get_current_dir());
 			}
-			String proj = TTR("New Game Project");
+			String proj = TTR("New Project");
 			project_name->set_text(proj);
 			_text_changed(proj);
 

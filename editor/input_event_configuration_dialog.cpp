@@ -37,6 +37,8 @@
 #include "scene/gui/option_button.h"
 #include "scene/gui/separator.h"
 #include "scene/gui/tree.h"
+// Redneck Jack 07.04.
+#include <servers/audio_server.h>
 
 void InputEventConfigurationDialog::_set_event(const Ref<InputEvent> &p_event, const Ref<InputEvent> &p_original_event, bool p_update_input_list_selection) {
 	if (p_event.is_valid()) {
@@ -58,6 +60,12 @@ void InputEventConfigurationDialog::_set_event(const Ref<InputEvent> &p_event, c
 		Ref<InputEventJoypadButton> joyb = p_event;
 		Ref<InputEventJoypadMotion> joym = p_event;
 		Ref<InputEventWithModifiers> mod = p_event;
+		// Redneck Jack 07.04.
+		Ref<InputEventAudio> audio = p_event;
+		Ref<InputEventMIDI> midi = p_event;
+		Ref<InputEventDMX> dmx = p_event;
+		Ref<InputEventOSC> osc = p_event;
+
 
 		// Update option values and visibility
 		bool show_mods = false;
@@ -128,14 +136,80 @@ void InputEventConfigurationDialog::_set_event(const Ref<InputEvent> &p_event, c
 					}
 
 					// If event type matches input types of this category.
-					if ((k.is_valid() && input_type == INPUT_KEY) || (joyb.is_valid() && input_type == INPUT_JOY_BUTTON) || (joym.is_valid() && input_type == INPUT_JOY_MOTION) || (mb.is_valid() && input_type == INPUT_MOUSE_BUTTON)) {
+					if ((k.is_valid() && input_type == INPUT_KEY)
+						|| (joyb.is_valid() && input_type == INPUT_JOY_BUTTON)
+						|| (joym.is_valid() && input_type == INPUT_JOY_MOTION)
+						|| (mb.is_valid() && input_type == INPUT_MOUSE_BUTTON)
+						// Redneck Jack 07.04.
+						|| (audio.is_valid() && input_type == INPUT_AUDIO)
+						|| (midi.is_valid() && input_type == INPUT_MIDI)
+						|| (dmx.is_valid() && input_type == INPUT_DMX)
+						|| (osc.is_valid() && input_type == INPUT_OSC)
+						)
+					{
 						// Loop through all items of this category until one matches.
 						while (input_item) {
 							bool key_match = k.is_valid() && (Variant(k->get_keycode()) == input_item->get_meta("__keycode") || Variant(k->get_physical_keycode()) == input_item->get_meta("__keycode"));
 							bool joyb_match = joyb.is_valid() && Variant(joyb->get_button_index()) == input_item->get_meta("__index");
 							bool joym_match = joym.is_valid() && Variant(joym->get_axis()) == input_item->get_meta("__axis") && joym->get_axis_value() == (float)input_item->get_meta("__value");
 							bool mb_match = mb.is_valid() && Variant(mb->get_button_index()) == input_item->get_meta("__index");
-							if (key_match || joyb_match || joym_match || mb_match) {
+							// Redneck Jack 07.04.
+							bool audio_match = audio.is_valid() && Variant(audio->get_channel()) == input_item->get_meta("__channel") && Variant(audio->get_threshold_db()) == input_item->get_meta("__threshold");
+
+							bool _midi_match_detail = midi->get_message() != MIDIMessage::NONE && Variant(midi->get_message()) == input_item->get_meta("__messagetype");
+							if (_midi_match_detail)
+							{
+								switch (midi->get_message())
+								{
+								//case MIDIMessage::NONE:
+								//	break;
+								case MIDIMessage::NOTE_OFF:
+								case MIDIMessage::NOTE_ON:
+									_midi_match_detail = Variant(midi->get_pitch()) == input_item->get_meta("__pitch");
+									break;
+								case MIDIMessage::AFTERTOUCH:
+									break;
+								case MIDIMessage::CONTROL_CHANGE:
+									_midi_match_detail = Variant(midi->get_controller_number()) == input_item->get_meta("__cc_num");
+									break;
+								case MIDIMessage::PROGRAM_CHANGE:
+									break;
+								case MIDIMessage::CHANNEL_PRESSURE:
+									break;
+								case MIDIMessage::PITCH_BEND:
+									_midi_match_detail = Variant(midi->get_controller_number()) == input_item->get_meta("__cc_num");
+									break;
+								case MIDIMessage::SYSTEM_EXCLUSIVE:
+									break;
+								case MIDIMessage::QUARTER_FRAME:
+									break;
+								case MIDIMessage::SONG_POSITION_POINTER:
+									break;
+								case MIDIMessage::SONG_SELECT:
+									break;
+								case MIDIMessage::TUNE_REQUEST:
+									break;
+								case MIDIMessage::TIMING_CLOCK:
+									break;
+								case MIDIMessage::START:
+									break;
+								case MIDIMessage::CONTINUE:
+									break;
+								case MIDIMessage::STOP:
+									break;
+								case MIDIMessage::ACTIVE_SENSING:
+									break;
+								case MIDIMessage::SYSTEM_RESET:
+									break;
+								default:
+									break;
+								}
+							}
+							
+							bool midi_match = midi.is_valid() && Variant(midi->get_channel()) == input_item->get_meta("__channel") && _midi_match_detail;
+							bool dmx_match = dmx.is_valid() && Variant(dmx->get_channel()) == input_item->get_meta("__channel");
+							bool osc_match = osc.is_valid() && Variant(osc->get_message().rsplit("/", false, 2) == input_item->get_meta("__message_root"));
+							if (key_match || joyb_match || joym_match || mb_match || midi_match, audio_match || dmx_match || osc_match) {
 								category->set_collapsed(false);
 								input_item->select(0);
 								input_list_tree->ensure_cursor_is_visible();
@@ -180,6 +254,11 @@ void InputEventConfigurationDialog::_on_listen_input_changed(const Ref<InputEven
 	Ref<InputEventJoypadButton> joyb = received_event;
 	Ref<InputEventJoypadMotion> joym = received_event;
 	Ref<InputEventMouseButton> mb = received_event;
+	// Redneck Jack 07.04.
+	Ref<InputEventAudio> audio = received_event;
+	Ref<InputEventMIDI> midi = received_event;
+	Ref<InputEventDMX> dmx = received_event;
+	Ref<InputEventOSC> osc = received_event;
 
 	int type = 0;
 	if (k.is_valid()) {
@@ -190,6 +269,15 @@ void InputEventConfigurationDialog::_on_listen_input_changed(const Ref<InputEven
 		type = INPUT_JOY_MOTION;
 	} else if (mb.is_valid()) {
 		type = INPUT_MOUSE_BUTTON;
+	// Redneck Jack 07.04.
+	} else if (audio.is_valid()) {
+		type = INPUT_AUDIO;
+	} else if (midi.is_valid()) {
+		type = INPUT_MIDI;
+	} else if (dmx.is_valid()) {
+		type = INPUT_DMX;
+	} else if (osc.is_valid()) {
+		type = INPUT_OSC;
 	}
 
 	if (!(allowed_input_types & type)) {
@@ -337,6 +425,71 @@ void InputEventConfigurationDialog::_update_input_list() {
 			item->set_meta("__axis", i >> 1);
 			item->set_meta("__value", (i & 1) ? 1 : -1);
 		}
+	}
+
+	// Redneck Jack 07.04.
+	if (AudioServer::get_singleton() && allowed_input_types & INPUT_AUDIO) {
+		TreeItem* audio_root = input_list_tree->create_item(root);
+		audio_root->set_text(0, TTR("Audio Input"));
+		audio_root->set_icon(0, icon_cache.audio);
+		audio_root->set_collapsed(collapse);
+		audio_root->set_meta("__type", INPUT_AUDIO);
+
+		Ref<InputEventAudio> audio;
+		audio.instantiate();
+		String desc = EventListenerLineEdit::get_event_text(audio, false);
+		TreeItem* item = input_list_tree->create_item(audio_root);
+		item->set_text(0, desc);
+		item->set_meta("__channel", 0);
+		item->set_meta("__threshold", 0.35);
+	}
+
+	if (allowed_input_types & INPUT_MIDI) {
+		TreeItem* midi_root = input_list_tree->create_item(root);
+		midi_root->set_text(0, TTR("Midi Input"));
+		midi_root ->set_icon(0, icon_cache.midi);
+		midi_root->set_collapsed(collapse);
+		midi_root->set_meta("__type", INPUT_MIDI);
+
+		Ref<InputEventMIDI> midi;
+		midi.instantiate();
+		String desc = EventListenerLineEdit::get_event_text(midi, false);
+		TreeItem* item = input_list_tree->create_item(midi_root);
+		item->set_text(0, desc);
+		item->set_meta("__channel", 0);
+		item->set_meta("__note", 0);
+		item->set_meta("__velocity_threshols", 0);
+	}
+
+	if (allowed_input_types & INPUT_DMX) {
+		TreeItem* dmx_root = input_list_tree->create_item(root);
+		dmx_root->set_text(0, TTR("DMX Input"));
+		dmx_root->set_icon(0, icon_cache.dmx);
+		dmx_root->set_collapsed(collapse);
+		dmx_root->set_meta("__type", INPUT_DMX);
+
+		Ref<InputEventMIDI> dmx;
+		dmx.instantiate();
+		String desc = EventListenerLineEdit::get_event_text(dmx, false);
+		TreeItem* item = input_list_tree->create_item(dmx_root);
+		item->set_text(0, desc);
+		item->set_meta("__channel", 0);
+		item->set_meta("__value", 0);
+	}
+
+	if (allowed_input_types & INPUT_OSC) {
+		TreeItem* osc_root = input_list_tree->create_item(root);
+		osc_root->set_text(0, TTR("OSC Input"));
+		osc_root->set_icon(0, icon_cache.osc);
+		osc_root->set_collapsed(collapse);
+		osc_root->set_meta("__type", INPUT_OSC);
+
+		Ref<InputEventMIDI> osc;
+		osc.instantiate();
+		String desc = EventListenerLineEdit::get_event_text(osc, false);
+		TreeItem* item = input_list_tree->create_item(osc_root);
+		item->set_text(0, desc);
+		item->set_meta("__message_root", "/");
 	}
 }
 
@@ -501,6 +654,59 @@ void InputEventConfigurationDialog::_input_list_item_selected() {
 
 			_set_event(jm, jm, false);
 		} break;
+
+		// Redneck Jack 07.04.
+		case INPUT_AUDIO:
+		{
+			int channel = (int)selected->get_meta("__channel");
+			double threshold = (double)selected->get_meta("__threshold");
+
+			Ref<InputEventAudio> audio;
+			audio.instantiate();
+			audio->set_channel(channel);
+			audio->set_threshold_db(threshold);
+
+			_set_event(audio, audio, false);
+		}
+
+		case INPUT_MIDI:
+		{
+			int channel = (int)selected->get_meta("__channel");
+			int pitch = (int)selected->get_meta("__pitch");
+			int velocity = (int)selected->get_meta("__velocity");
+
+			Ref<InputEventMIDI> midi;
+			midi.instantiate();
+			midi->set_channel(channel);
+			midi->set_pitch(pitch);
+			midi->set_velocity(velocity);
+
+			_set_event(midi, midi, false);
+		}
+
+		case INPUT_DMX:
+		{
+			int channel = (int)selected->get_meta("__channel");
+			int value = (int)selected->get_meta("__value");
+
+			Ref<InputEventDMX> dmx;
+			dmx.instantiate();
+			dmx->set_channel(channel);
+			dmx->set_value(value);
+
+			_set_event(dmx, dmx, false);
+		}
+
+		case INPUT_OSC:
+		{
+			String message = (String)selected->get_meta("__message");
+
+			Ref<InputEventOSC> osc;
+			osc.instantiate();
+			osc->set_message(message);
+
+			_set_event(osc, osc, false);
+		}
 	}
 }
 
@@ -582,7 +788,7 @@ void InputEventConfigurationDialog::set_allowed_input_types(int p_type_masks) {
 }
 
 InputEventConfigurationDialog::InputEventConfigurationDialog() {
-	allowed_input_types = INPUT_KEY | INPUT_MOUSE_BUTTON | INPUT_JOY_BUTTON | INPUT_JOY_MOTION;
+	allowed_input_types = INPUT_KEY | INPUT_MOUSE_BUTTON | INPUT_JOY_BUTTON | INPUT_JOY_MOTION | INPUT_AUDIO | INPUT_MIDI | INPUT_DMX | INPUT_OSC;
 
 	set_title(TTR("Event Configuration"));
 	set_min_size(Size2i(550 * EDSCALE, 0)); // Min width

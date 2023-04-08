@@ -63,16 +63,10 @@ def make_certs_header(target, source, env):
 
 def make_authors_header(target, source, env):
     sections = [
-        "Project Founders",
-        "Lead Developer",
-        "Project Manager",
-        "Developers",
+        "Metro Gaya Founders",
     ]
     sections_id = [
-        "AUTHORS_FOUNDERS",
-        "AUTHORS_LEAD_DEVELOPERS",
-        "AUTHORS_PROJECT_MANAGERS",
-        "AUTHORS_DEVELOPERS",
+        "AUTHORS_MGS_FOUNDERS",
     ]
 
     src = source[0]

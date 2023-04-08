@@ -147,8 +147,11 @@ void editor_register_fonts(Ref<Theme> p_theme) {
 	const int default_font_size = int(EDITOR_GET("interface/editor/main_font_size")) * EDSCALE;
 	const float embolden_strength = 0.6;
 
-	Ref<Font> default_font = load_internal_font(_font_NotoSans_Regular, _font_NotoSans_Regular_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, false);
-	Ref<Font> default_font_msdf = load_internal_font(_font_NotoSans_Regular, _font_NotoSans_Regular_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, true);
+	//Ref<Font> default_font = load_internal_font(_font_NotoSans_Regular, _font_NotoSans_Regular_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, false);
+	//Ref<Font> default_font_msdf = load_internal_font(_font_NotoSans_Regular, _font_NotoSans_Regular_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, true);
+
+	Ref<Font> default_font = load_internal_font(_font_SpaceGrotesk_VariableFont_wght, _font_SpaceGrotesk_VariableFont_wght_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, false);
+	Ref<Font> default_font_msdf = load_internal_font(_font_SpaceGrotesk_Regular, _font_SpaceGrotesk_Regular_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, true);
 
 	TypedArray<Font> fallbacks;
 	Ref<FontFile> arabic_font = load_internal_font(_font_NotoNaskhArabicUI_Regular, _font_NotoNaskhArabicUI_Regular_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, false, &fallbacks);
@@ -167,8 +170,8 @@ void editor_register_fonts(Ref<Theme> p_theme) {
 	default_font->set_fallbacks(fallbacks);
 	default_font_msdf->set_fallbacks(fallbacks);
 
-	Ref<FontFile> default_font_bold = load_internal_font(_font_NotoSans_Bold, _font_NotoSans_Bold_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, false);
-	Ref<FontFile> default_font_bold_msdf = load_internal_font(_font_NotoSans_Bold, _font_NotoSans_Bold_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, true);
+	Ref<FontFile> default_font_bold = load_internal_font(_font_Jura_Bold, _font_Jura_Bold_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, false);
+	Ref<FontFile> default_font_bold_msdf = load_internal_font(_font_Jura_Bold, _font_Jura_Bold_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, true);
 
 	TypedArray<Font> fallbacks_bold;
 	Ref<FontFile> arabic_font_bold = load_internal_font(_font_NotoNaskhArabicUI_Bold, _font_NotoNaskhArabicUI_Bold_size, font_hinting, font_antialiasing, true, font_subpixel_positioning, false, &fallbacks_bold);
