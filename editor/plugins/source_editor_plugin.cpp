@@ -2,6 +2,7 @@
 #include "source_editor_plugin.h"
 //#include "../ShowEngine.h"
 #include <scene/gui/menu_button.h>
+#include <scene/gui/tab_container.h>
 #include <core/os/time.h>
 #include <scene/gui/separator.h>
 #include <assert.h>
