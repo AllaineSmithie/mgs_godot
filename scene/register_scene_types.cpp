@@ -903,6 +903,7 @@ void register_scene_types() {
 
 	OS::get_singleton()->yield(); // may take time to init
 
+	GDREGISTER_CLASS(Audio);
 	GDREGISTER_CLASS(AudioStreamPlayer);
 	GDREGISTER_CLASS(AudioStreamPlayer2D);
 #ifndef _3D_DISABLED

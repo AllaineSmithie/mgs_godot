@@ -48,7 +48,7 @@ void EditorSceneFormatImporterFBX::get_extensions(List<String> *r_extensions) co
 
 Node *EditorSceneFormatImporterFBX::import_scene(const String &p_path, uint32_t p_flags,
 		const HashMap<StringName, Variant> &p_options,
-		List<String> *r_missing_deps, Error *r_err) {
+		List<String> *r_missing_deps, Error *r_err, EditorProgress* p_progress) {
 	// Get global paths for source and sink.
 
 	// Don't use `c_escape()` as it can generate broken paths. These paths will be

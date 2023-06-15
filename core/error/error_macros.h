@@ -571,6 +571,22 @@ void _err_flush_stdout();
 // Generic error macros.
 
 /**
+* Try using `ERR_FAIL_COND_MSG` or `ERR_FAIL_MSG`.
+* Only use this macro if more complex error detection or recovery is required, and
+* there is no sensible error message.
+*
+* The current function returns.
+*/
+#define ERR_FAIL_RETURN_NULLPTR()                                                                     \
+if (true) {                                                                        \
+	_err_print_error(FUNCTION_STR, __FILE__, __LINE__, "Method/function failed."); \
+	return nullptr;                                                                        \
+} else                                                                             \
+	((void)0)
+
+// Generic error macros.
+
+/**
  * Try using `ERR_FAIL_COND_MSG` or `ERR_FAIL_MSG`.
  * Only use this macro if more complex error detection or recovery is required, and
  * there is no sensible error message.

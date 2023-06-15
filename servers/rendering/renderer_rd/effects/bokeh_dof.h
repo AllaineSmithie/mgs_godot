@@ -44,7 +44,7 @@ class BokehDOF {
 private:
 	bool prefer_raster_effects;
 
-	struct BokehPushConstant {
+		struct BokehPushConstant {
 		uint32_t size[2];
 		float z_far;
 		float z_near;

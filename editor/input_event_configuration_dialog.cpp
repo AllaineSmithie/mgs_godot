@@ -156,7 +156,7 @@ void InputEventConfigurationDialog::_set_event(const Ref<InputEvent> &p_event, c
 							// Redneck Jack 07.04.
 							bool audio_match = audio.is_valid() && Variant(audio->get_channel()) == input_item->get_meta("__channel") && Variant(audio->get_threshold_db()) == input_item->get_meta("__threshold");
 
-							bool _midi_match_detail = midi->get_message() != MIDIMessage::NONE && Variant(midi->get_message()) == input_item->get_meta("__messagetype");
+							bool _midi_match_detail = midi.is_valid() && midi->get_message() != MIDIMessage::NONE && Variant(midi->get_message()) == input_item->get_meta("__messagetype");
 							if (_midi_match_detail)
 							{
 								switch (midi->get_message())
@@ -455,10 +455,13 @@ void InputEventConfigurationDialog::_update_input_list() {
 		midi.instantiate();
 		String desc = EventListenerLineEdit::get_event_text(midi, false);
 		TreeItem* item = input_list_tree->create_item(midi_root);
+		MIDIMessage defaultmiditype;
 		item->set_text(0, desc);
+		item->set_meta("__pitch", 0);
 		item->set_meta("__channel", 0);
 		item->set_meta("__note", 0);
-		item->set_meta("__velocity_threshols", 0);
+		item->set_meta("__velocity", 0);
+		item->set_meta("__message", defaultmiditype);
 	}
 
 	if (allowed_input_types & INPUT_DMX) {
@@ -468,11 +471,12 @@ void InputEventConfigurationDialog::_update_input_list() {
 		dmx_root->set_collapsed(collapse);
 		dmx_root->set_meta("__type", INPUT_DMX);
 
-		Ref<InputEventMIDI> dmx;
+		Ref<InputEventDMX> dmx;
 		dmx.instantiate();
 		String desc = EventListenerLineEdit::get_event_text(dmx, false);
 		TreeItem* item = input_list_tree->create_item(dmx_root);
 		item->set_text(0, desc);
+		item->set_meta("__universe", 0);
 		item->set_meta("__channel", 0);
 		item->set_meta("__value", 0);
 	}
@@ -484,12 +488,12 @@ void InputEventConfigurationDialog::_update_input_list() {
 		osc_root->set_collapsed(collapse);
 		osc_root->set_meta("__type", INPUT_OSC);
 
-		Ref<InputEventMIDI> osc;
+		Ref<InputEventOSC> osc;
 		osc.instantiate();
 		String desc = EventListenerLineEdit::get_event_text(osc, false);
 		TreeItem* item = input_list_tree->create_item(osc_root);
 		item->set_text(0, desc);
-		item->set_meta("__message_root", "/");
+		item->set_meta("__message", "/");
 	}
 }
 
@@ -667,7 +671,7 @@ void InputEventConfigurationDialog::_input_list_item_selected() {
 			audio->set_threshold_db(threshold);
 
 			_set_event(audio, audio, false);
-		}
+		} break;
 
 		case INPUT_MIDI:
 		{
@@ -682,7 +686,7 @@ void InputEventConfigurationDialog::_input_list_item_selected() {
 			midi->set_velocity(velocity);
 
 			_set_event(midi, midi, false);
-		}
+		} break;
 
 		case INPUT_DMX:
 		{
@@ -695,7 +699,7 @@ void InputEventConfigurationDialog::_input_list_item_selected() {
 			dmx->set_value(value);
 
 			_set_event(dmx, dmx, false);
-		}
+		} break;
 
 		case INPUT_OSC:
 		{
@@ -706,7 +710,7 @@ void InputEventConfigurationDialog::_input_list_item_selected() {
 			osc->set_message(message);
 
 			_set_event(osc, osc, false);
-		}
+		} break;
 	}
 }
 

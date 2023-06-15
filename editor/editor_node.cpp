@@ -135,6 +135,7 @@
 #include "editor/plugins/packed_scene_translation_parser_plugin.h"
 #include "editor/plugins/root_motion_editor_plugin.h"
 #include "editor/plugins/script_text_editor.h"
+#include "editor/plugins/source_editor_plugin.h"
 #include "editor/plugins/text_editor.h"
 #include "editor/plugins/version_control_editor_plugin.h"
 #include "editor/plugins/visual_shader_editor_plugin.h"
@@ -3468,7 +3469,8 @@ void EditorNode::select_editor_by_name(const String &p_name) {
 	ERR_FAIL_MSG("The editor name '" + p_name + "' was not found.");
 }
 
-void EditorNode::add_editor_plugin(EditorPlugin *p_editor, bool p_config_changed) {
+// Redneck Jack 08.04.23
+void EditorNode::add_editor_plugin(EditorPlugin *p_editor, bool p_config_changed, bool p_second_panel) {
 	if (p_editor->has_main_screen()) {
 		Button *tb = memnew(Button);
 		tb->set_flat(true);
@@ -3490,7 +3492,10 @@ void EditorNode::add_editor_plugin(EditorPlugin *p_editor, bool p_config_changed
 		tb->add_theme_font_size_override("font_size", singleton->gui_base->get_theme_font_size(SNAME("main_button_font_size"), SNAME("EditorFonts")));
 
 		singleton->main_editor_buttons.push_back(tb);
-		singleton->main_editor_button_hb->add_child(tb);
+		if (!p_second_panel)
+			singleton->main_editor_button_hb->add_child(tb);
+		else
+			singleton->right_spacer->add_child(tb);
 		singleton->editor_table.push_back(p_editor);
 
 		singleton->distraction_free->move_to_front();
@@ -6502,13 +6507,13 @@ void EditorNode::_update_renderer_color() {
 	String rendering_method = renderer->get_selected_metadata();
 
 	if (rendering_method == "forward_plus") {
-		renderer->add_theme_color_override("font_color", Color::hex(0x5d8c3fff));
+		renderer->add_theme_color_override("font_color", Color::hex(0x568c8cff/*0x5d8c3fff*/));
 	}
 	if (rendering_method == "mobile") {
-		renderer->add_theme_color_override("font_color", Color::hex(0xa5557dff));
+		renderer->add_theme_color_override("font_color", Color::hex(0xddc48aff/*0xa5557dff*/));
 	}
 	if (rendering_method == "gl_compatibility") {
-		renderer->add_theme_color_override("font_color", Color::hex(0x5586a4ff));
+		renderer->add_theme_color_override("font_color", Color::hex(0xa85351ff/*0x5586a4ff*/));
 	}
 }
 
@@ -7503,9 +7508,13 @@ EditorNode::EditorNode() {
 	//help_menu->add_icon_shortcut(gui_base->get_theme_icon(SNAME("Heart"), SNAME("EditorIcons")), ED_SHORTCUT_AND_COMMAND("editor/support_development", TTR("Support Godot Development")), HELP_SUPPORT_GODOT_DEVELOPMENT);
 
 	// Spacer to center 2D / 3D / Script buttons.
-	Control *right_spacer = memnew(Control);
+
+	// Redneck Jack 08.04.23
+
+	right_spacer = memnew(HBoxContainer);
 	right_spacer->set_mouse_filter(Control::MOUSE_FILTER_PASS);
 	right_spacer->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+	right_spacer->set_alignment(BoxContainer::ALIGNMENT_END);
 	menu_hb->add_child(right_spacer);
 
 	launch_pad = memnew(PanelContainer);
@@ -7637,13 +7646,13 @@ EditorNode::EditorNode() {
 
 		// Add the renderers name to the UI.
 		if (rendering_method == "forward_plus") {
-			renderer->add_item(TTR("Forward+"));
+			renderer->add_item(TTR("PC+"));
 		}
 		if (rendering_method == "mobile") {
 			renderer->add_item(TTR("Mobile"));
 		}
 		if (rendering_method == "gl_compatibility") {
-			renderer->add_item(TTR("Compatibility"));
+			renderer->add_item(TTR("Low"));
 		}
 		renderer->set_item_metadata(i, rendering_method);
 
@@ -7950,7 +7959,8 @@ EditorNode::EditorNode() {
 	TextEditor::register_editor();
 
 	if (AssetLibraryEditorPlugin::is_available()) {
-		add_editor_plugin(memnew(AssetLibraryEditorPlugin));
+		// Redneck Jack 08.04.23
+		add_editor_plugin(memnew(AssetLibraryEditorPlugin), false, true);
 	} else {
 		print_verbose("Asset Library not available (due to using Web editor, or SSL support disabled).");
 	}

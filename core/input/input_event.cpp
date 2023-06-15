@@ -1894,12 +1894,6 @@ void InputEventOSC::_bind_methods()
 {
 	ClassDB::bind_method(D_METHOD("set_message", "universe"), &InputEventDMX::set_universe);
 	ClassDB::bind_method(D_METHOD("get_message"), &InputEventDMX::get_universe);
-	ClassDB::bind_method(D_METHOD("set_channel", "channel"), &InputEventDMX::set_channel);
-	ClassDB::bind_method(D_METHOD("get_channel"), &InputEventDMX::get_channel);
-	ClassDB::bind_method(D_METHOD("set_value", "value"), &InputEventDMX::set_value);
-	ClassDB::bind_method(D_METHOD("get_value"), &InputEventDMX::get_value);
 
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "universe"), "get_universe", "set_universe");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "channel"), "set_channel", "get_channel");
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "value"), "set_value", "get_value");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING, "message"), "get_message", "set_message");
 }

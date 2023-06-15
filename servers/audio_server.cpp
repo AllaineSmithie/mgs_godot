@@ -700,6 +700,10 @@ void AudioServer::set_bus_count(int p_count) {
 		}
 	}
 
+	PackedInt64Array uuids;
+	for (int i = cb; i < buses.size(); i++)
+		uuids.append(buses[i]->uuid);
+
 	buses.resize(p_count);
 
 	for (int i = cb; i < buses.size(); i++) {
@@ -728,6 +732,12 @@ void AudioServer::set_bus_count(int p_count) {
 			buses.write[i]->channels.write[j].buffer.resize(buffer_size);
 		}
 		buses[i]->name = attempt;
+		buses[i]->uuid = Math::rand();
+		while (uuids.find(buses[i]->uuid) > -1)
+			buses[i]->uuid = Math::rand();
+
+		uuids.append(buses[i]->uuid);
+
 		buses[i]->solo = false;
 		buses[i]->mute = false;
 		buses[i]->bypass = false;
@@ -837,6 +847,13 @@ void AudioServer::move_bus(int p_bus, int p_to_pos) {
 	emit_signal(SNAME("bus_layout_changed"));
 }
 
+AudioServer::Bus* AudioServer::get_bus(int p_bus_index)
+{
+	if (p_bus_index < buses.size())
+		return buses[p_bus_index];
+	return nullptr;
+}
+
 int AudioServer::get_bus_count() const {
 	return buses.size();
 }
@@ -886,6 +903,12 @@ void AudioServer::set_bus_name(int p_bus, const String &p_name) {
 String AudioServer::get_bus_name(int p_bus) const {
 	ERR_FAIL_INDEX_V(p_bus, buses.size(), String());
 	return buses[p_bus]->name;
+}
+
+uint32_t AudioServer::get_bus_uuid(int p_bus) const
+{
+	ERR_FAIL_INDEX_V(p_bus, buses.size(), uint32_t());
+	return buses[p_bus]->uuid;
 }
 
 int AudioServer::get_bus_index(const StringName &p_bus_name) const {
@@ -1605,6 +1628,7 @@ void AudioServer::set_bus_layout(const Ref<AudioBusLayout> &p_bus_layout) {
 #ifdef TOOLS_ENABLED
 	set_edited(false);
 #endif
+	emit_signal(SNAME("bus_layout_loaded"));
 	unlock();
 }
 
@@ -1738,6 +1762,7 @@ void AudioServer::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "playback_speed_scale"), "set_playback_speed_scale", "get_playback_speed_scale");
 
 	ADD_SIGNAL(MethodInfo("bus_layout_changed"));
+	ADD_SIGNAL(MethodInfo("bus_layout_loaded"));
 
 	BIND_ENUM_CONSTANT(SPEAKER_MODE_STEREO);
 	BIND_ENUM_CONSTANT(SPEAKER_SURROUND_31);

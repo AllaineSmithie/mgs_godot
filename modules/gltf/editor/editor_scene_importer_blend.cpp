@@ -58,7 +58,7 @@ void EditorSceneFormatImporterBlend::get_extensions(List<String> *r_extensions) 
 
 Node *EditorSceneFormatImporterBlend::import_scene(const String &p_path, uint32_t p_flags,
 		const HashMap<StringName, Variant> &p_options,
-		List<String> *r_missing_deps, Error *r_err) {
+		List<String> *r_missing_deps, Error *r_err, EditorProgress* p_progress) {
 	// Get global paths for source and sink.
 
 	// Escape paths to be valid Python strings to embed in the script.

@@ -1760,7 +1760,7 @@ void EditorSceneFormatImporterCollada::get_extensions(List<String> *r_extensions
 	r_extensions->push_back("dae");
 }
 
-Node *EditorSceneFormatImporterCollada::import_scene(const String &p_path, uint32_t p_flags, const HashMap<StringName, Variant> &p_options, List<String> *r_missing_deps, Error *r_err) {
+Node *EditorSceneFormatImporterCollada::import_scene(const String &p_path, uint32_t p_flags, const HashMap<StringName, Variant> &p_options, List<String> *r_missing_deps, Error *r_err, EditorProgress* p_progress) {
 	if (r_err) {
 		*r_err = OK;
 	}

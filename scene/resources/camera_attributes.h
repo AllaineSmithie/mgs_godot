@@ -55,6 +55,13 @@ protected:
 	float auto_exposure_scale = 0.4;
 	virtual void _update_auto_exposure(){};
 
+	bool flare_enabled = false;
+	float flare_amount = 0.05;
+	float flare_anamorphic = 1.0f;
+	void _update_flare();
+
+	
+
 public:
 	virtual RID get_rid() const override;
 	virtual float calculate_exposure_normalization() const { return 1.0; }
@@ -71,6 +78,12 @@ public:
 	void set_auto_exposure_scale(float p_auto_exposure_scale);
 	float get_auto_exposure_scale() const;
 
+	void set_flare_enabled(float p_flare_enabled);
+	bool is_set_flare_enabled();
+	void set_flare_amount(float p_flare_amount);
+	float get_flare_amount();
+	void set_flare_anamorphic(float p_flare_anamorphic);
+	float get_flare_anamorphic();
 	CameraAttributes();
 	~CameraAttributes();
 };

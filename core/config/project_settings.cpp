@@ -48,7 +48,7 @@
 #include "modules/modules_enabled.gen.h" // For mono.
 #endif // TOOLS_ENABLED
 
-const String ProjectSettings::PROJECT_DATA_DIR_NAME_SUFFIX = "godot";
+const String ProjectSettings::PROJECT_DATA_DIR_NAME_SUFFIX = "mgs";
 
 ProjectSettings *ProjectSettings::singleton = nullptr;
 

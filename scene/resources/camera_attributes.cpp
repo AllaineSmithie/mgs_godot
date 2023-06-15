@@ -91,6 +91,10 @@ float CameraAttributes::get_auto_exposure_scale() const {
 	return auto_exposure_scale;
 }
 
+void CameraAttributes::_update_flare()
+{
+}
+
 RID CameraAttributes::get_rid() const {
 	return camera_attributes;
 }
@@ -120,6 +124,14 @@ void CameraAttributes::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_auto_exposure_scale", "exposure_grey"), &CameraAttributes::set_auto_exposure_scale);
 	ClassDB::bind_method(D_METHOD("get_auto_exposure_scale"), &CameraAttributes::get_auto_exposure_scale);
 
+
+	ClassDB::bind_method(D_METHOD("set_flare_enabled", "flare_enabled"), &CameraAttributes::set_flare_enabled);
+	ClassDB::bind_method(D_METHOD("is_set_flare_enabled"), &CameraAttributes::is_set_flare_enabled);
+	ClassDB::bind_method(D_METHOD("set_flare_amount", "flare_amount"), &CameraAttributes::set_flare_amount);
+	ClassDB::bind_method(D_METHOD("get_flare_amount"), &CameraAttributes::get_flare_amount);
+	ClassDB::bind_method(D_METHOD("set_flare_anamorphic", "flare_anamorphic"), &CameraAttributes::set_flare_anamorphic);
+	ClassDB::bind_method(D_METHOD("get_flare_anamorphic"), &CameraAttributes::get_flare_anamorphic);
+
 	ADD_GROUP("Exposure", "exposure_");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "exposure_sensitivity", PROPERTY_HINT_RANGE, "0.1,32000.0,0.1,suffix:ISO"), "set_exposure_sensitivity", "get_exposure_sensitivity");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "exposure_multiplier", PROPERTY_HINT_RANGE, "0.0,2048.0,0.001"), "set_exposure_multiplier", "get_exposure_multiplier");
@@ -128,6 +140,45 @@ void CameraAttributes::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "auto_exposure_enabled"), "set_auto_exposure_enabled", "is_auto_exposure_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "auto_exposure_scale", PROPERTY_HINT_RANGE, "0.01,64,0.01"), "set_auto_exposure_scale", "get_auto_exposure_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "auto_exposure_speed", PROPERTY_HINT_RANGE, "0.01,64,0.01"), "set_auto_exposure_speed", "get_auto_exposure_speed");
+
+	ADD_GROUP("Lens", "lens_");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flare_enabled"), "set_flare_enabled", "is_set_flare_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flare_amount", PROPERTY_HINT_RANGE, "0.01,1.0,0.1,or_greater"), "set_flare_amount", "get_flare_amount");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flare_anamorphic", PROPERTY_HINT_RANGE, "1.0,2.5,0.001,or_greater"), "set_flare_anamorphic", "get_flare_anamorphic");
+
+}
+
+void CameraAttributes::set_flare_enabled(float p_flare_enabled)
+{
+	flare_enabled = p_flare_enabled;
+	_update_flare();
+}
+
+bool CameraAttributes::is_set_flare_enabled()
+{
+	return flare_enabled;
+}
+
+void CameraAttributes::set_flare_amount(float p_flare_amount)
+{
+	flare_amount = p_flare_amount;
+	_update_flare();
+}
+
+float CameraAttributes::get_flare_amount()
+{
+	return flare_amount;
+}
+
+void CameraAttributes::set_flare_anamorphic(float p_flare_anamorphic)
+{
+	flare_anamorphic = p_flare_anamorphic;
+	_update_flare();
+}
+
+float CameraAttributes::get_flare_anamorphic()
+{
+	return flare_anamorphic;
 }
 
 CameraAttributes::CameraAttributes() {

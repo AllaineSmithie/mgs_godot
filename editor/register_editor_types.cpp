@@ -106,6 +106,7 @@
 #include "editor/plugins/version_control_editor_plugin.h"
 #include "editor/plugins/visual_shader_editor_plugin.h"
 #include "editor/plugins/voxel_gi_editor_plugin.h"
+#include "editor/plugins/source_editor_plugin.h"
 
 void register_editor_types() {
 	ResourceLoader::set_timestamp_on_load(true);
@@ -213,6 +214,9 @@ void register_editor_types() {
 	EditorPlugins::add_by_type<Sprite2DEditorPlugin>();
 	EditorPlugins::add_by_type<TilesEditorPlugin>();
 
+	// 2D Source Editor
+	EditorPlugins::add_by_type<SourceEditorPlugin>();
+	
 	// For correct doc generation.
 	GLOBAL_DEF("editor/run/main_run_args", "");
 

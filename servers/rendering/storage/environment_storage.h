@@ -144,6 +144,10 @@ private:
 		float adjustments_saturation = 1.0f;
 		bool use_1d_color_correction = false;
 		RID color_correction;
+
+		// Post Processing
+		/*bool post_processing_shader_enabled = false;
+		RID post_processing_shader;*/
 	};
 
 	mutable RID_Owner<Environment, true> environment_owner;
@@ -283,6 +287,11 @@ public:
 	float environment_get_adjustments_saturation(RID p_env) const;
 	bool environment_get_use_1d_color_correction(RID p_env) const;
 	RID environment_get_color_correction(RID p_env) const;
+
+	// Post Processing Shader
+	// RID environment_get_post_processing_shader(RID p_env) const;
+	//void environment_set_post_processing_shader(RID p_env, bool p_enable, RID p_postprocessingshader);
+	//bool environment_get_post_processing_shader_enabled(RID p_env) const;
 };
 
 #endif // ENVIRONMENT_STORAGE_H

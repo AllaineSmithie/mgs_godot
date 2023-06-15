@@ -132,6 +132,7 @@ public:
 		EDITOR_2D = 0,
 		EDITOR_3D,
 		EDITOR_SCRIPT,
+		EDITOR_SOURCEEDITOR,
 		EDITOR_ASSETLIB
 	};
 
@@ -418,6 +419,8 @@ private:
 	MenuButton *update_spinner = nullptr;
 
 	HBoxContainer *main_editor_button_hb = nullptr;
+	HBoxContainer* right_spacer = nullptr;
+	
 	Vector<Button *> main_editor_buttons;
 	Vector<EditorPlugin *> editor_table;
 
@@ -753,7 +756,7 @@ public:
 	static void progress_task_step_bg(const String &p_task, int p_step = -1);
 	static void progress_end_task_bg(const String &p_task);
 
-	static void add_editor_plugin(EditorPlugin *p_editor, bool p_config_changed = false);
+	static void add_editor_plugin(EditorPlugin *p_editor, bool p_config_changed = false, bool p_second_panel = false);
 	static void remove_editor_plugin(EditorPlugin *p_editor, bool p_config_changed = false);
 
 	static void add_plugin_init_callback(EditorPluginInitializeCallback p_callback);

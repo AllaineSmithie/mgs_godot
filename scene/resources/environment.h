@@ -208,8 +208,18 @@ private:
 	Ref<Texture> adjustment_color_correction;
 	void _update_adjustment();
 
+	// Post Process Shader
+	/*bool post_processing_shader_enabled = false;
+	Ref<Shader> post_processing_shader;
+	*/
 protected:
 	static void _bind_methods();
+
+	/*void set_post_processing_shader_enabled(bool enabled);
+	bool is_post_processing_shader_enabled() const;
+	void set_post_processing_shader(Ref<Shader> shader);
+	Ref<Shader> get_post_processing_shader() const;
+	void _update_post_processing_shader();*/
 	void _validate_property(PropertyInfo &p_property) const;
 #ifndef DISABLE_DEPRECATED
 	// Kept for compatibility from 3.x to 4.0.

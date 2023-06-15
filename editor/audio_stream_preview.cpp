@@ -116,7 +116,7 @@ void AudioStreamPreviewGenerator::_preview_thread(void *p_preview) {
 	int mixbuff_chunk_frames = AudioServer::get_singleton()->get_mix_rate() * muxbuff_chunk_s;
 
 	Vector<AudioFrame> mix_chunk;
-	mix_chunk.resize(mixbuff_chunk_frames);
+	mix_chunk.resize(mixbuff_chunk_frames); // switched back from AudioServer::get_singleton()->thread_get_mix_buffer_size() RJ 12.06.23
 
 	int frames_total = AudioServer::get_singleton()->get_mix_rate() * preview->preview->length;
 	int frames_todo = frames_total;
@@ -125,7 +125,7 @@ void AudioStreamPreviewGenerator::_preview_thread(void *p_preview) {
 
 	while (frames_todo) {
 		int ofs_write = uint64_t(frames_total - frames_todo) * uint64_t(preview->preview->preview.size() / 2) / uint64_t(frames_total);
-		int to_read = MIN(frames_todo, mixbuff_chunk_frames);
+		int to_read = MIN(frames_todo, mixbuff_chunk_frames); // AudioServer::get_singleton()->thread_get_mix_buffer_size());
 		int to_write = uint64_t(to_read) * uint64_t(preview->preview->preview.size() / 2) / uint64_t(frames_total);
 		to_write = MIN(to_write, (preview->preview->preview.size() / 2) - ofs_write);
 

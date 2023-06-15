@@ -200,6 +200,7 @@ struct _NO_DISCARD_ Color {
 	static Color from_hsv(float p_h, float p_s, float p_v, float p_alpha = 1.0f);
 	static Color from_ok_hsl(float p_h, float p_s, float p_l, float p_alpha = 1.0f);
 	static Color from_rgbe9995(uint32_t p_rgbe);
+	static Color from_nm(float p_nm);
 
 	_FORCE_INLINE_ bool operator<(const Color &p_color) const; // Used in set keys.
 	operator String() const;
@@ -254,6 +255,10 @@ struct _NO_DISCARD_ Color {
 		a = p_a;
 	}
 
+
+	static _FORCE_INLINE_ Color Color::cieToRgb(const float p_x, const float p_y, const float p_z);
+	static 	_FORCE_INLINE_ Color Color::xyzToRgb(const float p_x, const float p_y, const float p_z);
+
 	Color(const String &p_code) {
 		if (html_is_valid(p_code)) {
 			*this = html(p_code);
@@ -286,6 +291,64 @@ bool Color::operator<(const Color &p_color) const {
 
 _FORCE_INLINE_ Color operator*(float p_scalar, const Color &p_color) {
 	return p_color * p_scalar;
+}
+
+_FORCE_INLINE_ Color Color::cieToRgb(const float p_x, const float p_y, const float p_z)
+{		
+	float z = 1.0f - p_x - p_y;
+	float Y = p_z / 255;
+	float X = (Y / p_y) * p_x;
+	float Z = (Y / p_y) * z;
+	float r = X * 1.656492 - Y * 0.354851 - Z * 0.255038;
+	float g = -X * 0.707196 + Y * 1.655397 + Z * 0.036152;
+	float b = X * 0.051713 - Y * 0.121364 + Z * 1.011530;
+
+	r = r <= 0.0031308f ? 12.92f * r : (1.0f + 0.055f) * Math::pow(r, (1.0f / 2.4f)) - 0.055f;
+	g = g <= 0.0031308f ? 12.92f * g : (1.0f + 0.055f) * Math::pow(g, (1.0f / 2.4f)) - 0.055f;
+	b = b <= 0.0031308f ? 12.92f * b : (1.0f + 0.055f) * Math::pow(b, (1.0f / 2.4f)) - 0.055f;
+
+	// Bring all negative components to zero
+	r = MAX(r, 0.0f);
+	g = MAX(g, 0.0f);
+	b = MAX(b, 0.0f);
+
+	// If one component is greater than 1, weight components by that value
+	float max = MAX(MAX(r, g), b);
+	if (max > 1)
+	{
+		r = r / max;
+		g = g / max;
+		b = b / max;
+	}
+
+	Color result = { r, g, b };
+	return result;
+}
+_FORCE_INLINE_ Color Color::xyzToRgb(const float p_x, const float p_y, const float p_z)
+{
+	float x = p_x / 100;
+	float y = p_y / 100;
+	float z = p_z / 100;
+
+	float r = x * 3.2406 + y * -1.5372 + z * -0.4986;
+	float g = x * -0.9689 + y * 1.8758 + z * 0.0415;
+	float b = x * 0.0557 + y * -0.2040 + z * 1.0570;
+
+	if (r > 0.0031308f)
+		r = 1.055f * (Math::pow(r, (1.0f / 2.4f))) - 0.055f;
+	else
+		r = 12.92f * r;
+	if (g > 0.0031308f)
+		g = 1.055f * (Math::pow(g, (1.0f / 2.4f))) - 0.055f;
+	else
+		g = 12.92f * g;
+	if (b > 0.0031308f)
+		b = 1.055f * (Math::pow(b, (1.0f / 2.4f))) - 0.055f;
+	else
+		b = 12.92f * b;
+
+
+	return Color(r, g, b);
 }
 
 #endif // COLOR_H

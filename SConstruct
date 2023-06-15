@@ -134,7 +134,6 @@ env_base.__class__.use_windows_spawn_fix = methods.use_windows_spawn_fix
 
 env_base.__class__.add_shared_library = methods.add_shared_library
 env_base.__class__.add_library = methods.add_library
-env_base.__class__.add_program = methods.add_program
 env_base.__class__.CommandNoCache = methods.CommandNoCache
 env_base.__class__.Run = methods.Run
 env_base.__class__.disable_warnings = methods.disable_warnings
@@ -190,6 +189,16 @@ opts.Add("custom_modules", "A list of comma-separated directory paths containing
 opts.Add(BoolVariable("custom_modules_recursive", "Detect custom modules recursively for each specified path.", True))
 
 # Advanced options
+opts.Add(
+    EnumVariable(
+        "library_type",
+        "Build library type",
+        "executable",
+        ("executable", "static_library", "shared_library", "vst", "au", "lv2"),
+    )
+)
+
+
 opts.Add(BoolVariable("dev_mode", "Alias for dev options: verbose=yes warnings=extra werror=yes tests=yes", False))
 opts.Add(BoolVariable("tests", "Build the unit tests", False))
 opts.Add(BoolVariable("fast_unsafe", "Enable unsafe options for faster rebuilds", False))
@@ -210,6 +219,7 @@ opts.Add("system_certs_path", "Use this path as SSL certificates default for edi
 opts.Add(BoolVariable("use_precise_math_checks", "Math checks use very precise epsilon (debug option)", False))
 
 # Thirdparty libraries
+opts.Add(BoolVariable('builtin_assimp', "Use the built-in Assimp library", True))
 opts.Add(BoolVariable("builtin_certs", "Use the built-in SSL certificates bundles", True))
 opts.Add(BoolVariable("builtin_embree", "Use the built-in Embree library", True))
 opts.Add(BoolVariable("builtin_enet", "Use the built-in ENet library", True))
@@ -252,6 +262,35 @@ opts.Update(env_base)
 # Platform selection: validate input, and add options.
 
 selected_platform = ""
+
+if env_base["library_type"] == "static_library":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
+elif env_base["library_type"] == "shared_library":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
+    env_base.Append(CCFLAGS=["-fPIC"])
+    env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
+elif env_base["library_type"] == "vst":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
+    env_base.Append(CCFLAGS=["-fPIC"])
+    env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
+    env_base["library_type"] == "shared_library"
+elif env_base["library_type"] == "au":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_AU_BUILD"])
+    env_base.Append(CCFLAGS=["-fPIC"])
+    env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
+    env_base["library_type"] == "shared_library"
+elif env_base["library_type"] == "lv2":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_LV2_BUILD"])
+    env_base.Append(CCFLAGS=["-fPIC"])
+    env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
+    env_base["library_type"] == "shared_library"
+else:
+    env_base.__class__.add_program = methods.add_program
 
 if env_base["platform"] != "":
     selected_platform = env_base["platform"]

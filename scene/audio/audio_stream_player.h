@@ -35,8 +35,15 @@
 #include "scene/main/node.h"
 #include "servers/audio/audio_stream.h"
 
-class AudioStreamPlayer : public Node {
-	GDCLASS(AudioStreamPlayer, Node);
+class Audio : public Node
+{
+	GDCLASS(Audio, Node);
+protected:
+	static void _bind_methods() {}
+};
+
+class AudioStreamPlayer : public Audio {
+	GDCLASS(AudioStreamPlayer, Audio);
 
 public:
 	enum MixTarget {
