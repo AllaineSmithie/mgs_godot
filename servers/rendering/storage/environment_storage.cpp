@@ -777,3 +777,31 @@ RID RendererEnvironmentStorage::environment_get_color_correction(RID p_env) cons
 	ERR_FAIL_COND_V(!env, RID());
 	return env->color_correction;
 }
+
+
+// Post Processing Shader
+/*
+void RendererEnvironmentStorage::environment_set_post_processing_shader(RID p_env, bool p_enable, RID p_postprocessingshader)
+{
+	Environment* env = environment_owner.get_or_null(p_env);
+	ERR_FAIL_COND(!env);
+#ifdef DEBUG_ENABLED
+	if (OS::get_singleton()->get_current_rendering_method() == "gl_compatibility" && p_enable) {
+		WARN_PRINT_ONCE_ED("Adjustments are not supported when using the GL Compatibility backend yet. Support will be added in a future release.");
+	}
+#endif
+	env->post_processing_shader_enabled = p_enable;
+	env->post_processing_shader = p_postprocessingshader;
+}
+
+RID RendererEnvironmentStorage::environment_get_post_processing_shader(RID p_env) const {
+	Environment* env = environment_owner.get_or_null(p_env);
+	ERR_FAIL_COND_V(!env, RID());
+	return env->post_processing_shader;
+}
+
+bool RendererEnvironmentStorage::environment_get_post_processing_shader_enabled(RID p_env) const {
+	Environment* env = environment_owner.get_or_null(p_env);
+	ERR_FAIL_COND_V(!env, false);
+	return env->post_processing_shader_enabled;
+}*/

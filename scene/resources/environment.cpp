@@ -1034,6 +1034,39 @@ void Environment::_update_adjustment() {
 			color_correction);
 }
 
+// Post Process Shader
+/*
+void Environment::set_post_processing_shader_enabled(bool p_enabled)
+{
+	post_processing_shader_enabled = p_enabled;
+}
+bool Environment::is_post_processing_shader_enabled() const
+{
+	return post_processing_shader_enabled;
+}
+void Environment::set_post_processing_shader(Ref<Shader> p_shader)
+{
+	post_processing_shader = p_shader;
+	
+	_update_post_processing_shader();
+}
+Ref<Shader> Environment::get_post_processing_shader() const
+{
+	return post_processing_shader;
+}
+void Environment::_update_post_processing_shader()
+{
+	RID post_processing_shader_rid = post_processing_shader.is_valid() ? post_processing_shader->get_rid() : RID();
+	/*if (post_processing_shader_enabled)
+	{
+	}
+	RS::get_singleton()->environment_set_post_processing_shader(
+		environment,
+		post_processing_shader_enabled,
+		post_processing_shader_rid);*/
+//}
+
+
 // Private methods, constructor and destructor
 
 void Environment::_validate_property(PropertyInfo &p_property) const {
@@ -1476,6 +1509,18 @@ void Environment::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "adjustment_contrast", PROPERTY_HINT_RANGE, "0.01,8,0.01"), "set_adjustment_contrast", "get_adjustment_contrast");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "adjustment_saturation", PROPERTY_HINT_RANGE, "0.01,8,0.01"), "set_adjustment_saturation", "get_adjustment_saturation");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "adjustment_color_correction", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D,Texture3D"), "set_adjustment_color_correction", "get_adjustment_color_correction");
+
+	// Post Process Shader
+
+	/*ClassDB::bind_method(D_METHOD("set_post_processing_shader_enabled", "enabled"), &Environment::set_post_processing_shader_enabled);
+	ClassDB::bind_method(D_METHOD("is_post_processing_shader_enabled"), &Environment::is_post_processing_shader_enabled);
+	ClassDB::bind_method(D_METHOD("set_post_processing_shader", "shader"), &Environment::set_post_processing_shader);
+	ClassDB::bind_method(D_METHOD("get_post_processing_shader"), &Environment::get_post_processing_shader);
+	
+	ADD_GROUP("Post Process Shader", "postprocesshader_");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "post_processing_shader_enabled"), "set_post_processing_shader_enabled", "is_post_processing_shader_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "post_processing_shader_shader", PROPERTY_HINT_RESOURCE_TYPE, "Shader"), "set_post_processing_shader", "get_post_processing_shader");
+	*/
 
 	// Constants
 

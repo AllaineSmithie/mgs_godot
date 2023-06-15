@@ -379,6 +379,7 @@ public:
 	String rstrip(const String &p_chars) const;
 	String get_extension() const;
 	String get_basename() const;
+	String get_parent_directory() const;
 	String path_join(const String &p_file) const;
 	char32_t unicode_at(int p_idx) const;
 

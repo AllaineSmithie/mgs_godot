@@ -46,6 +46,7 @@
 class GLTFState : public Resource {
 	GDCLASS(GLTFState, Resource);
 	friend class GLTFDocument;
+	friend class EditorSceneFormatImporterMVR; // Hack from RJ
 
 	String filename;
 	String base_path;

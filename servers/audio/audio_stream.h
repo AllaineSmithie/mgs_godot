@@ -46,6 +46,10 @@ class AudioStreamPlayback : public RefCounted {
 	GDCLASS(AudioStreamPlayback, RefCounted);
 
 protected:
+	double start_seconds = 0.0;
+	double end_seconds = 0.0;
+	uint64_t start_sample = 0;
+	uint64_t end_sample = 0;
 	static void _bind_methods();
 	GDVIRTUAL1(_start, double)
 	GDVIRTUAL0(_stop)

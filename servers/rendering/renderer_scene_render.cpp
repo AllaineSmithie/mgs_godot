@@ -631,3 +631,21 @@ bool RendererSceneRender::environment_get_use_1d_color_correction(RID p_env) con
 RID RendererSceneRender::environment_get_color_correction(RID p_env) const {
 	return environment_storage.environment_get_color_correction(p_env);
 }
+
+// Post Processing SHader
+
+/*
+void RendererSceneRender::environment_set_post_processing_shader(RID p_env, bool p_enable, RID p_post_processing_shader)
+{
+	environment_storage.environment_set_post_processing_shader(p_env, p_enable, p_post_processing_shader);
+}
+
+RID RendererSceneRender::environment_get_post_processing_shader(RID p_env) const {
+	return environment_storage.environment_get_post_processing_shader(p_env);
+}
+
+bool RendererSceneRender::environment_get_post_processing_shader_enabled(RID p_env) const
+{
+	return environment_storage.environment_get_post_processing_shader_enabled(p_env);
+}
+*/

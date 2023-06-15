@@ -32,7 +32,6 @@
 
 #include "core/error/error_macros.h"
 #include "core/io/resource_saver.h"
-#include "editor/editor_node.h"
 #include "editor/import/scene_import_settings.h"
 #include "scene/3d/area_3d.h"
 #include "scene/3d/collision_shape_3d.h"
@@ -74,7 +73,7 @@ void EditorSceneFormatImporter::get_extensions(List<String> *r_extensions) const
 	ERR_FAIL();
 }
 
-Node *EditorSceneFormatImporter::import_scene(const String &p_path, uint32_t p_flags, const HashMap<StringName, Variant> &p_options, List<String> *r_missing_deps, Error *r_err) {
+Node *EditorSceneFormatImporter::import_scene(const String &p_path, uint32_t p_flags, const HashMap<StringName, Variant> &p_options, List<String> *r_missing_deps, Error *r_err, EditorProgress* p_progress) {
 	Dictionary options_dict;
 	for (const KeyValue<StringName, Variant> &elem : p_options) {
 		options_dict[elem.key] = elem.value;
@@ -2275,7 +2274,7 @@ Node *ResourceImporterScene::pre_import(const String &p_source_file, const HashM
 	String ext = p_source_file.get_extension().to_lower();
 
 	// TRANSLATORS: This is an editor progress label.
-	EditorProgress progress("pre-import", TTR("Pre-Import Scene"), 0);
+	EditorProgress progress("pre-import", TTR("Pre-Import Scene"), 100);
 	progress.step(TTR("Importing Scene..."), 0);
 
 	for (Ref<EditorSceneFormatImporter> importer_elem : importers) {
@@ -2629,7 +2628,7 @@ void EditorSceneFormatImporterESCN::get_extensions(List<String> *r_extensions) c
 	r_extensions->push_back("escn");
 }
 
-Node *EditorSceneFormatImporterESCN::import_scene(const String &p_path, uint32_t p_flags, const HashMap<StringName, Variant> &p_options, List<String> *r_missing_deps, Error *r_err) {
+Node *EditorSceneFormatImporterESCN::import_scene(const String &p_path, uint32_t p_flags, const HashMap<StringName, Variant> &p_options, List<String> *r_missing_deps, Error *r_err, EditorProgress* p_progress) {
 	Error error;
 	Ref<PackedScene> ps = ResourceFormatLoaderText::singleton->load(p_path, p_path, &error);
 	ERR_FAIL_COND_V_MSG(!ps.is_valid(), nullptr, "Cannot load scene as text resource from path '" + p_path + "'.");

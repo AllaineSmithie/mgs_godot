@@ -1,1 +1,17 @@
-<svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><rect fill="#1e1a21" x="8" y="8" width="1008" height="1008" rx="176" stroke-width="16" stroke="#2e2832"/><g fill="#fff"><path d="M105 673v33q407 354 814 0v-33z"/><path fill="#478cbf" d="m105 673 152 14q12 1 15 14l4 67 132 10 8-61q2-11 15-15h162q13 4 15 15l8 61 132-10 4-67q3-13 15-14l152-14V427q30-39 56-81-35-59-83-108-43 20-82 47-40-37-88-64 7-51 8-102-59-28-123-42-26 43-46 89-49-7-98 0-20-46-46-89-64 14-123 42 1 51 8 102-48 27-88 64-39-27-82-47-48 49-83 108 26 42 56 81zm0 33v39c0 276 813 276 813 0v-39l-134 12-5 69q-2 10-14 13l-162 11q-12 0-16-11l-10-65H447l-10 65q-4 11-16 11l-162-11q-12-3-14-13l-5-69z"/><path d="M483 600c3 34 55 34 58 0v-86c-3-34-55-34-58 0z"/><circle cx="725" cy="526" r="90"/><circle cx="299" cy="526" r="90"/></g><g fill="#414042"><circle cx="307" cy="532" r="60"/><circle cx="717" cy="532" r="60"/></g></svg>
+<svg width="1024" height="1024" viewBox="0 0 270.933 270.933" xml:space="preserve" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="a">
+            <stop style="stop-color:#000;stop-opacity:0" offset="0"/>
+            <stop style="stop-color:#000;stop-opacity:1" offset="1"/>
+        </linearGradient>
+        <linearGradient id="b">
+            <stop style="stop-color:#000;stop-opacity:1" offset="0"/>
+            <stop style="stop-color:#000;stop-opacity:0" offset="1"/>
+        </linearGradient>
+        <linearGradient xlink:href="#a" id="d" x1="290.625" y1="209.91" x2="674.604" y2="209.91" gradientUnits="userSpaceOnUse"/>
+        <linearGradient xlink:href="#b" id="c" x1="-92.844" y1="209.91" x2="290.871" y2="209.91" gradientUnits="userSpaceOnUse"/>
+    </defs>
+    <path d="M290.871 220.75 112.201 81.229v208.98c0 32.894-.225 97.418-.328 124.21-26.012.327-205.88 37.677-204.711 41.35 4.645-.084 29.842-48.891 29.842-48.891l95.818-32.687V-26.186c0-5.856 3.962-9.763 5.954-9.763 85.29 70.309 166.775 137.2 252.064 207.507z" style="font-variation-settings:normal;opacity:1;fill:url(#c);fill-opacity:1;stroke-width:1.36385;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000;stop-opacity:1" transform="translate(32.766 13.23) scale(.35278)"/>
+    <path d="M290.625 220.75 469.559 81.229v208.98c0 32.894.225 97.418.328 124.21 26.012.327 205.88 37.677 204.711 41.35-4.645-.084-29.842-48.891-29.842-48.891l-95.818-32.687V-26.186c0-5.856-3.962-9.763-5.955-9.763-85.29 70.309-167.039 137.2-252.328 207.507Z" style="font-variation-settings:normal;opacity:1;fill:url(#d);fill-opacity:1;stroke-width:1.36385;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000;stop-opacity:1" transform="translate(32.766 13.23) scale(.35278)"/>
+    <text xml:space="preserve" style="font-size:52.3331px;font-variation-settings:normal;letter-spacing:.140178px;word-spacing:.18223px;opacity:1;vector-effect:none;fill:#000;fill-opacity:1;stroke:#a6a6a6;stroke-width:1.86903;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000;stop-opacity:1" x="-73.828" y="570.427" transform="matrix(.39371 0 0 .3161 32.766 13.23)"><tspan style="font-style:normal;font-variant:normal;font-weight:400;font-stretch:normal;font-size:52.3331px;font-family:'Lucida Bright';-inkscape-font-specification:'Lucida Bright';stroke-width:1.86906" x="-73.828" y="570.427">METRO    GAYA    SYSTEM</tspan></text>
+</svg>

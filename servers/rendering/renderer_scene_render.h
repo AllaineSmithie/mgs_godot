@@ -223,6 +223,11 @@ public:
 	bool environment_get_use_1d_color_correction(RID p_env) const;
 	RID environment_get_color_correction(RID p_env) const;
 
+	// Post Processing Shader
+	/*void environment_set_post_processing_shader(RID p_env, bool p_enable, RID p_post_processing_shader);
+	bool environment_get_post_processing_shader_enabled(RID p_env) const;
+	RID environment_get_post_processing_shader(RID p_env) const;*/
+
 	virtual Ref<Image> environment_bake_panorama(RID p_env, bool p_bake_irradiance, const Size2i &p_size) = 0;
 
 	virtual void positional_soft_shadow_filter_set_quality(RS::ShadowQuality p_quality) = 0;

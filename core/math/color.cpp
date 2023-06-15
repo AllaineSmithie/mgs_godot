@@ -481,6 +481,98 @@ Color Color::from_rgbe9995(uint32_t p_rgbe) {
 	return Color(rd, gd, bd, 1.0f);
 }
 
+Color Color::from_nm(float p_nm)
+{
+	Color result;
+	int nm_int = (int)(p_nm);
+	float sss = 1.0f;
+	if (nm_int >= 100 && nm_int < 380)
+	{
+		result.r = 0.91;
+		result.g = 0.77;
+		result.b = 1.0;
+
+	}
+	else if (nm_int >= 380 && nm_int < 440)
+	{
+		result.r = abs(nm_int - 440) / (440 - 350);
+		result.g = 0.0;
+		result.b = 1.0;
+
+	}
+	else if (nm_int >= 440 && nm_int < 490) {
+		result.r = 0.0;
+		result.g = abs(nm_int - 440) / (490 - 440);
+		result.b = 1.0;
+
+	}
+	else if (nm_int >= 490 && nm_int < 510) {
+		result.r = 0.0;
+		result.g = 1.0;
+		result.b = abs(nm_int - 510) / (510 - 490);
+
+	}
+	else if (nm_int >= 510 && nm_int < 580) {
+		result.r = abs(nm_int - 510) / (580 - 510);
+		result.g = 1.0;
+		result.b = 0.0;
+
+	}
+	else if (nm_int >= 580 && nm_int < 645)
+	{
+		result.r = 1.0;
+		result.g = abs(nm_int - 645) / (645 - 580);
+		result.b = 0.0;
+
+	}
+	else if (nm_int >= 645 && nm_int < 780)
+	{
+		result.r = 1.0;
+		result.g = 0.0;
+		result.g = 0.0;
+
+	}
+	else if (nm_int >= 780 && nm_int < 1000000)
+	{
+		result.r = 1.0;
+		result.g = 0.31;
+		result.b = 0.31;
+
+	}
+	else
+	{
+		result.r = 0.0;
+		result.g = 0.0;
+		result.b = 0.0;
+	}
+
+	//let the intensity sss fall off near the vision limits
+	if (nm_int >= 380 && nm_int < 420) {
+		sss = 0.3 + 0.7 * (nm_int - 350) / (420 - 350);
+
+	}
+	else if (nm_int >= 420 && nm_int <= 700) {
+		sss = 1.0;
+
+	}
+	else if (nm_int > 700 && nm_int <= 780) {
+		sss = 0.3 + 0.7 * (780 - nm_int) / (780 - 700);
+
+	}
+	else {
+		sss = 1.0;
+	}
+
+	sss *= 255;
+
+	result.r = int(sss * result.r);
+	result.g = int(sss * result.g);
+	result.b = int(sss * result.b);
+
+
+	return result;
+}
+
 Color::operator String() const {
 	return "(" + String::num(r, 4) + ", " + String::num(g, 4) + ", " + String::num(b, 4) + ", " + String::num(a, 4) + ")";
 }

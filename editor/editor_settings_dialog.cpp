@@ -795,7 +795,7 @@ EditorSettingsDialog::EditorSettingsDialog() {
 	// Adding event dialog
 	shortcut_editor = memnew(InputEventConfigurationDialog);
 	shortcut_editor->connect("confirmed", callable_mp(this, &EditorSettingsDialog::_event_config_confirmed));
-	shortcut_editor->set_allowed_input_types(INPUT_KEY);
+	shortcut_editor->set_allowed_input_types(INPUT_KEY | INPUT_MIDI | INPUT_OSC);
 	add_child(shortcut_editor);
 
 	set_hide_on_ok(true);

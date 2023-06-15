@@ -440,50 +440,48 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	float preset_contrast = 0;
 	bool preset_draw_extra_borders = false;
 
-	const float default_contrast = 0.3;
+	const float default_contrast = 0.35;
 
 	// Please use alphabetical order if you're adding a new theme here
 	// (after "Custom")
 
-	if (preset == "Custom") {
+	if (preset == "Custom")
+	{
 		accent_color = EDITOR_GET("interface/theme/accent_color");
 		base_color = EDITOR_GET("interface/theme/base_color");
 		contrast = EDITOR_GET("interface/theme/contrast");
-	} else if (preset == "Breeze Dark") {
-		preset_accent_color = Color(0.26, 0.76, 1.00);
-		preset_base_color = Color(0.24, 0.26, 0.28);
-		preset_contrast = default_contrast;
-	} else if (preset == "Godot 2") {
-		preset_accent_color = Color(0.53, 0.67, 0.89);
-		preset_base_color = Color(0.24, 0.23, 0.27);
-		preset_contrast = default_contrast;
-	} else if (preset == "Gray") {
-		preset_accent_color = Color(0.44, 0.73, 0.98);
+	}
+	else if (preset == "Gray")
+	{
+		preset_accent_color = Color(0.65, 0.0, 0.03);
 		preset_base_color = Color(0.24, 0.24, 0.24);
-		preset_contrast = default_contrast;
-	} else if (preset == "Light") {
-		preset_accent_color = Color(0.18, 0.50, 1.00);
-		preset_base_color = Color(0.9, 0.9, 0.9);
+		preset_contrast = 0.35;
+	}
+	else if (preset == "Dark")
+	{
+		preset_accent_color = Color(0.65, 0.0, 0.03);
+		preset_base_color = Color(0.1, 0.1, 0.1);
+		preset_contrast = 0.1;
+	}
+	else if (preset == "Light")
+	{
+		preset_accent_color = Color(0.65, 0.0, 0.03);
+		preset_base_color = Color(0.84, 0.84, 0.84);
+		preset_contrast = -0.15;
 		// A negative contrast rate looks better for light themes, since it better follows the natural order of UI "elevation".
-		preset_contrast = -0.08;
-	} else if (preset == "Solarized (Dark)") {
-		preset_accent_color = Color(0.15, 0.55, 0.82);
-		preset_base_color = Color(0.04, 0.23, 0.27);
-		preset_contrast = default_contrast;
-	} else if (preset == "Solarized (Light)") {
-		preset_accent_color = Color(0.15, 0.55, 0.82);
-		preset_base_color = Color(0.89, 0.86, 0.79);
-		// A negative contrast rate looks better for light themes, since it better follows the natural order of UI "elevation".
-		preset_contrast = -0.08;
-	} else if (preset == "Black (OLED)") {
-		preset_accent_color = Color(0.45, 0.75, 1.0);
+	}
+	else if (preset == "Black (OLED)")
+	{
+		preset_accent_color = Color(0.65, 0.0, 0.003);
 		preset_base_color = Color(0, 0, 0);
 		// The contrast rate value is irrelevant on a fully black theme.
 		preset_contrast = 0.0;
 		preset_draw_extra_borders = true;
-	} else { // Default
-		preset_accent_color = Color(0.44, 0.73, 0.98);
-		preset_base_color = Color(0.21, 0.24, 0.29);
+	}
+	else
+	{ // Default
+		preset_accent_color = Color(0.65, 0.0, 0.03);
+		preset_base_color = Color(0.1, 0.1, 0.1);
 		preset_contrast = default_contrast;
 	}
 
@@ -533,9 +531,9 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	const Color contrast_color_1 = base_color.lerp(mono_color, MAX(contrast, default_contrast));
 	const Color contrast_color_2 = base_color.lerp(mono_color, MAX(contrast * 1.5, default_contrast * 1.5));
 
-	const Color font_color = mono_color.lerp(base_color, 0.25);
-	const Color font_hover_color = mono_color.lerp(base_color, 0.125);
-	const Color font_focus_color = mono_color.lerp(base_color, 0.125);
+	const Color font_color = mono_color.lerp(base_color, 0.115/*0.0775*/);
+	const Color font_hover_color = mono_color.lerp(base_color, 0.15);
+	const Color font_focus_color = mono_color.lerp(base_color, 0.15);
 	const Color font_hover_pressed_color = font_hover_color.lerp(accent_color, 0.74);
 	const Color font_disabled_color = Color(mono_color.r, mono_color.g, mono_color.b, 0.35);
 	const Color font_readonly_color = Color(mono_color.r, mono_color.g, mono_color.b, 0.65);
@@ -544,6 +542,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	const Color selection_color = accent_color * Color(1, 1, 1, 0.4);
 	const Color disabled_color = mono_color.inverted().lerp(base_color, 0.7);
 	const Color disabled_bg_color = mono_color.inverted().lerp(base_color, 0.9);
+
 
 	const Color icon_normal_color = Color(1, 1, 1);
 	Color icon_hover_color = icon_normal_color * (dark_theme ? 1.15 : 1.45);

@@ -37,13 +37,18 @@ enum InputType {
 	INPUT_KEY = 1,
 	INPUT_MOUSE_BUTTON = 2,
 	INPUT_JOY_BUTTON = 4,
-	INPUT_JOY_MOTION = 8
+	INPUT_JOY_MOTION = 8,
+	// Redneck Jack 07.04.
+	INPUT_MIDI = 16,
+	INPUT_AUDIO = 32,
+	INPUT_DMX = 64,
+	INPUT_OSC = 128,
 };
 
 class EventListenerLineEdit : public LineEdit {
 	GDCLASS(EventListenerLineEdit, LineEdit)
 
-	int allowed_input_types = INPUT_KEY | INPUT_MOUSE_BUTTON | INPUT_JOY_BUTTON | INPUT_JOY_MOTION;
+	int allowed_input_types = INPUT_KEY | INPUT_MOUSE_BUTTON | INPUT_JOY_BUTTON | INPUT_JOY_MOTION | INPUT_AUDIO | INPUT_MIDI | INPUT_DMX | INPUT_OSC;
 	bool ignore_next_event = true;
 	bool share_keycodes = false;
 	Ref<InputEvent> event;

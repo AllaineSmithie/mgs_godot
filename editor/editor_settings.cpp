@@ -52,6 +52,9 @@
 #include "scene/main/scene_tree.h"
 #include "scene/main/window.h"
 
+// Redneck Jack 08.04.23
+#include "../servers/audio_server.h"
+
 // PRIVATE METHODS
 
 Ref<EditorSettings> EditorSettings::singleton = nullptr;
@@ -394,7 +397,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	}
 
 	/* Interface */
-
+	
 	// Editor
 	// Display what the Auto display scale setting effectively corresponds to.
 	const String display_scale_hint_string = vformat("Auto (%d%%),75%%,100%%,125%%,150%%,175%%,200%%,Custom", Math::round(get_auto_display_scale() * 100));
@@ -414,7 +417,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	EDITOR_SETTING_USAGE(Variant::BOOL, PROPERTY_HINT_NONE, "interface/editor/expand_to_title", true, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_RESTART_IF_CHANGED)
 
 	EDITOR_SETTING_USAGE(Variant::FLOAT, PROPERTY_HINT_RANGE, "interface/editor/custom_display_scale", 1.0, "0.5,3,0.01", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_RESTART_IF_CHANGED)
-	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_RANGE, "interface/editor/main_font_size", 14, "8,48,1")
+	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_RANGE, "interface/editor/main_font_size", 13, "8,48,1")
 	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_RANGE, "interface/editor/code_font_size", 14, "8,48,1")
 	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interface/editor/code_font_contextual_ligatures", 1, "Enabled,Disable Contextual Alternates (Coding Ligatures),Use Custom OpenType Feature Set")
 	_initial_set("interface/editor/code_font_custom_opentype_features", "");
@@ -457,10 +460,10 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	EDITOR_SETTING(Variant::FLOAT, PROPERTY_HINT_RANGE, "interface/inspector/float_drag_speed", 5.0, "0.1,100,0.01")
 
 	// Theme
-	EDITOR_SETTING(Variant::STRING, PROPERTY_HINT_ENUM, "interface/theme/preset", "Default", "Default,Breeze Dark,Godot 2,Gray,Light,Solarized (Dark),Solarized (Light),Black (OLED),Custom")
+	EDITOR_SETTING(Variant::STRING, PROPERTY_HINT_ENUM, "interface/theme/preset", "Default", "Default,Dark,Light,Grey,Custom,Black (OLED),Custom")
 	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interface/theme/icon_and_font_color", 0, "Auto,Dark,Light")
-	EDITOR_SETTING(Variant::COLOR, PROPERTY_HINT_NONE, "interface/theme/base_color", Color(0.2, 0.23, 0.31), "")
-	EDITOR_SETTING(Variant::COLOR, PROPERTY_HINT_NONE, "interface/theme/accent_color", Color(0.41, 0.61, 0.91), "")
+	EDITOR_SETTING(Variant::COLOR, PROPERTY_HINT_NONE, "interface/theme/base_color", Color(0.1, 0.1, 0.1), "")
+	EDITOR_SETTING(Variant::COLOR, PROPERTY_HINT_NONE, "interface/theme/accent_color", Color(0.65, 0.0, 0.03), "")
 	EDITOR_SETTING(Variant::FLOAT, PROPERTY_HINT_RANGE, "interface/theme/contrast", 0.3, "-1,1,0.01")
 	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "interface/theme/draw_extra_borders", false, "")
 	EDITOR_SETTING(Variant::FLOAT, PROPERTY_HINT_RANGE, "interface/theme/icon_saturation", 1.0, "0,2,0.01")
@@ -490,6 +493,49 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "interface/multi_window/restore_windows_on_load", true, "");
 	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "interface/multi_window/maximize_window", false, "");
 	set_restart_if_changed("interface/multi_window/enable", true);
+
+	/* Interfaces Manager */
+	// Temporarily here, should merge with existing structure and advanced rules like audio
+
+	// Audio
+	const PackedStringArray all_devices = AudioServer::get_singleton()->get_input_device_list();
+	String all_devices_string = "none";
+	for (auto d : all_devices)
+		all_devices_string = all_devices_string + "," + d;
+
+	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/audio/driver", 0, all_devices_string)
+	const String samplerates_hint = "External,22.05 khz,44.1 khz,48.0 khz,88.2 khz,96.0 khz,192.0 khz";
+	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/audio/samplerate", 2, samplerates_hint)
+	const String bit_hint = "16bit,24bit,32bit(float),64bit(float)";
+	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/audio/quality", 2, bit_hint)
+
+	// Midi
+	OS::get_singleton()->close_midi_inputs();
+	OS::get_singleton()->open_midi_inputs();
+	const PackedStringArray all_midi_devices = OS::get_singleton()->get_connected_midi_inputs();
+	all_devices_string = "none";
+	for (auto d : all_midi_devices)
+		all_devices_string = all_devices_string + "," + d;
+
+	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/midi/interface", 0, all_devices_string)
+	const String channel_hint = "Omni,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16";
+	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/midi/channel", 0, channel_hint)
+
+	// DMX
+	all_devices_string = "none";
+	/*const PackedStringArray all_dmx_usb_devices = ShowEngine::get_singleton()->get_connected_dmx_usb_inputs();
+	
+	for (auto d : all_dmx_usb_devices )
+		all_devices_string = all_devices_string + "," + d;
+		*/
+	all_devices_string += ",Artnet";
+	all_devices_string += ",sACN";
+	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/dmx/interface", 0, all_devices_string)
+	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_RANGE, "interfaces_manager/dmx/channel", -1, "-1,511,1")
+
+	// OSC
+	EDITOR_SETTING(Variant::STRING, PROPERTY_HINT_LINK, "interfaces_manager/osc/adress", "/", all_devices_string)
+	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_RANGE, "interfaces_manager/dmx/channel", -1, "-1,511,1")
 
 	/* Filesystem */
 
@@ -817,7 +863,7 @@ void EditorSettings::_load_godot2_text_editor_theme() {
 	_initial_set("text_editor/theme/highlighting/completion_scroll_color", Color(1, 1, 1, 0.29));
 	_initial_set("text_editor/theme/highlighting/completion_scroll_hovered_color", Color(1, 1, 1, 0.4));
 	_initial_set("text_editor/theme/highlighting/completion_font_color", Color(0.67, 0.67, 0.67));
-	_initial_set("text_editor/theme/highlighting/text_color", Color(0.67, 0.67, 0.67));
+	_initial_set("text_editor/theme/highlighting/text_color", Color(0.87, 0.87, 0.87));
 	_initial_set("text_editor/theme/highlighting/line_number_color", Color(0.67, 0.67, 0.67, 0.4));
 	_initial_set("text_editor/theme/highlighting/safe_line_number_color", Color(0.67, 0.78, 0.67, 0.6));
 	_initial_set("text_editor/theme/highlighting/caret_color", Color(0.67, 0.67, 0.67));

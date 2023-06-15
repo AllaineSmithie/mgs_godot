@@ -128,11 +128,18 @@ bool EventListenerLineEdit::_is_event_allowed(const Ref<InputEvent> &p_event) co
 	const Ref<InputEventKey> k = p_event;
 	const Ref<InputEventJoypadButton> jb = p_event;
 	const Ref<InputEventJoypadMotion> jm = p_event;
+	// Redneck Jack 07.04.
+	//const Ref<InputEventAudio> audio = p_event;
+	const Ref<InputEventMIDI> mid = p_event;
+	const Ref<InputEventDMX> dmx = p_event;
+	const Ref<InputEventOSC> osc = p_event;
 
 	return (mb.is_valid() && (allowed_input_types & INPUT_MOUSE_BUTTON)) ||
 			(k.is_valid() && (allowed_input_types & INPUT_KEY)) ||
 			(jb.is_valid() && (allowed_input_types & INPUT_JOY_BUTTON)) ||
-			(jm.is_valid() && (allowed_input_types & INPUT_JOY_MOTION));
+			(mid.is_valid() && (allowed_input_types & INPUT_MIDI)) /*Redneck Jack 07.04.*/ ||
+			(dmx.is_valid() && (allowed_input_types & INPUT_DMX)) ||
+			(osc.is_valid() && (allowed_input_types & INPUT_OSC));
 }
 
 void EventListenerLineEdit::gui_input(const Ref<InputEvent> &p_event) {

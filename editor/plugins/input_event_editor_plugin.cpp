@@ -65,6 +65,12 @@ void InputEventConfigContainer::set_event(const Ref<InputEvent> &p_event) {
 	Ref<InputEventJoypadButton> jb = p_event;
 	Ref<InputEventJoypadMotion> jm = p_event;
 
+	// Redneck Jack 07.04.
+	Ref<InputEventAudio> audio = p_event;
+	Ref<InputEventMIDI> mid = p_event;
+	Ref<InputEventDMX> dmx = p_event;
+	Ref<InputEventOSC> osc = p_event;
+
 	if (k.is_valid()) {
 		config_dialog->set_allowed_input_types(INPUT_KEY);
 	} else if (m.is_valid()) {
@@ -74,6 +80,16 @@ void InputEventConfigContainer::set_event(const Ref<InputEvent> &p_event) {
 	} else if (jm.is_valid()) {
 		config_dialog->set_allowed_input_types(INPUT_JOY_MOTION);
 	}
+	// Redneck Jack
+	  else if (audio.is_valid()) {
+		config_dialog->set_allowed_input_types(INPUT_AUDIO);
+	} else if (mid.is_valid()) {
+		config_dialog->set_allowed_input_types(INPUT_MIDI);
+	} else if (dmx.is_valid()) {
+		config_dialog->set_allowed_input_types(INPUT_DMX);
+	} else if (osc.is_valid()) {
+		config_dialog->set_allowed_input_types(INPUT_OSC);
+	} 
 
 	input_event = p_event;
 	_event_changed();

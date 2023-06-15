@@ -355,7 +355,7 @@ void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const Rende
 
 		rb->allocate_blur_textures();
 
-		RendererRD::BokehDOF::BokehBuffers buffers;
+		RendererRD::BokehDOF::BokehBuffers buffers;		
 
 		// Textures we use
 		buffers.base_texture_size = rb->get_internal_size();
@@ -569,6 +569,20 @@ void RendererSceneRenderRD::_render_buffers_post_process_and_tonemap(const Rende
 
 		RD::get_singleton()->draw_command_end_label();
 	}
+
+	// Deactivated for now
+	/* {
+		RENDER_TIMESTAMP("Post Processing Shader");
+		RD::get_singleton()->draw_command_begin_label("Post Processing Shader");
+
+		if (environment_get_post_processing_shader_enabled(p_render_data->environment))
+		{
+			RID pps = environment_get_post_processing_shader(p_render_data->environment);
+			if (pps.is_valid())
+				true;
+		}
+		RD::get_singleton()->draw_command_end_label();
+	}*/
 
 	if (fsr && can_use_effects && rb->get_scaling_3d_mode() == RS::VIEWPORT_SCALING_3D_MODE_FSR) {
 		RD::get_singleton()->draw_command_begin_label("FSR 1.0 Upscale");

@@ -3223,8 +3223,9 @@ Error GLTFDocument::_parse_images(Ref<GLTFState> p_state, const String &p_base_p
 		}
 
 		String image_name;
-		if (dict.has("name")) {
-			image_name = dict["name"];
+		if (d.has("name")) {
+			image_name = d["name"];
+			image_name = image_name.replace("<", "_").replace(">", "_"); // Redneck Jack 10.04.23 -> replace "<" and ">" with "_" for os-specific generality
 			image_name = image_name.get_file().get_basename().validate_filename();
 		}
 		if (image_name.is_empty()) {
@@ -3249,7 +3250,7 @@ Error GLTFDocument::_parse_images(Ref<GLTFState> p_state, const String &p_base_p
 			} else { // Relative path to an external image file.
 				ERR_FAIL_COND_V(p_base_path.is_empty(), ERR_INVALID_PARAMETER);
 				uri = uri.uri_decode();
-				uri = p_base_path.path_join(uri).replace("\\", "/"); // Fix for Windows.
+				uri = p_base_path.path_join(uri).replace("\\", "/").replace("<", "_").replace(">", "_"); // Fix for Windows, Fix for MVR/Vectorworks, Fix for MVR/Vectorworks.
 				// ResourceLoader will rely on the file extension to use the relevant loader.
 				// The spec says that if mimeType is defined, it should take precedence (e.g.
 				// there could be a `.png` image which is actually JPEG), but there's no easy
@@ -3762,6 +3763,14 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> p_state) {
 		} else if (base_material->get_transparency() != BaseMaterial3D::TRANSPARENCY_DISABLED) {
 			d["alphaMode"] = "BLEND";
 		}
+
+		Dictionary extensions;
+		if (base_material->get_shading_mode() == BaseMaterial3D::SHADING_MODE_UNSHADED) {
+			Dictionary mat_unlit;
+			extensions["KHR_materials_unlit"] = mat_unlit;
+			p_state->add_used_extension("KHR_materials_unlit");
+		}
+		d["extensions"] = extensions;
 
 		Dictionary extensions;
 		if (base_material->get_shading_mode() == BaseMaterial3D::SHADING_MODE_UNSHADED) {

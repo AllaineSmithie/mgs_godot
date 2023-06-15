@@ -200,6 +200,7 @@ private:
 
 	struct Bus {
 		StringName name;
+		uint32_t uuid = -1;
 		bool solo = false;
 		bool mute = false;
 		bool bypass = false;
@@ -331,9 +332,11 @@ public:
 	void add_bus(int p_at_pos = -1);
 
 	void move_bus(int p_bus, int p_to_pos);
+	Bus* get_bus(int p_bus_index);
 
 	void set_bus_name(int p_bus, const String &p_name);
 	String get_bus_name(int p_bus) const;
+	uint32_t get_bus_uuid(int p_bus) const;
 	int get_bus_index(const StringName &p_bus_name) const;
 
 	int get_bus_channels(int p_bus) const;

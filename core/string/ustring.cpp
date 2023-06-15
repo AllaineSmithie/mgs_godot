@@ -4714,6 +4714,15 @@ String String::get_basename() const {
 
 	return substr(0, pos);
 }
+String String::get_parent_directory() const {
+	int pos = rfind(".");
+	if (pos < 0 || pos < MAX(rfind("/"), rfind("\\"))) {
+		pos = MAX(rfind("/"), rfind("\\"));
+	}
+
+	pos = MAX(rfind("/"), rfind("\\"));
+	return substr(0, pos + 1);
+}
 
 String itos(int64_t p_val) {
 	return String::num_int64(p_val);

@@ -46,15 +46,19 @@ void EditorSceneFormatImporterGLTF::get_extensions(List<String> *r_extensions) c
 
 Node *EditorSceneFormatImporterGLTF::import_scene(const String &p_path, uint32_t p_flags,
 		const HashMap<StringName, Variant> &p_options,
-		List<String> *r_missing_deps, Error *r_err) {
+		List<String> *r_missing_deps, Error *r_err, EditorProgress* p_progress) {
 	Ref<GLTFDocument> gltf;
 	gltf.instantiate();
 	Ref<GLTFState> state;
 	state.instantiate();
+	if (p_progress)
+		p_progress->step(TTR("Importing glTF..."), 0);
 	if (p_options.has("gltf/embedded_image_handling")) {
 		int32_t enum_option = p_options["gltf/embedded_image_handling"];
 		state->set_handle_binary_image(enum_option);
 	}
+	if (p_progress)
+		p_progress->step(TTR("loading glTF file"), 50);
 	Error err = gltf->append_from_file(p_path, state, p_flags);
 	if (err != OK) {
 		if (r_err) {
@@ -63,6 +67,8 @@ Node *EditorSceneFormatImporterGLTF::import_scene(const String &p_path, uint32_t
 		return nullptr;
 	}
 	if (p_options.has("animation/import")) {
+		if (p_progress)
+			p_progress->step(TTR("loading glTF animations"), 750);
 		state->set_create_animations(bool(p_options["animation/import"]));
 	}
 

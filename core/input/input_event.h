@@ -553,6 +553,75 @@ public:
 	InputEventMIDI() {}
 };
 
+// Redneck Jack
+class InputEventAudio: public InputEvent {
+	GDCLASS(InputEventAudio, InputEvent);
+
+	int channel_index = 0;
+	double threshold = 0.0;
+
+protected:
+	static void _bind_methods();
+
+public:
+	void set_channel(const int p_channel_index);
+	int get_channel() const;
+
+	void set_threshold_db(const double p_message);
+	double get_threshold_db() const;
+
+	virtual String as_text() const override;
+	virtual String to_string() override;
+
+	InputEventAudio() {}
+};
+
+class InputEventDMX: public InputEvent {
+	GDCLASS(InputEventDMX, InputEvent);
+
+	int universe = 0;
+	int channel = 0;
+	int value = 0;
+
+protected:
+	static void _bind_methods();
+
+public:
+	void set_universe(const int p_universe);
+	int get_universe() const;
+
+	void set_channel(const int p_channel);
+	int get_channel() const;
+
+	void set_value(const int p_value);
+	int get_value() const;
+
+	virtual String as_text() const override;
+	virtual String to_string() override;
+
+	InputEventDMX() {}
+};
+
+
+class InputEventOSC: public InputEvent {
+	GDCLASS(InputEventOSC, InputEvent);
+
+	String message;
+
+protected:
+	static void _bind_methods();
+
+public:
+	void set_message(const String p_universe);
+	String get_message() const;
+
+	virtual String as_text() const override;
+	virtual String to_string() override;
+
+	InputEventOSC() {}
+};
+
+
 class InputEventShortcut : public InputEvent {
 	GDCLASS(InputEventShortcut, InputEvent);
 

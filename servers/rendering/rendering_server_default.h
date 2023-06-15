@@ -706,6 +706,8 @@ public:
 
 	FUNC7(environment_set_adjustment, RID, bool, float, float, float, bool, RID)
 
+	//FUNC3(environment_set_post_processing_shader, RID, bool, RID)
+
 	FUNC10(environment_set_fog, RID, bool, const Color &, float, float, float, float, float, float, float)
 	FUNC14(environment_set_volumetric_fog, RID, bool, float, const Color &, const Color &, float, float, float, float, float, bool, float, float, float)
 

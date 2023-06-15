@@ -1,0 +1,3 @@
+[submodule "modules/portaudio"]
+	path = modules/portaudio
+	url = https://github.com/sebastian-heinz/portaudio.git

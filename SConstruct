@@ -145,7 +145,6 @@ env_base.__class__.use_windows_spawn_fix = methods.use_windows_spawn_fix
 
 env_base.__class__.add_shared_library = methods.add_shared_library
 env_base.__class__.add_library = methods.add_library
-env_base.__class__.add_program = methods.add_program
 env_base.__class__.CommandNoCache = methods.CommandNoCache
 env_base.__class__.Run = methods.Run
 env_base.__class__.disable_warnings = methods.disable_warnings
@@ -186,7 +185,7 @@ opts.Add(
 opts.Add(BoolVariable("debug_symbols", "Build with debugging symbols", False))
 opts.Add(BoolVariable("separate_debug_symbols", "Extract debugging symbols to a separate file", False))
 opts.Add(EnumVariable("lto", "Link-time optimization (production builds)", "none", ("none", "auto", "thin", "full")))
-opts.Add(BoolVariable("production", "Set defaults to build Godot for use in production", False))
+opts.Add(BoolVariable("production", "Set defaults to build MGS for use in production", False))
 
 # Components
 opts.Add(BoolVariable("deprecated", "Enable compatibility code for deprecated and removed features", True))
@@ -202,6 +201,16 @@ opts.Add("custom_modules", "A list of comma-separated directory paths containing
 opts.Add(BoolVariable("custom_modules_recursive", "Detect custom modules recursively for each specified path.", True))
 
 # Advanced options
+opts.Add(
+    EnumVariable(
+        "library_type",
+        "Build library type",
+        "executable",
+        ("executable", "static_library", "shared_library", "vst", "au", "lv2"),
+    )
+)
+
+
 opts.Add(BoolVariable("dev_mode", "Alias for dev options: verbose=yes warnings=extra werror=yes tests=yes", False))
 opts.Add(BoolVariable("tests", "Build the unit tests", False))
 opts.Add(BoolVariable("fast_unsafe", "Enable unsafe options for faster rebuilds", False))
@@ -212,7 +221,7 @@ opts.Add(EnumVariable("warnings", "Level of compilation warnings", "all", ("extr
 opts.Add(BoolVariable("werror", "Treat compiler warnings as errors", False))
 opts.Add("extra_suffix", "Custom extra suffix added to the base filename of all generated binary files", "")
 opts.Add(BoolVariable("vsproj", "Generate a Visual Studio solution", False))
-opts.Add("vsproj_name", "Name of the Visual Studio solution", "godot")
+opts.Add("vsproj_name", "Name of the Visual Studio solution", "metro_gaya_system")
 opts.Add(BoolVariable("disable_3d", "Disable 3D nodes for a smaller executable", False))
 opts.Add(BoolVariable("disable_advanced_gui", "Disable advanced GUI nodes and behaviors", False))
 opts.Add("build_profile", "Path to a file containing a feature build profile", "")
@@ -227,6 +236,7 @@ opts.Add(BoolVariable("use_precise_math_checks", "Math checks use very precise e
 opts.Add(BoolVariable("scu_build", "Use single compilation unit build", False))
 
 # Thirdparty libraries
+opts.Add(BoolVariable('builtin_assimp', "Use the built-in Assimp library", True))
 opts.Add(BoolVariable("builtin_certs", "Use the built-in SSL certificates bundles", True))
 opts.Add(BoolVariable("builtin_embree", "Use the built-in Embree library", True))
 opts.Add(BoolVariable("builtin_enet", "Use the built-in ENet library", True))
@@ -271,6 +281,35 @@ opts.Update(env_base)
 
 selected_platform = ""
 
+if env_base["library_type"] == "static_library":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
+elif env_base["library_type"] == "shared_library":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
+    env_base.Append(CCFLAGS=["-fPIC"])
+    env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
+elif env_base["library_type"] == "vst":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
+    env_base.Append(CCFLAGS=["-fPIC"])
+    env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
+    env_base["library_type"] == "shared_library"
+elif env_base["library_type"] == "au":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_AU_BUILD"])
+    env_base.Append(CCFLAGS=["-fPIC"])
+    env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
+    env_base["library_type"] == "shared_library"
+elif env_base["library_type"] == "lv2":
+    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    env_base.Append(CPPDEFINES=["MGS_LV2_BUILD"])
+    env_base.Append(CCFLAGS=["-fPIC"])
+    env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
+    env_base["library_type"] == "shared_library"
+else:
+    env_base.__class__.add_program = methods.add_program
+
 if env_base["platform"] != "":
     selected_platform = env_base["platform"]
 elif env_base["p"] != "":
@@ -301,21 +340,21 @@ else:
 if selected_platform in ["macos", "osx"]:
     if selected_platform == "osx":
         # Deprecated alias kept for compatibility.
-        print('Platform "osx" has been renamed to "macos" in Godot 4.0. Building for platform "macos".')
+        print('Platform "osx" has been renamed to "macos" in Metro Gaya System 0.1. Building for platform "macos".')
     # Alias for convenience.
     selected_platform = "macos"
 
 if selected_platform in ["ios", "iphone"]:
     if selected_platform == "iphone":
         # Deprecated alias kept for compatibility.
-        print('Platform "iphone" has been renamed to "ios" in Godot 4.0. Building for platform "ios".')
+        print('Platform "iphone" has been renamed to "ios" in Metro Gaya System 0.1. Building for platform "ios".')
     # Alias for convenience.
     selected_platform = "ios"
 
 if selected_platform in ["linux", "bsd", "x11"]:
     if selected_platform == "x11":
         # Deprecated alias kept for compatibility.
-        print('Platform "x11" has been renamed to "linuxbsd" in Godot 4.0. Building for platform "linuxbsd".')
+        print('Platform "x11" has been renamed to "linuxbsd" in Metro Gaya System 0.1. Building for platform "linuxbsd".')
     # Alias for convenience.
     selected_platform = "linuxbsd"
 

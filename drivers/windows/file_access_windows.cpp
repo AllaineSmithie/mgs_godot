@@ -367,7 +367,7 @@ uint64_t FileAccessWindows::_get_modified_time(const String &p_file) {
 
 	String file = fix_path(p_file);
 	if (file.ends_with("/") && file != "/") {
-		file = file.substr(0, file.length() - 1);
+		file = file.substr(0, file.size() - 1);
 	}
 
 	struct _stat st;
