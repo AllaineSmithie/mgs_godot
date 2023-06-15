@@ -100,6 +100,7 @@
 #include "editor/plugins/skeleton_2d_editor_plugin.h"
 #include "editor/plugins/skeleton_3d_editor_plugin.h"
 #include "editor/plugins/skeleton_ik_3d_editor_plugin.h"
+#include "editor/plugins/source_editor_plugin.h"
 #include "editor/plugins/sprite_2d_editor_plugin.h"
 #include "editor/plugins/sprite_frames_editor_plugin.h"
 #include "editor/plugins/style_box_editor_plugin.h"
@@ -228,6 +229,9 @@ void register_editor_types() {
 	EditorPlugins::add_by_type<Skeleton2DEditorPlugin>();
 	EditorPlugins::add_by_type<Sprite2DEditorPlugin>();
 	EditorPlugins::add_by_type<TilesEditorPlugin>();
+
+	// Source Editor
+	EditorPlugins::add_by_type<SourceEditorPlugin>();
 
 	// For correct doc generation.
 	GLOBAL_DEF("editor/run/main_run_args", "");

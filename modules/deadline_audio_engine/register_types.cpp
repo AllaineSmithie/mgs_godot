@@ -1,4 +1,3 @@
-#ifndef _DEADLINE_AUDIO_NGINE_DISABLED
 
 #include "register_types.h"
 #include "core/object/class_db.h"
@@ -14,7 +13,8 @@
 #include "audio_formats/resource_importer_pro.h"
 #endif
 
-DeadlineAudioEngine* _deadline_audio_engine = nullptr;
+static DeadlineAudioEngine* _deadline_audio_engine = nullptr;
+
 void initialize_deadline_audio_engine_module(ModuleInitializationLevel p_level)
 {
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SERVERS)
@@ -59,5 +59,3 @@ void uninitialize_deadline_audio_engine_module(ModuleInitializationLevel p_level
 		memdelete(_deadline_audio_engine);
 	}
 }
-
-#endif

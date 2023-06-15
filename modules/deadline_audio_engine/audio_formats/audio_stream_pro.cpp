@@ -10,14 +10,15 @@ inline void AudioStreamPlaybackPRO::_fillRBuffer(int k, int p_frames, AudioFrame
 {
 	int j = k;
 	assert(buffer_position + p_frames <= voice_buffer.getNumSamples());
-	for (; j < p_frames; j++)
+	for (; j < k + p_frames; j++)
 	{
 		p_buffer[j].l = voice_buffer.getSample(0, buffer_position + j - k);
 	}
-	for (j = k; j < p_frames; j++)
+	for (j = k; j < k + p_frames; j++)
 	{
 		p_buffer[j].r = voice_buffer.getSample(1, buffer_position + j - k);
 	}
+
 }
 
 int AudioStreamPlaybackPRO::mix(AudioFrame* p_buffer, float p_rate_scale, int p_frames)

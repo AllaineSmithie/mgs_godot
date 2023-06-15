@@ -7,7 +7,7 @@ def get_doc_path():
 def get_doc_classes():
     return [
         "DeadlineAudioEngine"
-        "AudioStreamFLAC"
+        "AudioStreamPRO"
     ]
 
 

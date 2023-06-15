@@ -3223,8 +3223,8 @@ Error GLTFDocument::_parse_images(Ref<GLTFState> p_state, const String &p_base_p
 		}
 
 		String image_name;
-		if (d.has("name")) {
-			image_name = d["name"];
+		if (dict.has("name")) {
+			image_name = dict["name"];
 			image_name = image_name.replace("<", "_").replace(">", "_"); // Redneck Jack 10.04.23 -> replace "<" and ">" with "_" for os-specific generality
 			image_name = image_name.get_file().get_basename().validate_filename();
 		}
@@ -3760,17 +3760,10 @@ Error GLTFDocument::_serialize_materials(Ref<GLTFState> p_state) {
 		if (base_material->get_transparency() == BaseMaterial3D::TRANSPARENCY_ALPHA_SCISSOR) {
 			d["alphaMode"] = "MASK";
 			d["alphaCutoff"] = base_material->get_alpha_scissor_threshold();
-		} else if (base_material->get_transparency() != BaseMaterial3D::TRANSPARENCY_DISABLED) {
+		}
+		else if (base_material->get_transparency() != BaseMaterial3D::TRANSPARENCY_DISABLED) {
 			d["alphaMode"] = "BLEND";
 		}
-
-		Dictionary extensions;
-		if (base_material->get_shading_mode() == BaseMaterial3D::SHADING_MODE_UNSHADED) {
-			Dictionary mat_unlit;
-			extensions["KHR_materials_unlit"] = mat_unlit;
-			p_state->add_used_extension("KHR_materials_unlit");
-		}
-		d["extensions"] = extensions;
 
 		Dictionary extensions;
 		if (base_material->get_shading_mode() == BaseMaterial3D::SHADING_MODE_UNSHADED) {
