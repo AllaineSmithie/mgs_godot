@@ -31,9 +31,9 @@
 #ifndef IMPORT_UTILS_H
 #define IMPORT_UTILS_H
 
+#include "import_state.h"
 #include <core/io/image_loader.h>
 #include <core/io/dir_access.h>
-#include "import_state.h"
 
 #include <thirdparty/assimp/include/assimp/SceneCombiner.h>
 #include <thirdparty/assimp/include/assimp/cexport.h>
@@ -42,11 +42,11 @@
 #include <thirdparty/assimp/include/assimp/pbrmaterial.h>
 #include <thirdparty/assimp/include/assimp/postprocess.h>
 #include <thirdparty/assimp/include/assimp/scene.h>
+#include <string>
 #include <thirdparty/assimp/include/assimp/DefaultLogger.hpp>
 #include <thirdparty/assimp/include/assimp/Importer.hpp>
 #include <thirdparty/assimp/include/assimp/LogStream.hpp>
 #include <thirdparty/assimp/include/assimp/Logger.hpp>
-#include <string>
 
 using namespace AssimpImporter;
 
@@ -91,14 +91,14 @@ using namespace AssimpImporter;
 #define AI_MATKEY_FBX_MAYA_STINGRAY_AO_UV_XFORM "$raw.Maya|TEX_ao_map|uvtrafo"
 
 /**
- * Assimp Utils
- * Conversion tools / glue code to convert from assimp to godot
-*/
+  * Assimp Utils
+  * Conversion tools / glue code to convert from assimp to godot
+  */
 class AssimpUtils {
 public:
 	/**
-	 * calculate tangents for mesh data from assimp data
-	 */
+	  * calculate tangents for mesh data from assimp data
+	  */
 	static void calc_tangent_from_mesh(const aiMesh *ai_mesh, int i, int tri_index, int index, PackedColorArray &w) {
 		const aiVector3D normals = ai_mesh->mAnimMeshes[i]->mNormals[tri_index];
 		const Vector3 godot_normal = Vector3(normals.x, normals.y, normals.z);
@@ -147,8 +147,8 @@ public:
 	};
 
 	/** Get assimp string
-    * automatically filters the string data
-    */
+      * automatically filters the string data
+      */
 	static String get_assimp_string(const aiString &p_string) {
 		//convert an assimp String to a Godot String
 		String name;
@@ -175,10 +175,10 @@ public:
 	}
 
 	/**
-     * No filter logic get_raw_string_from_assimp
-     * This just convers the aiString to a parsed utf8 string
-     * Without removing special chars etc
-     */
+      * No filter logic get_raw_string_from_assimp
+      * This just convers the aiString to a parsed utf8 string
+      * Without removing special chars etc
+      */
 	static String get_raw_string_from_assimp(const aiString &p_string) {
 		String name;
 		name.parse_utf8(p_string.C_Str() /*,p_string.length*/);
@@ -190,8 +190,8 @@ public:
 	}
 
 	/**
-     * Converts aiMatrix4x4 to godot Transform3D
-    */
+      * Converts aiMatrix4x4 to godot Transform3D
+      */
 	static const Transform3D assimp_matrix_transform(const aiMatrix4x4 p_matrix) {
 		aiMatrix4x4 matrix = p_matrix;
 		Transform3D xform;
@@ -200,23 +200,37 @@ public:
 	}
 
 	/** Get fbx fps for time mode meta data
-     */
+      */
 	static float get_fbx_fps(int32_t time_mode, const aiScene *p_scene) {
 		switch (time_mode) {
-			case AssetImportFbx::TIME_MODE_DEFAULT: return 24; //hack
-			case AssetImportFbx::TIME_MODE_120: return 120;
-			case AssetImportFbx::TIME_MODE_100: return 100;
-			case AssetImportFbx::TIME_MODE_60: return 60;
-			case AssetImportFbx::TIME_MODE_50: return 50;
-			case AssetImportFbx::TIME_MODE_48: return 48;
-			case AssetImportFbx::TIME_MODE_30: return 30;
-			case AssetImportFbx::TIME_MODE_30_DROP: return 30;
-			case AssetImportFbx::TIME_MODE_NTSC_DROP_FRAME: return 29.9700262f;
-			case AssetImportFbx::TIME_MODE_NTSC_FULL_FRAME: return 29.9700262f;
-			case AssetImportFbx::TIME_MODE_PAL: return 25;
-			case AssetImportFbx::TIME_MODE_CINEMA: return 24;
-			case AssetImportFbx::TIME_MODE_1000: return 1000;
-			case AssetImportFbx::TIME_MODE_CINEMA_ND: return 23.976f;
+			case AssetImportFbx::TIME_MODE_DEFAULT:
+				return 24; //hack
+			case AssetImportFbx::TIME_MODE_120:
+				return 120;
+			case AssetImportFbx::TIME_MODE_100:
+				return 100;
+			case AssetImportFbx::TIME_MODE_60:
+				return 60;
+			case AssetImportFbx::TIME_MODE_50:
+				return 50;
+			case AssetImportFbx::TIME_MODE_48:
+				return 48;
+			case AssetImportFbx::TIME_MODE_30:
+				return 30;
+			case AssetImportFbx::TIME_MODE_30_DROP:
+				return 30;
+			case AssetImportFbx::TIME_MODE_NTSC_DROP_FRAME:
+				return 29.9700262f;
+			case AssetImportFbx::TIME_MODE_NTSC_FULL_FRAME:
+				return 29.9700262f;
+			case AssetImportFbx::TIME_MODE_PAL:
+				return 25;
+			case AssetImportFbx::TIME_MODE_CINEMA:
+				return 24;
+			case AssetImportFbx::TIME_MODE_1000:
+				return 1000;
+			case AssetImportFbx::TIME_MODE_CINEMA_ND:
+				return 23.976f;
 			case AssetImportFbx::TIME_MODE_CUSTOM:
 				int32_t frame_rate = -1;
 				p_scene->mMetaData->Get("FrameRate", frame_rate);
