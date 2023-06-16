@@ -347,8 +347,8 @@ _FORCE_INLINE_ Color Color::xyzToRgb(const float p_x, const float p_y, const flo
 	else
 		b = 12.92f * b;
 
-
-	return Color(r, g, b);
+	Color result = { r, g, b };
+	return result;
 }
 
 #endif // COLOR_H
