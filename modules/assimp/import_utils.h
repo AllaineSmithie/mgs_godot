@@ -28,8 +28,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 
-#ifndef IMPORT_UTILS_IMPORTER_ASSIMP_H
-#define IMPORT_UTILS_IMPORTER_ASSIMP_H
+#ifndef IMPORT_UTILS_H
+#define IMPORT_UTILS_H
 
 #include <core/io/image_loader.h>
 #include <core/io/dir_access.h>
@@ -445,4 +445,4 @@ public:
 	}
 };
 
-#endif // IMPORT_UTILS_IMPORTER_ASSIMP_H
+#endif // IMPORT_UTILS_H
