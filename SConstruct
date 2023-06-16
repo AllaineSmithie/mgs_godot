@@ -236,7 +236,7 @@ opts.Add(BoolVariable("use_precise_math_checks", "Math checks use very precise e
 opts.Add(BoolVariable("scu_build", "Use single compilation unit build", False))
 
 # Thirdparty libraries
-opts.Add(BoolVariable('builtin_assimp', "Use the built-in Assimp library", True))
+opts.Add(BoolVariable("builtin_assimp", "Use the built-in Assimp library", True))
 opts.Add(BoolVariable("builtin_certs", "Use the built-in SSL certificates bundles", True))
 opts.Add(BoolVariable("builtin_embree", "Use the built-in Embree library", True))
 opts.Add(BoolVariable("builtin_enet", "Use the built-in ENet library", True))
@@ -354,7 +354,9 @@ if selected_platform in ["ios", "iphone"]:
 if selected_platform in ["linux", "bsd", "x11"]:
     if selected_platform == "x11":
         # Deprecated alias kept for compatibility.
-        print('Platform "x11" has been renamed to "linuxbsd" in Metro Gaya System 0.1. Building for platform "linuxbsd".')
+        print(
+            'Platform "x11" has been renamed to "linuxbsd" in Metro Gaya System 0.1. Building for platform "linuxbsd".'
+        )
     # Alias for convenience.
     selected_platform = "linuxbsd"
 
