@@ -1,40 +1,41 @@
 /**************************************************************************/
-/*  import_utils.h                                                       */
+/*  import_utils.h                                                        */
 /**************************************************************************/
-/*                         This file is part of:                         */
-/*                             GODOT ENGINE                              */
-/*                        https://godotengine.org                        */
+/*                         This file is part of:                          */
+/*                             GODOT ENGINE                               */
+/*                        https://godotengine.org                         */
 /**************************************************************************/
 /* Copyright (c) 2014-present Godot Engine contributors (see AUTHORS.md). */
-/* Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.                 */
-/*                                                                       */
-/* Permission is hereby granted, free of charge, to any person obtaining */
-/* a copy of this software and associated documentation files (the       */
-/* "Software"), to deal in the Software without restriction, including   */
-/* without limitation the rights to use, copy, modify, merge, publish,   */
-/* distribute, sublicense, and/or sell copies of the Software, and to    */
-/* permit persons to whom the Software is furnished to do so, subject to */
-/* the following conditions:                                             */
-/*                                                                       */
-/* The above copyright notice and this permission notice shall be        */
-/* included in all copies or substantial portions of the Software.       */
-/*                                                                       */
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,       */
-/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */
+/* Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.                  */
+/*                                                                        */
+/* Permission is hereby granted, free of charge, to any person obtaining  */
+/* a copy of this software and associated documentation files (the        */
+/* "Software"), to deal in the Software without restriction, including    */
+/* without limitation the rights to use, copy, modify, merge, publish,    */
+/* distribute, sublicense, and/or sell copies of the Software, and to     */
+/* permit persons to whom the Software is furnished to do so, subject to  */
+/* the following conditions:                                              */
+/*                                                                        */
+/* The above copyright notice and this permission notice shall be         */
+/* included in all copies or substantial portions of the Software.        */
+/*                                                                        */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,        */
+/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF     */
 /* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. */
-/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */
-/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
-/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
+/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY   */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,   */
+/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE      */
+/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
 #ifndef IMPORT_UTILS_H
 #define IMPORT_UTILS_H
 
 #include "import_state.h"
-#include <core/io/image_loader.h>
 #include <core/io/dir_access.h>
+#include <core/io/image_loader.h>
 
+#include <string>
 #include <thirdparty/assimp/include/assimp/SceneCombiner.h>
 #include <thirdparty/assimp/include/assimp/cexport.h>
 #include <thirdparty/assimp/include/assimp/cimport.h>
@@ -42,7 +43,6 @@
 #include <thirdparty/assimp/include/assimp/pbrmaterial.h>
 #include <thirdparty/assimp/include/assimp/postprocess.h>
 #include <thirdparty/assimp/include/assimp/scene.h>
-#include <string>
 #include <thirdparty/assimp/include/assimp/DefaultLogger.hpp>
 #include <thirdparty/assimp/include/assimp/Importer.hpp>
 #include <thirdparty/assimp/include/assimp/LogStream.hpp>
@@ -146,7 +146,8 @@ public:
 		};
 	};
 
-	/** Get assimp string
+	/**
+	 * Get assimp string
      * automatically filters the string data
      */
 	static String get_assimp_string(const aiString &p_string) {
@@ -199,7 +200,8 @@ public:
 		return xform;
 	}
 
-	/** Get fbx fps for time mode meta data
+	/**
+	 * Get fbx fps for time mode meta data
      */
 	static float get_fbx_fps(int32_t time_mode, const aiScene *p_scene) {
 		switch (time_mode) {
@@ -299,7 +301,8 @@ public:
 		}
 	}
 
-	/** find the texture path for the supplied fbx path inside godot
+	/**
+	 * find the texture path for the supplied fbx path inside godot
      * very simple lookup for subfolders etc for a texture which may or may not be in a directory
      */
 	static void find_texture_path(const String &r_p_path, String &r_path, bool &r_found) {
@@ -440,7 +443,8 @@ public:
 
 		return false;
 	}
-	/** GetAssimpTexture
+	/**
+	 * GetAssimpTexture
 	 * Designed to retrieve textures for you
 	 */
 	static bool GetAssimpTexture(
