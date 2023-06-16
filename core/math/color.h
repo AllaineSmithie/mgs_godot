@@ -312,8 +312,7 @@ _FORCE_INLINE_ Color cieToRgb(const float p_x, const float p_y, const float p_z)
 
 	// If one component is greater than 1, weight components by that value
 	float max = MAX(MAX(r, g), b);
-	if (max > 1)
-	{
+	if (max > 1) {
 		r = r / max;
 		g = g / max;
 		b = b / max;
