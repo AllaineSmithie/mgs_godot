@@ -1,31 +1,31 @@
 /**************************************************************************/
-/*  import_utils.h                                                        */
+/*  import_utils.h                                                   	 */
 /**************************************************************************/
-/*                         This file is part of:                          */
-/*                             GODOT ENGINE                               */
-/*                        https://godotengine.org                         */
+/*                         This file is part of:                     	 */
+/*                             GODOT ENGINE                          	 */
+/*                        https://godotengine.org                    	 */
 /**************************************************************************/
 /* Copyright (c) 2014-present Godot Engine contributors (see AUTHORS.md). */
-/* Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.                  */
-/*                                                                        */
+/* Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.             	 */
+/*                                                                   	 */
 /* Permission is hereby granted, free of charge, to any person obtaining  */
-/* a copy of this software and associated documentation files (the        */
+/* a copy of this software and associated documentation files (the   	 */
 /* "Software"), to deal in the Software without restriction, including    */
 /* without limitation the rights to use, copy, modify, merge, publish,    */
-/* distribute, sublicense, and/or sell copies of the Software, and to     */
+/* distribute, sublicense, and/or sell copies of the Software, and to	 */
 /* permit persons to whom the Software is furnished to do so, subject to  */
-/* the following conditions:                                              */
-/*                                                                        */
-/* The above copyright notice and this permission notice shall be         */
-/* included in all copies or substantial portions of the Software.        */
-/*                                                                        */
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,        */
-/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF     */
+/* the following conditions:                                         	 */
+/*                                                                   	 */
+/* The above copyright notice and this permission notice shall be    	 */
+/* included in all copies or substantial portions of the Software.   	 */
+/*                                                                   	 */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,   	 */
+/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF	 */
 /* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. */
 /* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY   */
 /* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,   */
-/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE      */
-/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
+/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 	 */
+/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.            	 */
 /**************************************************************************/
 
 #ifndef IMPORT_UTILS_H
@@ -35,7 +35,6 @@
 #include <core/io/dir_access.h>
 #include <core/io/image_loader.h>
 
-#include <string>
 #include <thirdparty/assimp/include/assimp/SceneCombiner.h>
 #include <thirdparty/assimp/include/assimp/cexport.h>
 #include <thirdparty/assimp/include/assimp/cimport.h>
@@ -43,6 +42,7 @@
 #include <thirdparty/assimp/include/assimp/pbrmaterial.h>
 #include <thirdparty/assimp/include/assimp/postprocess.h>
 #include <thirdparty/assimp/include/assimp/scene.h>
+#include <string>
 #include <thirdparty/assimp/include/assimp/DefaultLogger.hpp>
 #include <thirdparty/assimp/include/assimp/Importer.hpp>
 #include <thirdparty/assimp/include/assimp/LogStream.hpp>
@@ -148,8 +148,8 @@ public:
 
 	/**
 	 * Get assimp string
-     * automatically filters the string data
-     */
+	 * automatically filters the string data
+	 */
 	static String get_assimp_string(const aiString &p_string) {
 		//convert an assimp String to a Godot String
 		String name;
@@ -176,10 +176,10 @@ public:
 	}
 
 	/**
-     * No filter logic get_raw_string_from_assimp
-     * This just convers the aiString to a parsed utf8 string
-     * Without removing special chars etc
-     */
+	 * No filter logic get_raw_string_from_assimp
+	 * This just convers the aiString to a parsed utf8 string
+	 * Without removing special chars etc
+	 */
 	static String get_raw_string_from_assimp(const aiString &p_string) {
 		String name;
 		name.parse_utf8(p_string.C_Str() /*,p_string.length*/);
@@ -191,8 +191,8 @@ public:
 	}
 
 	/**
-     * Converts aiMatrix4x4 to godot Transform3D
-     */
+	 * Converts aiMatrix4x4 to godot Transform3D
+	 */
 	static const Transform3D assimp_matrix_transform(const aiMatrix4x4 p_matrix) {
 		aiMatrix4x4 matrix = p_matrix;
 		Transform3D xform;
@@ -202,7 +202,7 @@ public:
 
 	/**
 	 * Get fbx fps for time mode meta data
-     */
+	 */
 	static float get_fbx_fps(int32_t time_mode, const aiScene *p_scene) {
 		switch (time_mode) {
 			case AssetImportFbx::TIME_MODE_DEFAULT:
@@ -242,11 +242,11 @@ public:
 	}
 
 	/**
-     * Get global transform for the current node - so we can use world space rather than
-     * local space coordinates
-     * useful if you need global - although recommend using local wherever possible over global
-     * as you could break fbx scaling :)
-     */
+	 * Get global transform for the current node - so we can use world space rather than
+	 * local space coordinates
+	 * useful if you need global - although recommend using local wherever possible over global
+	 * as you could break fbx scaling :)
+	 */
 	static Transform3D _get_global_assimp_node_transform(const aiNode *p_current_node) {
 		aiNode const *current_node = p_current_node;
 		Transform3D xform;
@@ -303,8 +303,8 @@ public:
 
 	/**
 	 * find the texture path for the supplied fbx path inside godot
-     * very simple lookup for subfolders etc for a texture which may or may not be in a directory
-     */
+	 * very simple lookup for subfolders etc for a texture which may or may not be in a directory
+	 */
 	static void find_texture_path(const String &r_p_path, String &r_path, bool &r_found) {
 		String dir;
 
