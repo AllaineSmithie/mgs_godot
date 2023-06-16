@@ -482,7 +482,7 @@ void InputEventConfigurationDialog::_update_input_list() {
 		midi.instantiate();
 		String desc = EventListenerLineEdit::get_event_text(midi, false);
 		TreeItem* item = input_list_tree->create_item(midi_root);
-		MIDIMessage defaultmiditype;
+		MIDIMessage defaultmiditype = MIDIMessage::NONE;
 		item->set_text(0, desc);
 		item->set_meta("__pitch", 0);
 		item->set_meta("__channel", 0);
