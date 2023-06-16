@@ -1,12 +1,12 @@
-/*************************************************************************/
+/**************************************************************************/
 /*  import_utils.h                                                       */
-/*************************************************************************/
-/*                       This file is part of:                           */
-/*                           GODOT ENGINE                                */
-/*                      https://godotengine.org                          */
-/*************************************************************************/
-/* Copyright (c) 2007-2020 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2020 Godot Engine contributors (cf. AUTHORS.md).   */
+/**************************************************************************/
+/*                         This file is part of:                         */
+/*                             GODOT ENGINE                              */
+/*                        https://godotengine.org                        */
+/**************************************************************************/
+/* Copyright (c) 2014-present Godot Engine contributors (see AUTHORS.md). */
+/* Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -21,12 +21,12 @@
 /*                                                                       */
 /* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,       */
 /* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */
-/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/
+/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. */
 /* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */
 /* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
-/*************************************************************************/
+/**************************************************************************/
 
 #ifndef IMPORT_UTILS_H
 #define IMPORT_UTILS_H
@@ -91,14 +91,14 @@ using namespace AssimpImporter;
 #define AI_MATKEY_FBX_MAYA_STINGRAY_AO_UV_XFORM "$raw.Maya|TEX_ao_map|uvtrafo"
 
 /**
-  * Assimp Utils
-  * Conversion tools / glue code to convert from assimp to godot
-  */
+ * Assimp Utils
+ * Conversion tools / glue code to convert from assimp to godot
+ */
 class AssimpUtils {
 public:
 	/**
-	  * calculate tangents for mesh data from assimp data
-	  */
+	 * calculate tangents for mesh data from assimp data
+	 */
 	static void calc_tangent_from_mesh(const aiMesh *ai_mesh, int i, int tri_index, int index, PackedColorArray &w) {
 		const aiVector3D normals = ai_mesh->mAnimMeshes[i]->mNormals[tri_index];
 		const Vector3 godot_normal = Vector3(normals.x, normals.y, normals.z);
@@ -147,8 +147,8 @@ public:
 	};
 
 	/** Get assimp string
-      * automatically filters the string data
-      */
+     * automatically filters the string data
+     */
 	static String get_assimp_string(const aiString &p_string) {
 		//convert an assimp String to a Godot String
 		String name;
@@ -175,10 +175,10 @@ public:
 	}
 
 	/**
-      * No filter logic get_raw_string_from_assimp
-      * This just convers the aiString to a parsed utf8 string
-      * Without removing special chars etc
-      */
+     * No filter logic get_raw_string_from_assimp
+     * This just convers the aiString to a parsed utf8 string
+     * Without removing special chars etc
+     */
 	static String get_raw_string_from_assimp(const aiString &p_string) {
 		String name;
 		name.parse_utf8(p_string.C_Str() /*,p_string.length*/);
@@ -190,8 +190,8 @@ public:
 	}
 
 	/**
-      * Converts aiMatrix4x4 to godot Transform3D
-      */
+     * Converts aiMatrix4x4 to godot Transform3D
+     */
 	static const Transform3D assimp_matrix_transform(const aiMatrix4x4 p_matrix) {
 		aiMatrix4x4 matrix = p_matrix;
 		Transform3D xform;
@@ -200,7 +200,7 @@ public:
 	}
 
 	/** Get fbx fps for time mode meta data
-      */
+     */
 	static float get_fbx_fps(int32_t time_mode, const aiScene *p_scene) {
 		switch (time_mode) {
 			case AssetImportFbx::TIME_MODE_DEFAULT:
@@ -240,11 +240,11 @@ public:
 	}
 
 	/**
-      * Get global transform for the current node - so we can use world space rather than
-      * local space coordinates
-      * useful if you need global - although recommend using local wherever possible over global
-      * as you could break fbx scaling :)
-      */
+     * Get global transform for the current node - so we can use world space rather than
+     * local space coordinates
+     * useful if you need global - although recommend using local wherever possible over global
+     * as you could break fbx scaling :)
+     */
 	static Transform3D _get_global_assimp_node_transform(const aiNode *p_current_node) {
 		aiNode const *current_node = p_current_node;
 		Transform3D xform;
@@ -256,8 +256,8 @@ public:
 	}
 
 	/**
-	  * Find hardcoded textures from assimp which could be in many different directories
-	  */
+	 * Find hardcoded textures from assimp which could be in many different directories
+	 */
 	static void find_texture_path(const String &p_path, String &path, bool &found, String extension) {
 		Vector<String> paths;
 		paths.push_back(path.get_basename() + extension);
@@ -300,8 +300,8 @@ public:
 	}
 
 	/** find the texture path for the supplied fbx path inside godot
-      * very simple lookup for subfolders etc for a texture which may or may not be in a directory
-      */
+     * very simple lookup for subfolders etc for a texture which may or may not be in a directory
+     */
 	static void find_texture_path(const String &r_p_path, String &r_path, bool &r_found) {
 		String dir;
 
@@ -329,9 +329,9 @@ public:
 	}
 
 	/**
-	  * set_texture_mapping_mode
-	  * Helper to check the mapping mode of the texture (repeat, clamp and mirror)
-	  */
+	 * set_texture_mapping_mode
+	 * Helper to check the mapping mode of the texture (repeat, clamp and mirror)
+	 */
 	static void set_texture_mapping_mode(aiTextureMapMode *map_mode, Ref<ImageTexture> texture) {
 		ERR_FAIL_COND(texture.is_null());
 		ERR_FAIL_COND(map_mode == NULL);
@@ -349,8 +349,8 @@ public:
 	}
 
 	/**
-	  * Load or load from cache image :)
-	  */
+	 * Load or load from cache image :)
+	 */
 	static Ref<Image> load_image(ImportState &state, const aiScene *p_scene, String p_path) {
 
 		auto match = state.path_to_image_cache.find(p_path);
@@ -441,8 +441,8 @@ public:
 		return false;
 	}
 	/** GetAssimpTexture
-	  * Designed to retrieve textures for you
-	  */
+	 * Designed to retrieve textures for you
+	 */
 	static bool GetAssimpTexture(
 			AssimpImporter::ImportState &state,
 			aiMaterial *ai_material,
