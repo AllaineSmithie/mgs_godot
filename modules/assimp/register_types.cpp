@@ -30,7 +30,7 @@
 
 #include "register_types.h"
 
-#include "editor/editor_node.h"
+#include <editor/editor_node.h>
 #include "editor_scene_importer_assimp.h"
 
 #ifdef TOOLS_ENABLED

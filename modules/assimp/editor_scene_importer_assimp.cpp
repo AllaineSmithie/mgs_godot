@@ -30,7 +30,7 @@
 
 #include "editor_scene_importer_assimp.h"
 #include "core/io/image_loader.h"
-#include "editor/import/resource_importer_scene.h"
+#include <editor/import/resource_importer_scene.h>
 #include "import_utils.h"
 #include "scene/3d/camera_3d.h"
 #include "scene/3d/light_3d.h"

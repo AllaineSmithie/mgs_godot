@@ -115,14 +115,22 @@ struct ExceptionSwallower<void> {
     }
 };
 
+#ifdef __cpp_exceptions
 #define ASSIMP_BEGIN_EXCEPTION_REGION()\
 {\
     try {
+#else
+#define ASSIMP_BEGIN_EXCEPTION_REGION()
+#endif
 
+#ifdef __cpp_exceptions
 #define ASSIMP_END_EXCEPTION_REGION(type)\
     } catch(...) {\
         return ExceptionSwallower<type>()();\
     }\
 }
+#else
+#define ASSIMP_END_EXCEPTION_REGION(type)
+#endif
 
 #endif // AI_INCLUDED_EXCEPTIONAL_H
