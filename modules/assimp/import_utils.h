@@ -164,7 +164,6 @@ public:
 	}
 
 	static String get_anim_string_from_assimp(const aiString &p_string) {
-
 		String name;
 		name.parse_utf8(p_string.C_Str() /*,p_string.length*/);
 		if (name.find(":") != -1) {
