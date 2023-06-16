@@ -255,7 +255,6 @@ struct _NO_DISCARD_ Color {
 		a = p_a;
 	}
 
-
 	static _FORCE_INLINE_ Color Color::cieToRgb(const float p_x, const float p_y, const float p_z);
 	static 	_FORCE_INLINE_ Color Color::xyzToRgb(const float p_x, const float p_y, const float p_z);
 
