@@ -30,10 +30,9 @@
 
 #include "register_types.h"
 
-#include <editor/editor_node.h>
-#include "editor_scene_importer_assimp.h"
-
 #ifdef TOOLS_ENABLED
+#include "editor_scene_importer_assimp.h"
+#include "editor/editor_node.h"
 static void _editor_init() {
 	Ref<EditorSceneImporterAssimp> import_assimp;
 	import_assimp.instantiate();

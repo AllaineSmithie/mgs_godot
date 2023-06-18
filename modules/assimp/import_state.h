@@ -113,7 +113,7 @@ struct RecursiveState {
 			Node *_parent_node,
 			aiBone *_bone) :
 			node_Transform3D(_node_Transform3D),
-			Skeleton3D(_Skeleton3D),
+			skeleton3D(_Skeleton3D),
 			new_node(_new_node),
 			node_name(_node_name),
 			assimp_node(_assimp_node),
@@ -121,7 +121,7 @@ struct RecursiveState {
 			bone(_bone) {}
 
 	Transform3D node_Transform3D;
-	Skeleton3D *Skeleton3D = NULL;
+	Skeleton3D *skeleton3D = NULL;
 	Node3D *new_node = NULL;
 	String node_name;
 	aiNode *assimp_node = NULL;

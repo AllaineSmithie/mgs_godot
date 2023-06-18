@@ -8,7 +8,8 @@ env_assimp.disable_warnings()
 
 # Force bundled version for now, there's no released version of Assimp with
 # support for ArmaturePopulate which we use from their master branch.
-if True:  # env['builtin_assimp']:
+# env["builtin_assimp"]:
+if env.editor_build:
     thirdparty_dir = "#thirdparty/assimp"
 
     env_assimp.Prepend(CPPPATH=["#thirdparty/assimp"])
