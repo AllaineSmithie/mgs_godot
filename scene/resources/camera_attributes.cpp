@@ -142,19 +142,19 @@ void CameraAttributes::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "auto_exposure_speed", PROPERTY_HINT_RANGE, "0.01,64,0.01"), "set_auto_exposure_speed", "get_auto_exposure_speed");
 
 	ADD_GROUP("Lens", "lens_");
-	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flare_enabled"), "set_flare_enabled", "is_set_flare_enabled");
+	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flare_enabled"), "set_flare_enabled", "is_set_flare_enabled", false);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flare_amount", PROPERTY_HINT_RANGE, "0.01,1.0,0.1,or_greater"), "set_flare_amount", "get_flare_amount");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flare_anamorphic", PROPERTY_HINT_RANGE, "1.0,2.5,0.001,or_greater"), "set_flare_anamorphic", "get_flare_anamorphic");
 
 }
 
-void CameraAttributes::set_flare_enabled(float p_flare_enabled)
+void CameraAttributes::set_flare_enabled(bool p_flare_enabled)
 {
 	flare_enabled = p_flare_enabled;
 	_update_flare();
 }
 
-bool CameraAttributes::is_set_flare_enabled()
+bool CameraAttributes::is_set_flare_enabled() const
 {
 	return flare_enabled;
 }
