@@ -1066,7 +1066,6 @@ void Environment::_update_post_processing_shader()
 	//	post_processing_shader_rid);
 }*/
 
-
 // Private methods, constructor and destructor
 
 void Environment::_validate_property(PropertyInfo &p_property) const {
