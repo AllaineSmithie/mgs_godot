@@ -42,9 +42,9 @@
 
 class DMXMonitorUniverse : public VBoxContainer {
 	GDCLASS(DMXMonitorUniverse, VBoxContainer);
+	
 public:
 	Node *root = nullptr;
-
 	MenuButton *edit = nullptr;
 
 	PanelContainer *main_panel = nullptr;
@@ -85,14 +85,12 @@ protected:
 	//void _notification(int p_what);
 
 public:
-
 	void set_assigned_dmx_universe(int p_dmx_index);
 	Array get_assigned_dmx_universe() const;
-	
+
 	Dictionary get_state() const;
 	void set_state(const Dictionary &p_state);
 
-		
 	DMXMonitorUniverse();
 	~DMXMonitorUniverse();
 };
@@ -118,10 +116,10 @@ class DMXMonitor : public VBoxContainer {
 	int current_universe;
 
 	bool updating;
-	
+
 	DMXMonitorUniverse * universe_display = nullptr;
-		
-	void _select_universe_by_name(const String& p_universename);
+
+	void _select_universe_by_name(const String &p_universename);
 	void _dmx_universe_selected(int p_which);
 
 	void _play_pressed();
@@ -154,7 +152,7 @@ public:
 
 //	UndoRedo *undo_redo;
 //	void set_undo_redo(UndoRedo *p_undo_redo) { undo_redo = p_undo_redo; }
-	
+
 	DMXMonitor(EditorNode *p_editor, DMXMonitorEditorPlugin *p_plugin);
 };
 
@@ -168,8 +166,9 @@ protected:
 	void _notification(int p_what);
 
 public:
-	virtual Dictionary get_state() const override { return Dictionary();/* anim_editor->get_state(); */}
-	virtual void set_state(const Dictionary &p_state) override { /*anim_editor->set_state(p_state);*/ }
+	virtual Dictionary get_state() const override { return Dictionary(); /* anim_editor->get_state(); */ }
+	virtual void set_state(const Dictionary &p_state) override { /*anim_editor->set_state(p_state);*/
+	}
 
 	virtual String get_name() const override { return "DMXMonitor"; }
 	bool has_main_screen() const override { return false; }
@@ -177,8 +176,10 @@ public:
 	virtual bool handles(Object *p_object) const override;
 	virtual void make_visible(bool p_visible) override;
 
-	virtual void forward_canvas_force_draw_over_viewport(Control *p_overlay) override { /*anim_editor->forward_force_draw_over_viewport(p_overlay);*/ }
-	virtual void forward_3d_force_draw_over_viewport(Control *p_overlay) override { /*anim_editor->forward_force_draw_over_viewport(p_overlay); */}
+	virtual void forward_canvas_force_draw_over_viewport(Control *p_overlay) override { /*anim_editor->forward_force_draw_over_viewport(p_overlay);*/
+	}
+	virtual void forward_3d_force_draw_over_viewport(Control *p_overlay) override { /*anim_editor->forward_force_draw_over_viewport(p_overlay); */
+	}
 
 	DMXMonitorEditorPlugin(EditorNode *p_node);
 	~DMXMonitorEditorPlugin();
