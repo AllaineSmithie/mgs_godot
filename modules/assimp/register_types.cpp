@@ -38,10 +38,10 @@ static void _editor_init() {
 	import_assimp.instantiate();
 	ResourceImporterScene::add_importer(import_assimp);
 }
-#endif
 
 void register_assimp_types() {
 }
+#endif
 
 
 void initialize_assimp_module(ModuleInitializationLevel p_level) {

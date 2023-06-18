@@ -3,13 +3,12 @@
 Import("env")
 Import("env_modules")
 
-env_assimp = env_modules.Clone()
-env_assimp.disable_warnings()
-
 # Force bundled version for now, there's no released version of Assimp with
 # support for ArmaturePopulate which we use from their master branch.
 # env["builtin_assimp"]:
 if env.editor_build:
+    env_assimp = env_modules.Clone()
+    env_assimp.disable_warnings()
     thirdparty_dir = "#thirdparty/assimp"
 
     env_assimp.Prepend(CPPPATH=["#thirdparty/assimp"])
