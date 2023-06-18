@@ -24,7 +24,7 @@ jobs:
             cache-name: macos-editor
             target: editor
             tests: true
-            bin: "./bin/godot.macos.editor.x86_64"
+            bin: "./bin/mgs.macos.editor.x86_64"
 
           - name: Template (target=template_release)
             cache-name: macos-template
@@ -66,8 +66,8 @@ jobs:
 
       - name: Prepare artifact
         run: |
-          strip bin/godot.*
-          chmod +x bin/godot.*
+          strip bin/mgs.*
+          chmod +x bin/mgs.*
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
