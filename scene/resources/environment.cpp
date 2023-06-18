@@ -1047,7 +1047,7 @@ bool Environment::is_post_processing_shader_enabled() const
 void Environment::set_post_processing_shader(Ref<Shader> p_shader)
 {
 	post_processing_shader = p_shader;
-	
+
 	_update_post_processing_shader();
 }
 Ref<Shader> Environment::get_post_processing_shader() const
@@ -1516,7 +1516,7 @@ void Environment::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_post_processing_shader_enabled"), &Environment::is_post_processing_shader_enabled);
 	ClassDB::bind_method(D_METHOD("set_post_processing_shader", "shader"), &Environment::set_post_processing_shader);
 	ClassDB::bind_method(D_METHOD("get_post_processing_shader"), &Environment::get_post_processing_shader);
-	
+
 	ADD_GROUP("Post Process Shader", "postprocesshader_");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "post_processing_shader_enabled"), "set_post_processing_shader_enabled", "is_post_processing_shader_enabled");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "post_processing_shader_shader", PROPERTY_HINT_RESOURCE_TYPE, "Shader"), "set_post_processing_shader", "get_post_processing_shader");
