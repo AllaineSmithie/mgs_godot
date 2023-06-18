@@ -91,8 +91,7 @@ float CameraAttributes::get_auto_exposure_scale() const {
 	return auto_exposure_scale;
 }
 
-void CameraAttributes::_update_flare()
-{
+void CameraAttributes::_update_flare() {
 }
 
 RID CameraAttributes::get_rid() const {
