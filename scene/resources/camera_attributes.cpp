@@ -123,7 +123,6 @@ void CameraAttributes::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_auto_exposure_scale", "exposure_grey"), &CameraAttributes::set_auto_exposure_scale);
 	ClassDB::bind_method(D_METHOD("get_auto_exposure_scale"), &CameraAttributes::get_auto_exposure_scale);
 
-
 	ClassDB::bind_method(D_METHOD("set_flare_enabled", "flare_enabled"), &CameraAttributes::set_flare_enabled);
 	ClassDB::bind_method(D_METHOD("is_set_flare_enabled"), &CameraAttributes::is_set_flare_enabled);
 	ClassDB::bind_method(D_METHOD("set_flare_amount", "flare_amount"), &CameraAttributes::set_flare_amount);
