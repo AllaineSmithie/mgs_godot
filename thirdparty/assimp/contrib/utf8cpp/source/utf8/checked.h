@@ -34,6 +34,8 @@ DEALINGS IN THE SOFTWARE.
 namespace utf8
 {
     // Base for the exceptions that may be thrown from the library
+
+#ifdef __cpp_exceptions
     class exception : public ::std::exception {
     };
 
@@ -66,6 +68,40 @@ namespace utf8
     public:
         virtual const char* what() const throw() { return "Not enough space"; }
     };
+#else
+	class exception : {
+	};
+
+	// Exceptions that may be thrown from the library functions.
+	class invalid_code_point : public exception {
+		uint32_t cp;
+	public:
+		invalid_code_point(uint32_t cp) : cp(cp) {}
+		virtual const char* what() const { return "Invalid code point"; }
+		uint32_t code_point() const { return cp; }
+	};
+
+	class invalid_utf8 : public exception {
+		uint8_t u8;
+	public:
+		invalid_utf8(uint8_t u) : u8(u) {}
+		virtual const char* what() const { return "Invalid UTF-8"; }
+		uint8_t utf8_octet() const { return u8; }
+	};
+
+	class invalid_utf16 : public exception {
+		uint16_t u16;
+	public:
+		invalid_utf16(uint16_t u) : u16(u) {}
+		virtual const char* what() const { return "Invalid UTF-16"; }
+		uint16_t utf16_word() const { return u16; }
+	};
+
+	class not_enough_room : public exception {
+	public:
+		virtual const char* what() const { return "Not enough space"; }
+	};
+#endif // __cpp_exceptions
 
     /// The library API - functions intended to be called by the users
 

@@ -292,7 +292,7 @@ _FORCE_INLINE_ Color operator*(float p_scalar, const Color &p_color) {
 	return p_color * p_scalar;
 }
 
-_FORCE_INLINE_ Color cieToRgb(const float p_x, const float p_y, const float p_z) {
+_FORCE_INLINE_ Color Color::cieToRgb(const float p_x, const float p_y, const float p_z) {
 	float z = 1.0f - p_x - p_y;
 	float Y = p_z / 255;
 	float X = (Y / p_y) * p_x;
