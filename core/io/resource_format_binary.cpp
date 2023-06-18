@@ -2363,7 +2363,7 @@ Error ResourceFormatSaverBinaryInstance::set_uid(const String &p_path, ResourceU
 		WARN_PRINT("This file is old, so it does not support UIDs, opening and resaving '" + p_path + "'.");
 		return ERR_UNAVAILABLE;
 	}
-	
+
 	// TMP deactivated
 	if (ver_format > FORMAT_VERSION || ver_major > 3 /*VERSION_MAJOR*/) {
 		ERR_FAIL_V_MSG(ERR_FILE_UNRECOGNIZED,
