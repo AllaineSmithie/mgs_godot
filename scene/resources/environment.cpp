@@ -1057,14 +1057,14 @@ Ref<Shader> Environment::get_post_processing_shader() const
 void Environment::_update_post_processing_shader()
 {
 	RID post_processing_shader_rid = post_processing_shader.is_valid() ? post_processing_shader->get_rid() : RID();
-	/*if (post_processing_shader_enabled)
-	{
-	}
-	RS::get_singleton()->environment_set_post_processing_shader(
-		environment,
-		post_processing_shader_enabled,
-		post_processing_shader_rid);*/
-//}
+	//if (post_processing_shader_enabled)
+	//{
+	//}
+	//RS::get_singleton()->environment_set_post_processing_shader(
+	//	environment,
+	//	post_processing_shader_enabled,
+	//	post_processing_shader_rid);
+}*/
 
 
 // Private methods, constructor and destructor
