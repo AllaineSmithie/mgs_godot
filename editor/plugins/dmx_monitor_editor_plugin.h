@@ -117,7 +117,7 @@ class DMXMonitor : public VBoxContainer {
 
 	bool updating;
 
-	DMXMonitorUniverse * universe_display = nullptr;
+	DMXMonitorUniverse *universe_display = nullptr;
 
 	void _select_universe_by_name(const String &p_universename);
 	void _dmx_universe_selected(int p_which);
@@ -150,8 +150,8 @@ public:
 	Dictionary get_state() const;
 	void set_state(const Dictionary &p_state);
 
-//	UndoRedo *undo_redo;
-//	void set_undo_redo(UndoRedo *p_undo_redo) { undo_redo = p_undo_redo; }
+	//	UndoRedo *undo_redo;
+	//	void set_undo_redo(UndoRedo *p_undo_redo) { undo_redo = p_undo_redo; }
 
 	DMXMonitor(EditorNode *p_editor, DMXMonitorEditorPlugin *p_plugin);
 };
