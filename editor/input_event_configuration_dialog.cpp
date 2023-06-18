@@ -236,7 +236,7 @@ void InputEventConfigurationDialog::_set_event(const Ref<InputEvent> &p_event, c
 							bool midi_match = midi.is_valid() && Variant(midi->get_channel()) == input_item->get_meta("__channel") && _midi_match_detail;
 							bool dmx_match = dmx.is_valid() && Variant(dmx->get_channel()) == input_item->get_meta("__channel");
 							bool osc_match = osc.is_valid() && Variant(osc->get_message().rsplit("/", false, 2) == input_item->get_meta("__message_root"));
-							if (key_match || joyb_match || joym_match || mb_match || midi_match, audio_match || dmx_match || osc_match) {
+							if (key_match || joyb_match || joym_match || mb_match || midi_match || audio_match || dmx_match || osc_match) {
 								category->set_collapsed(false);
 								input_item->select(0);
 								input_list_tree->ensure_cursor_is_visible();
