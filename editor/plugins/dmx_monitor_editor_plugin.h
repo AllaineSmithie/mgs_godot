@@ -119,7 +119,7 @@ class DMXMonitor : public VBoxContainer {
 
 	bool updating;
 	
-	DMXMonitorUniverse * universe_display = nullptr;
+	DMXMonitorUniverse*  universe_display = nullptr;
 		
 	void _select_universe_by_name(const String& p_universename);
 	void _dmx_universe_selected(int p_which);
@@ -161,8 +161,8 @@ public:
 class DMXMonitorEditorPlugin : public EditorPlugin {
 	GDCLASS(DMXMonitorEditorPlugin, EditorPlugin);
 
-	DMXMonitor *dmx_monitor = nullptr;
-	EditorNode *editor = nullptr;
+	DMXMonitor* dmx_monitor = nullptr;
+	EditorNode* editor = nullptr;
 
 protected:
 	void _notification(int p_what);
@@ -173,14 +173,14 @@ public:
 
 	virtual String get_name() const override { return "DMXMonitor"; }
 	bool has_main_screen() const override { return false; }
-	virtual void edit(Object *p_object) override;
-	virtual bool handles(Object *p_object) const override;
+	virtual void edit(Object* p_object) override;
+	virtual bool handles(Object* p_object) const override;
 	virtual void make_visible(bool p_visible) override;
 
-	virtual void forward_canvas_force_draw_over_viewport(Control *p_overlay) override { /*anim_editor->forward_force_draw_over_viewport(p_overlay);*/ }
-	virtual void forward_3d_force_draw_over_viewport(Control *p_overlay) override { /*anim_editor->forward_force_draw_over_viewport(p_overlay); */}
+	virtual void forward_canvas_force_draw_over_viewport(Control* p_overlay) override { /*anim_editor->forward_force_draw_over_viewport(p_overlay);*/ }
+	virtual void forward_3d_force_draw_over_viewport(Control* p_overlay) override { /*anim_editor->forward_force_draw_over_viewport(p_overlay); */}
 
-	DMXMonitorEditorPlugin(EditorNode *p_node);
+	DMXMonitorEditorPlugin(EditorNode* p_node);
 	~DMXMonitorEditorPlugin();
 };
 
