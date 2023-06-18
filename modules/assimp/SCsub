@@ -93,5 +93,5 @@ if env.editor_build:
     env_thirdparty.add_source_files(env.modules_sources, Glob("#thirdparty/assimp/code/Material/*.cpp"))
     env_thirdparty.add_source_files(env.modules_sources, Glob("#thirdparty/assimp/code/3DS/*.cpp"))
 
-# Godot's own source files
-env_assimp.add_source_files(env.modules_sources, "*.cpp")
+    # Godot's own source files
+    env_assimp.add_source_files(env.modules_sources, "*.cpp")
