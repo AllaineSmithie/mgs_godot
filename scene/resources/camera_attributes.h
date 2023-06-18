@@ -60,8 +60,6 @@ protected:
 	float flare_anamorphic = 1.0f;
 	void _update_flare();
 
-	
-
 public:
 	virtual RID get_rid() const override;
 	virtual float calculate_exposure_normalization() const { return 1.0; }

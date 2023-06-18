@@ -145,39 +145,32 @@ void CameraAttributes::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "flare_enabled"), "set_flare_enabled", "is_set_flare_enabled", false);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flare_amount", PROPERTY_HINT_RANGE, "0.01,1.0,0.1,or_greater"), "set_flare_amount", "get_flare_amount");
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "flare_anamorphic", PROPERTY_HINT_RANGE, "1.0,2.5,0.001,or_greater"), "set_flare_anamorphic", "get_flare_anamorphic");
-
 }
 
-void CameraAttributes::set_flare_enabled(bool p_flare_enabled)
-{
+void CameraAttributes::set_flare_enabled(bool p_flare_enabled) {
 	flare_enabled = p_flare_enabled;
 	_update_flare();
 }
 
-bool CameraAttributes::is_set_flare_enabled() const
-{
+bool CameraAttributes::is_set_flare_enabled() const {
 	return flare_enabled;
 }
 
-void CameraAttributes::set_flare_amount(float p_flare_amount)
-{
+void CameraAttributes::set_flare_amount(float p_flare_amount) {
 	flare_amount = p_flare_amount;
 	_update_flare();
 }
 
-float CameraAttributes::get_flare_amount()
-{
+float CameraAttributes::get_flare_amount() {
 	return flare_amount;
 }
 
-void CameraAttributes::set_flare_anamorphic(float p_flare_anamorphic)
-{
+void CameraAttributes::set_flare_anamorphic(float p_flare_anamorphic) {
 	flare_anamorphic = p_flare_anamorphic;
 	_update_flare();
 }
 
-float CameraAttributes::get_flare_anamorphic()
-{
+float CameraAttributes::get_flare_anamorphic() {
 	return flare_anamorphic;
 }
 
