@@ -106,7 +106,6 @@ class DMXMonitor : public VBoxContainer {
 	EditorNode* editor;
 	DMXMonitorEditorPlugin* plugin = nullptr;
 
-
 	OptionButton* universes = nullptr;
 	Button* stop = nullptr;
 	Button* play = nullptr;
@@ -152,7 +151,6 @@ public:
 	void unpin() { pin->set_pressed(false); }
 	Dictionary get_state() const;
 	void set_state(const Dictionary& p_state);
-
 
 //	UndoRedo* undo_redo;
 //	void set_undo_redo(UndoRedo* p_undo_redo) { undo_redo = p_undo_redo; }
