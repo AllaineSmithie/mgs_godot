@@ -42,7 +42,7 @@
 
 class DMXMonitorUniverse : public VBoxContainer {
 	GDCLASS(DMXMonitorUniverse, VBoxContainer);
-	
+
 public:
 	Node *root = nullptr;
 	MenuButton *edit = nullptr;
