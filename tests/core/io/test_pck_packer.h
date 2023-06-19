@@ -96,7 +96,7 @@ TEST_CASE("[PCKPacker] Pack a PCK file with some files and directories") {
 			pck_packer.add_file("some/directories with spaces/to/create/icon.png", base_dir.path_join("../icon.png")) == OK,
 			"Adding a file to a new subdirectory in the PCK should return an OK error code.");
 	CHECK_MESSAGE(
-			pck_packer.add_file("some/directories with spaces/to/create/icon.svg", base_dir.path_join("../icon.svg")) == OK,
+			pck_packer.add_file("some/directories with spaces/to/create/icon.svg", base_dir.path_join("../glsl_builders.py")) == OK,
 			"Adding a file to an existing subdirectory in the PCK should return an OK error code.");
 	CHECK_MESSAGE(
 			pck_packer.add_file("some/directories with spaces/to/create/icon.png", base_dir.path_join("../logo.svg")) == OK,
