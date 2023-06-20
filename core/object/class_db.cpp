@@ -853,6 +853,8 @@ void ClassDB::add_signal(const StringName &p_class, const MethodInfo &p_signal) 
 	OBJTYPE_WLOCK;
 
 	ClassInfo *type = classes.getptr(p_class);
+	if (!type)
+		print_line(p_class);
 	ERR_FAIL_COND(!type);
 
 	StringName sname = p_signal.name;

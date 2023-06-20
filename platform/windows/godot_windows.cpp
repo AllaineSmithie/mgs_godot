@@ -141,7 +141,7 @@ CommandLineToArgvA(
 	return argv;
 }
 
-char *wc_to_utf8(const wchar_t *wc) {
+char * wc_to_utf8(const wchar_t *wc) {
 	int ulen = WideCharToMultiByte(CP_UTF8, 0, wc, -1, nullptr, 0, nullptr, nullptr);
 	char *ubuf = new char[ulen + 1];
 	WideCharToMultiByte(CP_UTF8, 0, wc, -1, ubuf, ulen, nullptr, nullptr);
@@ -149,136 +149,234 @@ char *wc_to_utf8(const wchar_t *wc) {
 	return ubuf;
 }
 
+#if defined(MGS_VST_BUILD) // LIBRARY_ENABLED
+//#define MGS_VST_BUILD
 
-int utf8_char_main(int argc, char **argv_utf8) {
-	OS_Windows os(nullptr);
+#include "pluginterfaces/base/ftypes.h"
+#include "pluginterfaces/base/fstrdefs.h"
 
-	setlocale(LC_CTYPE, "");
+using namespace Steinberg;
 
-	TEST_MAIN_PARAM_OVERRIDE(argc, argv_utf8)
+#if defined(_MSC_VER) && defined(DEVELOPMENT)
+#include <crtdbg.h>
+#endif
+#if !defined(__cdecl)
+	#define __cdecl
+#endif
+	char* get_host_executable_path(int& r_size) {
+		WCHAR path[MAX_PATH];
+		r_size = (int)GetModuleFileNameW(NULL, path, MAX_PATH);
 
-	Error err = Main::setup(argv_utf8[0], argc - 1, &argv_utf8[1]);
+		char *argv_utf8 = wc_to_utf8(&path);
+		return argv_utf8;
+	}
+	extern "C" __declspec (dllexport) bool InitDll() { return true; }
+	extern "C" __declspec (dllexport) bool ExitDll() { return true; }
 
-	if (err != OK) {
-		if (err == ERR_HELP) { // Returned by --help and --version, so success.
-			return 0;
+	//------------------------------------------------------------------------
+	HINSTANCE ghInst = nullptr;
+	void* moduleHandle = nullptr;
+#define VST_MAX_PATH 2048
+	Steinberg::tchar gPath[VST_MAX_PATH] = { 0 };
+
+
+	//------------------------------------------------------------------------
+	extern bool InitModule(); ///< must be provided by plug-in: called when the library is loaded
+	extern bool DeinitModule(); ///< must be provided by plug-in: called when the library is unloaded
+
+	//------------------------------------------------------------------------
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
+		static int moduleCounter{ 0 }; // counting for InitDll/ExitDll pairs
+
+		//------------------------------------------------------------------------
+		/** must be called from host right after loading dll,
+		must be provided by the plug-in!
+		Note: this could be called more than one time! */
+		SMTG_EXPORT_SYMBOL bool InitDll()
+		{
+			if (++moduleCounter == 1)
+				return InitModule();
+			return true;
 		}
-		return 255;
+
+		//------------------------------------------------------------------------
+		/** must be called from host right before unloading dll
+		must be provided by the plug-in!
+		Note: this could be called more than one time! */
+		SMTG_EXPORT_SYMBOL bool ExitDll()
+		{
+			if (--moduleCounter == 0)
+				return DeinitModule();
+			else if (moduleCounter < 0)
+				return false;
+			return true;
+		}
+#ifdef __cplusplus
+	} // extern "C"
+#endif
+
+//------------------------------------------------------------------------
+	BOOL WINAPI DllMain(HINSTANCE hInst, DWORD dwReason, LPVOID /*lpvReserved*/)
+	{
+		if (dwReason == DLL_PROCESS_ATTACH)
+		{
+#if defined(_MSC_VER) && defined(DEVELOPMENT)
+			_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_DEBUG);
+			_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_DEBUG);
+			_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG);
+			int flag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+			_CrtSetDbgFlag(flag | _CRTDBG_LEAK_CHECK_DF);
+#endif
+
+			moduleHandle = ghInst = godot_hinstance = hInst;
+
+			// gets the path of the component
+			if (GetModuleFileName(ghInst, Steinberg::wscast(gPath), MAX_PATH) > 0)
+			{
+				Steinberg::tchar* bkslash = Steinberg::wscast(wcsrchr(Steinberg::wscast(gPath), L'\\'));
+				if (bkslash)
+					gPath[bkslash - gPath + 1] = 0;
+			}
+		}
+
+		return TRUE;
+	}
+#else
+
+	int utf8_char_main(int argc, char **argv_utf8) {
+		OS_Windows os(nullptr);
+
+		setlocale(LC_CTYPE, "");
+
+		TEST_MAIN_PARAM_OVERRIDE(argc, argv_utf8)
+
+		Error err = Main::setup(argv_utf8[0], argc - 1, &argv_utf8[1]);
+
+		if (err != OK) {
+			if (err == ERR_HELP) { // Returned by --help and --version, so success.
+				return 0;
+			}
+			return 255;
+		}
+
+		if (Main::start()) {
+			os.run();
+		}
+		Main::cleanup();
+
+		return os.get_exit_code();
 	}
 
-	if (Main::start()) {
-		os.run();
-	}
-	Main::cleanup();
+	int widechar_main(int argc, wchar_t **argv) {
+		char **argv_utf8 = new char *[argc];
 
-	return os.get_exit_code();
-}
+		for (int i = 0; i < argc; ++i) {
+			argv_utf8[i] = wc_to_utf8(argv[i]);
+		}
+		int returnCode = utf8_char_main(argc, argv_utf8);
 
-int widechar_main(int argc, wchar_t **argv) {
-	char **argv_utf8 = new char *[argc];
-
-	for (int i = 0; i < argc; ++i) {
-		argv_utf8[i] = wc_to_utf8(argv[i]);
-	}
-	int returnCode = utf8_char_main(argc, argv_utf8);
-
-	for (int i = 0; i < argc; ++i) {
-		delete[] argv_utf8[i];
-	}
-	delete[] argv_utf8;
-
-	return returnCode;
-}
-
-/*int widechar_main(int argc, wchar_t **argv) {
-	OS_Windows os(nullptr);
-
-	setlocale(LC_CTYPE, "");
-
-	char **argv_utf8 = new char *[argc];
-
-	for (int i = 0; i < argc; ++i) {
-		argv_utf8[i] = wc_to_utf8(argv[i]);
-	}
-
-	TEST_MAIN_PARAM_OVERRIDE(argc, argv_utf8)
-
-	Error err = Main::setup(argv_utf8[0], argc - 1, &argv_utf8[1]);
-
-	if (err != OK) {
 		for (int i = 0; i < argc; ++i) {
 			delete[] argv_utf8[i];
 		}
 		delete[] argv_utf8;
 
-		if (err == ERR_HELP) { // Returned by --help and --version, so success.
+		return returnCode;
+	}
+
+	/*int widechar_main(int argc, wchar_t **argv) {
+		OS_Windows os(nullptr);
+
+		setlocale(LC_CTYPE, "");
+
+		char **argv_utf8 = new char *[argc];
+
+		for (int i = 0; i < argc; ++i) {
+			argv_utf8[i] = wc_to_utf8(argv[i]);
+		}
+
+		TEST_MAIN_PARAM_OVERRIDE(argc, argv_utf8)
+
+		Error err = Main::setup(argv_utf8[0], argc - 1, &argv_utf8[1]);
+
+		if (err != OK) {
+			for (int i = 0; i < argc; ++i) {
+				delete[] argv_utf8[i];
+			}
+			delete[] argv_utf8;
+
+			if (err == ERR_HELP) { // Returned by --help and --version, so success.
+				return 0;
+			}
+			return 255;
+		}
+
+		if (Main::start()) {
+			os.run();
+		}
+		Main::cleanup();
+
+		for (int i = 0; i < argc; ++i) {
+			delete[] argv_utf8[i];
+		}
+		delete[] argv_utf8;
+
+		return os.get_exit_code();
+	}*/
+
+	int _main() {
+		LPWSTR *wc_argv;
+		int argc;
+		int result;
+
+		wc_argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+
+		if (nullptr == wc_argv) {
+			wprintf(L"CommandLineToArgvW failed\n");
 			return 0;
 		}
-		return 255;
+
+		result = widechar_main(argc, wc_argv);
+
+		LocalFree(wc_argv);
+		return result;
 	}
 
-	if (Main::start()) {
-		os.run();
+	#if defined(LIBRARY_ENABLED)
+	#include "core/libgodot/libgodot.h"
+	extern "C" LIBGODOT_API int godot_main(int argc, char* argv[]) {
+	//#ifndef MGS_VST_BUILD
+		return utf8_char_main(argc, argv);
+	//#else
+	//#endif
 	}
-	Main::cleanup();
+	#else
+	int main(int argc, char **argv) {
+		// override the arguments for the test handler / if symbol is provided
+		// TEST_MAIN_OVERRIDE
 
-	for (int i = 0; i < argc; ++i) {
-		delete[] argv_utf8[i];
-	}
-	delete[] argv_utf8;
-
-	return os.get_exit_code();
-}*/
-
-int _main() {
-	LPWSTR *wc_argv;
-	int argc;
-	int result;
-
-	wc_argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-
-	if (nullptr == wc_argv) {
-		wprintf(L"CommandLineToArgvW failed\n");
-		return 0;
-	}
-
-	result = widechar_main(argc, wc_argv);
-
-	LocalFree(wc_argv);
-	return result;
-}
-#if defined(LIBRARY_ENABLED)
-#include "core/libgodot/libgodot.h"
-extern "C" LIBGODOT_API int godot_main(int argc, char* argv[]) {
-//#ifndef MGS_VST_BUILD
-	return utf8_char_main(argc, argv);
-//#else
-//#endif
-}
-
-#else
-
-int main(int argc, char **argv) {
-	// override the arguments for the test handler / if symbol is provided
-	// TEST_MAIN_OVERRIDE
-
-	// _argc and _argv are ignored
-	// we are going to use the WideChar version of them instead
-#ifdef CRASH_HANDLER_EXCEPTION
-	__try {
+		// _argc and _argv are ignored
+		// we are going to use the WideChar version of them instead
+	#ifdef CRASH_HANDLER_EXCEPTION
+		__try {
+			return _main();
+		} __except (CrashHandlerException(GetExceptionInformation())) {
+			return 1;
+		}
+	#else
 		return _main();
-	} __except (CrashHandlerException(GetExceptionInformation())) {
-		return 1;
+	#endif
 	}
-#else
-	return _main();
-#endif
-}
 
-HINSTANCE godot_hinstance = nullptr;
+	HINSTANCE godot_hinstance = nullptr;
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	godot_hinstance = hInstance;
-	return main(0, nullptr);
-}
-#endif
+	int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+		godot_hinstance = hInstance;
+		return main(0, nullptr);
+	}
+
+	#endif // LIBRARY_ENABLED
+
+#endif // MGS_VST_BUILD

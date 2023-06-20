@@ -573,6 +573,10 @@ def save_active_platforms(apnames, ap):
             svg_names.append("logo")
         if os.path.isfile(x + "/run_icon.svg"):
             svg_names.append("run_icon")
+        if os.path.isfile(x + "/vst3_logo.svg"):
+            svg_names.append("vst3_logo")
+        if os.path.isfile(x + "/vst3_run_icon.svg"):
+            svg_names.append("vst3_run_icon")
 
         for name in svg_names:
             svgf = open(x + "/" + name + ".svg", "rb")

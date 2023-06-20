@@ -2,4 +2,105 @@
 
 Import("env")
 env_libgodot = env.Clone()
+
+vst_sdk = env["vst_sdk"]
+
+if env["library_type"] == "vst":
+    
+    env_libgodot.Prepend(CPPPATH=["vst/"])
+
+	# Base
+	env_vst_base = env_libgodot.Clone()
+    env_vst_base.Prepend(CPPPATH=["vst/base/"])
+    if env["dev_build"]:
+    	env_vst_base.Append(CPPDEFINES=["DEVELOPMENT=1"])
+    else:
+    	env_vst_base.Append(CPPDEFINES=["RELEASE=1"])
+
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/baseiids.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/fbuffer.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/fdebug.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/fdynlib.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/fobject.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/fstreamer.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/fstring.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/timer.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/updatehandler.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/thread/flock.cpp")
+    env_vst_base.add_source_files(env.core_sources, "vst/base/source/thread/fcondition.cpp")
+
+	# Plugin Interfaces
+	env_plugin_interfaces = env_libgodot.Clone()
+    env_plugin_interfaces.Prepend(CPPPATH=["vst/pluginterfaces/"])
+    env_plugin_interfaces.add_source_files(env.core_sources, "vst/pluginterfaces/base/conststringtable.cpp")
+    env_plugin_interfaces.add_source_files(env.core_sources, "vst/pluginterfaces/base/coreiids.cpp")
+    env_plugin_interfaces.add_source_files(env.core_sources, "vst/pluginterfaces/base/funknown.cpp")
+    env_plugin_interfaces.add_source_files(env.core_sources, "vst/pluginterfaces/base/ustring.cpp")
+
+	# Public.SDK Common
+	env_public_sdk_common = env_libgodot.Clone()
+    env_public_sdk_common.Prepend(CPPPATH=["vst/public.sdk/"])
+
+	if vst_sdk:
+    	env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstpresetfile.cpp")
+
+    env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/commoniids.cpp")
+	env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/openurl.cpp")
+	env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/readfile.cpp")
+	
+	if env_base["platform"] == "macos":
+        env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/threadchecker_mac.mm")
+        env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/systemclipboard_mac.mm")
+    elif env_base["platform"] == "windows":
+		env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/threadchecker_win32.cpp")
+		env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/systemclipboard_win32.cpp")
+    elif env_base["platform"] == "linuxbsd":
+		env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/systemclipboard_linux.cpp")
+		env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/threadchecker_linux.cpp")
+	
+	if not vst_sdk:
+		env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/pvaluecontainer.cpp")
+		env_public_sdk_common.add_source_files(env.core_sources, "vst/public.sdk/source/common/pattributes.cpp")
+
+	# Public.SDK
+	env_public_sdk = env_libgodot.Clone()
+    env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/common/pluginview.cpp")
+    env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/main/pluginfactory.cpp")
+    env_public_sdk.Append(CPPPATH=["cxx_std_14"])
+
+	if vst_sdk:
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/main/moduleinit.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/utility/stringconvert.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/utility/testing.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/utility/vst2persistence.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstaudioeffect.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstbus.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstcomponent.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstcomponentbase.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vsteditcontroller.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstinitiids.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstnoteexpressiontypes.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstparameters.cpp")
+        env_public_sdk.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstrepresentation.cpp")
+
+	# Public.SDK Hosting
+	env_public_sdk_hosting = env_libgodot.Clone()
+    env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/common/pluginview.cpp")
+    env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/main/pluginfactory.cpp")
+    env_public_sdk_hosting.Append(CPPPATH=["cxx_std_14"])
+
+	if vst_sdk:
+		env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/vst/hosting/connectionproxy.cpp")
+        env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/vst/hosting/eventlist.cpp")
+        env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/vst/hosting/hostclasses.cpp")
+        env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/vst/hosting/module.cpp")
+        env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/vst/hosting/parameterchanges.cpp")
+        env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/vst/hosting/pluginterfacesupport.cpp")
+        env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/vst/hosting/processdata.cpp")
+        env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/vst/utility/stringconvert.cpp")
+        env_public_sdk_hosting.add_source_files(env.core_sources, "vst/public.sdk/source/vst/vstinitiids.cpp")
+
+elif env["library_type"] == "au":
+elif env["library_type"] == "lv2":
+
 env_libgodot.add_source_files(env.core_sources, "*.cpp")

@@ -187,6 +187,10 @@ opts.Add(BoolVariable("separate_debug_symbols", "Extract debugging symbols to a 
 opts.Add(EnumVariable("lto", "Link-time optimization (production builds)", "none", ("none", "auto", "thin", "full")))
 opts.Add(BoolVariable("production", "Set defaults to build MGS for use in production", False))
 
+# VST
+opts.Add(BoolVariable("vst_sdk", "Build with VST SDK", False))
+opts.Add(BoolVariable("vst_instrument", "Build as VST Instrument", False))
+
 # Components
 opts.Add(BoolVariable("deprecated", "Enable compatibility code for deprecated and removed features", True))
 opts.Add(EnumVariable("precision", "Set the floating-point precision level", "single", ("single", "double")))
@@ -283,26 +287,25 @@ selected_platform = ""
 
 if env_base["library_type"] == "static_library":
     env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
-    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
 elif env_base["library_type"] == "shared_library":
     env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
-    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
     env_base.Append(CCFLAGS=["-fPIC"])
     env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
 elif env_base["library_type"] == "vst":
-    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
+    if env_base["vst_sdk"]:
+        env_base.Append(CPPDEFINES=["MGS_VST_SDK"])
+    if env_base["vst_instrument"]:
+        env_base.Append(CPPDEFINES=["MGS_VST_INSTRUMENT"])
+
     env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
     env_base.Append(CCFLAGS=["-fPIC"])
     env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
-    env_base["library_type"] == "shared_library"
 elif env_base["library_type"] == "au":
-    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
     env_base.Append(CPPDEFINES=["MGS_AU_BUILD"])
     env_base.Append(CCFLAGS=["-fPIC"])
     env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
     env_base["library_type"] == "shared_library"
 elif env_base["library_type"] == "lv2":
-    env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
     env_base.Append(CPPDEFINES=["MGS_LV2_BUILD"])
     env_base.Append(CCFLAGS=["-fPIC"])
     env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
