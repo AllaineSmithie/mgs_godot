@@ -247,6 +247,7 @@ int _main() {
 	LocalFree(wc_argv);
 	return result;
 }
+
 #if defined(LIBRARY_ENABLED)
 #include "core/libgodot/libgodot.h"
 extern "C" LIBGODOT_API int godot_main(int argc, char* argv[]) {
@@ -254,6 +255,39 @@ extern "C" LIBGODOT_API int godot_main(int argc, char* argv[]) {
 	return utf8_char_main(argc, argv);
 //#else
 //#endif
+}
+OS_Windows* os = nullptr;
+extern "C" LIBGODOT_API int godot_main_setup(int argc, char* argv_utf8[], HINSTANCE handle = nullptr) {
+	OS_Windows _os(handle);
+	os = &_os;
+
+	setlocale(LC_CTYPE, "");
+
+	TEST_MAIN_PARAM_OVERRIDE(argc, argv_utf8)
+
+	Error err = Main::setup(argv_utf8[0], argc - 1, &argv_utf8[1]);
+
+	Main::start();
+	return 0;
+}
+
+extern "C" LIBGODOT_API void godot_main_run_pre(int argc, char* argv[], HINSTANCE handle = nullptr) {
+
+	if (os->get_main_loop())
+		return;
+
+	os->get_main_loop()->initialize();
+}
+
+extern "C" LIBGODOT_API void godot_main_run_iteration(int argc, char* argv[], HINSTANCE handle = nullptr) {
+	DisplayServer::get_singleton()->process_events(); // get rid of pending events
+	Main::iteration();
+}
+
+extern "C" LIBGODOT_API int godot_main_finalize(int argc, char* argv[], HINSTANCE handle = nullptr) {
+	os->get_main_loop()->finalize();
+	Main::cleanup();
+	return os->get_exit_code();
 }
 
 #else
