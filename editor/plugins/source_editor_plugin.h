@@ -4,87 +4,21 @@
 #include "editor/editor_node.h"
 #include "editor/editor_plugin.h"
 #include "editor/editor_settings.h"
+#include "editor/editor_interface.h"
+#include "editor/window_wrapper.h"
 #include "editor/editor_translation_parser.h"
 #include <scene/gui/panel_container.h>
+#include "scene/gui/dialogs.h"
 #include <scene/gui/box_container.h>
 #include <scene/gui/check_button.h>
 #include <scene/gui/button.h>
+#include <scene/gui/item_list.h>
 #include <scene/gui/option_button.h>
 #include <scene/gui/spin_box.h>
 #include <scene/gui/line_edit.h>
 #include <scene/gui/split_container.h>
 #include <scene/gui/texture_rect.h>
 #include <scene/main/timer.h>
-
-/*
-class SlotItemDescription : public PanelContainer
-{
-	GDCLASS(SlotItemDescription, PanelContainer);
-	TextureRect* m_icon = nullptr;
-	OptionButton* m_input_menu = nullptr;
-	OptionButton* m_input_channel = nullptr;
-	OptionButton* m_input_value_1 = nullptr;
-	SpinBox* m_input_value_2 = nullptr;
-	Button* m_input_apply = nullptr;
-	OptionButton* m_output_menu = nullptr;
-	OptionButton* m_output_channel = nullptr;
-	OptionButton* m_output_value_1 = nullptr;
-	SpinBox* m_output_value_2 = nullptr;
-	Button* m_output_apply = nullptr;
-	VBoxContainer* m_logic_vbox = nullptr;
-	LineEdit* m_name_edit = nullptr;
-public:
-	SlotItemDescription();
-	void configure(Dictionary& slotInfo);
-protected:
-};
-
-class SourceEditor;
-
-class SlotItem : public PanelContainer
-{
-	GDCLASS(SlotItem, PanelContainer);
-
-	friend class ShowEditor;
-protected:
-
-	Button* m_selected = nullptr;
-	CheckButton* m_enabled = nullptr;
-	TextureRect* m_input_icon = nullptr;
-	TextureRect* m_output_icon = nullptr;
-	Label* m_slot_title = nullptr;
-	Label* m_input_title = nullptr;
-	Label* m_output_title = nullptr;
-	Label* m_script_title = nullptr;
-	Label* m_animation_title = nullptr;
-	LinkButton* author = nullptr;
-	Label* price = nullptr;
-
-	RID m_slot_rid;
-
-	void _onClicked();
-	void _onEnabled();
-
-protected:
-	//void _notification(int p_what);
-	static void _bind_methods();
-
-public:
-	void configure(const String& p_name,
-		RID p_rid,
-		const String& p_input_interface_type_name,
-		const String& p_output_interface_type_name,
-		const String& p_input_interface_name,
-		const String& p_output_interface_name,
-		const String& p_script_title,
-		const String& p_animation_title,
-		const bool active
-	);
-	SlotItem();
-};
-
-*/
-
 
 // =========================================================================
 
@@ -108,22 +42,67 @@ public:
 class SourceEditor: public PanelContainer
 {
 	GDCLASS(SourceEditor, PanelContainer);
+	enum {
+		SOURCE_FILE_OPEN,
+		SOURCE_FILE_CLOSE,
+		TOGGLE_SOURCE_PANEL,
+		WINDOW_SELECT_BASE = 100,
+	};
 private:
-	static SourceEditor* singleton;
 	bool initial_loading = true;
 
-	TabContainer* m_header_bar = nullptr;
-protected:
+	static Ref<Control> source_editor_plugins[1024];
+	static int source_editor_plugin_ctn;
 
+	TabContainer* tab_container = nullptr;
+	HBoxContainer* menu_hb = nullptr;
+	MenuButton* file_menu = nullptr;
+	MenuButton* edit_menu = nullptr;
+	MenuButton* batch_tools_menu = nullptr;
+	Timer* autosave_timer = nullptr;
+
+	Button* make_floating = nullptr;
+
+	HSplitContainer* source_split = nullptr;
+
+	bool _sort_list_on_update = false;
+	bool restoring_layout = false;
+	static SourceEditor* source_editor;
+	WindowWrapper* source_window_wrapper = nullptr;
+
+	bool grab_focus_block = false;
+	int file_dialog_option = -1;
+
+	EditorFileDialog* file_dialog = nullptr;
+	AcceptDialog* error_dialog = nullptr;
+	ConfirmationDialog* erase_tab_confirm = nullptr;
+	ScriptCreateDialog* script_create_dialog = nullptr;
+	Tree* disk_changed_list = nullptr;
+	ConfirmationDialog* disk_changed = nullptr;
+protected:
 	static void _bind_methods();
 	void _notification(int p_what);
 
+
 public:
-	static SourceEditor* get_singleton();
-	SourceEditor();
+
+	void _menu_option(int p_option);
+	void _window_changed(bool p_visible);
+	void _tab_changed(int p_which);
+	void _close_current_tab(bool p_save = true);
+	void _close_discard_current_tab(const String& p_str);
+	void _file_dialog_action(String p_file);
+	void _autosave();
+	void _update_autosave_timer();
+
+	void set_window_layout(Ref<ConfigFile> p_layout);
+	void get_window_layout(Ref<ConfigFile> p_layout);
+	
+	static SourceEditor* get_singleton() { return source_editor; }
+	SourceEditor(WindowWrapper* p_wrapper);
 	~SourceEditor();
-	void register_extension(SourceEditorPluginExtension* p_extension);
-	void unregister_extension(SourceEditorPluginExtension* p_extension);
+	void register_extension(Control* p_extension);
+	void unregister_extension(Control* p_extension);
 };
 
 // =========================================================================
@@ -131,19 +110,23 @@ public:
 class SourceEditorPlugin : public EditorPlugin {
 	GDCLASS(SourceEditorPlugin, EditorPlugin);
 
-	SourceEditor* _source_editor = nullptr;
 	static SourceEditorPlugin* singleton;
 	static Vector<Ref<SourceEditorPluginExtension>> extensions;
 
+	SourceEditor* source_editor = nullptr;
+	WindowWrapper* source_window_wrapper = nullptr;
+	String last_editor;
 protected:
 	void _notification(int p_what);
 public:
 	_FORCE_INLINE_ static SourceEditorPlugin* get_singleton() { return singleton; }
 
-	SourceEditor* get_spatial_editor() { return _source_editor; }
+	SourceEditor* get_spatial_editor() { return source_editor; }
 	virtual String get_name() const override { return "Edit"; }
 	bool has_main_screen() const override { return true; }
 	virtual void make_visible(bool p_visible) override;
+	void set_window_layout(Ref<ConfigFile> p_layout);
+	void get_window_layout(Ref<ConfigFile> p_layout);
 	virtual void edit(Object* p_object) override;
 	virtual bool handles(Object* p_object) const override;
 
@@ -158,6 +141,10 @@ public:
 	virtual void edited_scene_changed() override;
 
 	virtual void shortcut_input(const Ref<InputEvent>& p_event) override;
+
+	void _window_visibility_changed(bool p_visible);
+
+	void _focus_another_editor();
 
 	SourceEditorPlugin();
 	~SourceEditorPlugin();

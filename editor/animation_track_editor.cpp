@@ -39,6 +39,7 @@
 #include "editor/editor_undo_redo_manager.h"
 #include "editor/gui/editor_spin_slider.h"
 #include "editor/gui/scene_tree_editor.h"
+#include "editor/scene_tree_dock.h"
 #include "editor/inspector_dock.h"
 #include "editor/plugins/animation_player_editor_plugin.h"
 #include "scene/animation/animation_player.h"
@@ -1336,6 +1337,9 @@ void AnimationTimelineEdit::_notification(int p_what) {
 			time_icon->set_texture(get_theme_icon(SNAME("Time"), SNAME("EditorIcons")));
 
 			add_track->get_popup()->clear();
+			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyAudio"), SNAME("EditorIcons")), TTR("Audio Track"));
+			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyMidi"), SNAME("EditorIcons")), TTR("Midi Track"));
+			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyVideo"), SNAME("EditorIcons")), TTR("Video Track"));
 			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyValue"), SNAME("EditorIcons")), TTR("Property Track"));
 			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyXPosition"), SNAME("EditorIcons")), TTR("3D Position Track"));
 			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyXRotation"), SNAME("EditorIcons")), TTR("3D Rotation Track"));
@@ -1343,7 +1347,6 @@ void AnimationTimelineEdit::_notification(int p_what) {
 			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyBlendShape"), SNAME("EditorIcons")), TTR("Blend Shape Track"));
 			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyCall"), SNAME("EditorIcons")), TTR("Call Method Track"));
 			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyBezier"), SNAME("EditorIcons")), TTR("Bezier Curve Track"));
-			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyAudio"), SNAME("EditorIcons")), TTR("Audio Playback Track"));
 			add_track->get_popup()->add_icon_item(get_theme_icon(SNAME("KeyAnimation"), SNAME("EditorIcons")), TTR("Animation Playback Track"));
 		} break;
 
@@ -1771,7 +1774,7 @@ AnimationTimelineEdit::AnimationTimelineEdit() {
 	len_hb->add_child(expander);
 	time_icon = memnew(TextureRect);
 	time_icon->set_v_size_flags(SIZE_SHRINK_CENTER);
-	time_icon->set_tooltip_text(TTR("Animation length (seconds)"));
+	time_icon->set_tooltip_text(TTR("Timeline length (seconds)"));
 	len_hb->add_child(time_icon);
 	length = memnew(EditorSpinSlider);
 	length->set_min(0.0001);
@@ -1780,12 +1783,12 @@ AnimationTimelineEdit::AnimationTimelineEdit() {
 	length->set_allow_greater(true);
 	length->set_custom_minimum_size(Vector2(70 * EDSCALE, 0));
 	length->set_hide_slider(true);
-	length->set_tooltip_text(TTR("Animation length (seconds)"));
+	length->set_tooltip_text(TTR("Timeline length (seconds)"));
 	length->connect("value_changed", callable_mp(this, &AnimationTimelineEdit::_anim_length_changed));
 	len_hb->add_child(length);
 	loop = memnew(Button);
 	loop->set_flat(true);
-	loop->set_tooltip_text(TTR("Animation Looping"));
+	loop->set_tooltip_text(TTR("Timeline Looping"));
 	loop->connect("pressed", callable_mp(this, &AnimationTimelineEdit::_anim_loop_pressed));
 	loop->set_toggle_mode(true);
 	len_hb->add_child(loop);
@@ -3368,6 +3371,14 @@ void AnimationTrackEditor::_root_removed() {
 	root = nullptr;
 }
 
+void AnimationTrackEditor::_node_created(Node* p_node) {
+	if (add_node_pending) {
+		add_node_pending = false;
+		_new_track_node_selected(p_node->get_path());
+		grab_click_focus();
+	}
+}
+
 void AnimationTrackEditor::set_root(Node *p_root) {
 	if (root) {
 		root->disconnect("tree_exiting", callable_mp(this, &AnimationTrackEditor::_root_removed));
@@ -4392,12 +4403,31 @@ void AnimationTrackEditor::_update_tracks() {
 				}
 			}
 		}
+
 		if (animation->track_get_type(i) == Animation::TYPE_AUDIO) {
 			for (int j = 0; j < track_edit_plugins.size(); j++) {
 				track_edit = track_edit_plugins.write[j]->create_audio_track_edit();
 				if (track_edit) {
 					break;
 				}
+			}
+		}
+
+		if (animation->track_get_type(i) == Animation::TYPE_MIDI) {
+			for (int j = 0; j < track_edit_plugins.size(); j++) {
+				//track_edit = track_edit_plugins.write[j]->create_midi_track_edit();
+				//if (track_edit) {
+					break;
+				//}
+			}
+		}
+
+		if (animation->track_get_type(i) == Animation::TYPE_VIDEO) {
+			for (int j = 0; j < track_edit_plugins.size(); j++) {
+				//track_edit = track_edit_plugins.write[j]->create_video_track_edit();
+				//if (track_edit) {
+					break;
+				//}
 			}
 		}
 
@@ -4681,6 +4711,45 @@ void AnimationTrackEditor::_dropped_track(int p_from_track, int p_to_track) {
 	undo_redo->commit_action();
 }
 
+void AnimationTrackEditor::_cancel_add_node_pending() {
+	add_node_pending = false;
+}
+
+void AnimationTrackEditor::_add_child_node_pressed() {
+	if (pick_track != nullptr)
+		pick_track->hide();
+	
+	SceneTreeDock::get_singleton()->grab_click_focus();
+	SceneTreeDock::get_singleton()->get_tree_editor()->set_selected(root);
+	switch (adding_track_type)
+	{
+	case Animation::TYPE_AUDIO:
+		SceneTreeDock::get_singleton()->open_add_child_dialog("Audio");
+		add_node_pending = true;
+		break;
+	case Animation::TYPE_MIDI:
+		SceneTreeDock::get_singleton()->open_add_child_dialog("Midi");
+		add_node_pending = true;
+		break;
+	case Animation::TYPE_VIDEO:
+		SceneTreeDock::get_singleton()->open_add_child_dialog("Video");
+		add_node_pending = true;
+		break;
+	case Animation::TYPE_VALUE: ///< Set a value in a property, can be interpolated.
+	case Animation::TYPE_POSITION_3D: ///< Position 3D track
+	case Animation::TYPE_ROTATION_3D: ///< Rotation 3D track
+	case Animation::TYPE_SCALE_3D: ///< Scale 3D track
+	case Animation::TYPE_BLEND_SHAPE: ///< Blend Shape track
+	case Animation::TYPE_METHOD: ///< Call any method on a specific node.
+	case Animation::TYPE_BEZIER: ///< Bezier curve
+	case Animation::TYPE_ANIMATION:
+		SceneTreeDock::get_singleton()->open_add_child_dialog("");
+		add_node_pending = true;
+	default:
+		break;
+	}
+}
+
 void AnimationTrackEditor::_new_track_node_selected(NodePath p_path) {
 	ERR_FAIL_COND(!root);
 	Node *node = get_node(p_path);
@@ -4778,9 +4847,12 @@ void AnimationTrackEditor::_add_track(int p_type) {
 		return;
 	}
 	adding_track_type = p_type;
-	pick_track->popup_scenetree_dialog();
-	pick_track->get_filter_line_edit()->clear();
-	pick_track->get_filter_line_edit()->grab_focus();
+	//if (adding_track_type != Animation::TYPE_AUDIO)
+	{
+		pick_track->popup_scenetree_dialog();
+		pick_track->get_filter_line_edit()->clear();
+		pick_track->get_filter_line_edit()->grab_focus();
+	}
 }
 
 void AnimationTrackEditor::_new_track_property_selected(String p_name) {
@@ -6556,7 +6628,7 @@ AnimationTrackEditor::AnimationTrackEditor() {
 	edit->set_text(TTR("Edit"));
 	edit->set_flat(false);
 	edit->set_disabled(true);
-	edit->set_tooltip_text(TTR("Animation properties."));
+	edit->set_tooltip_text(TTR("Timeline properties."));
 	edit->get_popup()->add_item(TTR("Copy Tracks"), EDIT_COPY_TRACKS);
 	edit->get_popup()->add_item(TTR("Paste Tracks"), EDIT_PASTE_TRACKS);
 	edit->get_popup()->add_separator();
@@ -6589,6 +6661,7 @@ AnimationTrackEditor::AnimationTrackEditor() {
 	pick_track->register_text_enter(pick_track->get_filter_line_edit());
 	pick_track->set_title(TTR("Pick a node to animate:"));
 	pick_track->connect("selected", callable_mp(this, &AnimationTrackEditor::_new_track_node_selected));
+	pick_track->connect("add_child_node_pressed", callable_mp(this, &AnimationTrackEditor::_add_child_node_pressed));
 	pick_track->get_filter_line_edit()->connect("text_changed", callable_mp(this, &AnimationTrackEditor::_pick_track_filter_text_changed));
 	pick_track->get_filter_line_edit()->connect("gui_input", callable_mp(this, &AnimationTrackEditor::_pick_track_filter_input));
 
@@ -6790,6 +6863,10 @@ AnimationTrackEditor::AnimationTrackEditor() {
 	track_copy_select->set_hide_root(true);
 	track_copy_vbox->add_child(track_copy_select);
 	track_copy_dialog->connect("confirmed", callable_mp(this, &AnimationTrackEditor::_edit_menu_pressed).bind(EDIT_COPY_TRACKS_CONFIRM));
+
+	// Scene Tree Dock
+	SceneTreeDock::get_singleton()->connect("node_created", callable_mp(this, &AnimationTrackEditor::_node_created));
+	SceneTreeDock::get_singleton()->get_create_dialog()->connect("canceled", callable_mp(this, &AnimationTrackEditor::_cancel_add_node_pending));
 }
 
 AnimationTrackEditor::~AnimationTrackEditor() {

@@ -3229,10 +3229,17 @@ void SceneTreeDock::open_shader_dialog(const Ref<ShaderMaterial> &p_for_material
 	attach_shader_to_selected(p_preferred_mode);
 }
 
-void SceneTreeDock::open_add_child_dialog() {
-	create_dialog->set_base_type("CanvasItem");
-	_tool_selected(TOOL_NEW, true);
-	reset_create_dialog = true;
+void SceneTreeDock::open_add_child_dialog(const String p_base_type) {
+	if (p_base_type != "")
+	{
+		create_dialog->set_base_type(p_base_type);
+		_tool_selected(TOOL_NEW, true);
+		reset_create_dialog = true;
+	}
+	else
+	{
+		_tool_selected(TOOL_NEW, false);
+	}
 }
 
 void SceneTreeDock::open_instance_child_dialog() {

@@ -324,7 +324,7 @@ public:
 	void attach_shader_to_selected(int p_preferred_mode = -1);
 	void open_shader_dialog(const Ref<ShaderMaterial> &p_for_material, int p_preferred_mode = -1);
 
-	void open_add_child_dialog();
+	void open_add_child_dialog(const String p_base_type = "CanvasLayer");
 	void open_instance_child_dialog();
 
 	List<Node *> paste_nodes();
@@ -332,6 +332,9 @@ public:
 
 	ScriptCreateDialog *get_script_create_dialog() {
 		return script_create_dialog;
+	}
+	CreateDialog *get_create_dialog() {
+		return create_dialog;
 	}
 
 	SceneTreeDock(Node *p_scene_root, EditorSelection *p_editor_selection, EditorData &p_editor_data);

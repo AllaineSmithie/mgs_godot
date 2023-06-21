@@ -5698,10 +5698,10 @@ void EditorNode::hide_bottom_panel() {
 	}
 }
 
-void EditorNode::make_bottom_panel_item_visible(Control *p_item) {
+void EditorNode::make_bottom_panel_item_visible(Control *p_item, bool p_visible) {
 	for (int i = 0; i < bottom_panel_items.size(); i++) {
 		if (bottom_panel_items[i].control == p_item) {
-			_bottom_panel_switch(true, i);
+			_bottom_panel_switch(p_visible, i);
 			break;
 		}
 	}
@@ -7890,8 +7890,6 @@ EditorNode::EditorNode() {
 
 	gui_base->add_child(disk_changed);
 
-	add_editor_plugin(memnew(AnimationPlayerEditorPlugin));
-	add_editor_plugin(memnew(AnimationTrackKeyEditEditorPlugin));
 	add_editor_plugin(memnew(CanvasItemEditorPlugin));
 	add_editor_plugin(memnew(Node3DEditorPlugin));
 	add_editor_plugin(memnew(ScriptEditorPlugin));
@@ -7926,6 +7924,9 @@ EditorNode::EditorNode() {
 	for (int i = 0; i < EditorPlugins::get_plugin_count(); i++) {
 		add_editor_plugin(EditorPlugins::create(i));
 	}
+	// has to come after EditorPlugins now
+	add_editor_plugin(memnew(AnimationPlayerEditorPlugin));
+	add_editor_plugin(memnew(AnimationTrackKeyEditEditorPlugin));
 
 	for (const StringName &extension_class_name : GDExtensionEditorPlugins::get_extension_classes()) {
 		add_extension_editor_plugin(extension_class_name);

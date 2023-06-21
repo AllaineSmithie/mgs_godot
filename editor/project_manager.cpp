@@ -2830,64 +2830,9 @@ ProjectManager::ProjectManager() {
 	local_projects_hb->set_name(TTR("Local Projects"));
 	tabs->add_child(local_projects_hb);
 
+	// Project tab side bar
+	VBoxContainer* tree_vb = memnew(VBoxContainer);
 	{
-		// Projects + search bar
-		VBoxContainer *search_tree_vb = memnew(VBoxContainer);
-		local_projects_hb->add_child(search_tree_vb);
-		search_tree_vb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-
-		HBoxContainer *hb = memnew(HBoxContainer);
-		hb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-		search_tree_vb->add_child(hb);
-
-		search_box = memnew(LineEdit);
-		search_box->set_placeholder(TTR("Filter Projects"));
-		search_box->set_tooltip_text(TTR("This field filters projects by name and last path component.\nTo filter projects by name and full path, the query must contain at least one `/` character."));
-		search_box->set_clear_button_enabled(true);
-		search_box->connect("text_changed", callable_mp(this, &ProjectManager::_on_search_term_changed));
-		search_box->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-		hb->add_child(search_box);
-
-		loading_label = memnew(Label(TTR("Loading, please wait...")));
-		loading_label->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-		hb->add_child(loading_label);
-		// The loading label is shown later.
-		loading_label->hide();
-
-		Label *sort_label = memnew(Label);
-		sort_label->set_text(TTR("Sort:"));
-		hb->add_child(sort_label);
-
-		filter_option = memnew(OptionButton);
-		filter_option->set_clip_text(true);
-		filter_option->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-		filter_option->connect("item_selected", callable_mp(this, &ProjectManager::_on_order_option_changed));
-		hb->add_child(filter_option);
-
-		Vector<String> sort_filter_titles;
-		sort_filter_titles.push_back(TTR("Last Edited"));
-		sort_filter_titles.push_back(TTR("Name"));
-		sort_filter_titles.push_back(TTR("Path"));
-		sort_filter_titles.push_back(TTR("Tags"));
-
-		for (int i = 0; i < sort_filter_titles.size(); i++) {
-			filter_option->add_item(sort_filter_titles[i]);
-		}
-
-		search_panel = memnew(PanelContainer);
-		search_panel->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-		search_tree_vb->add_child(search_panel);
-
-		_project_list = memnew(ProjectList);
-		_project_list->connect(ProjectList::SIGNAL_SELECTION_CHANGED, callable_mp(this, &ProjectManager::_update_project_buttons));
-		_project_list->connect(ProjectList::SIGNAL_PROJECT_ASK_OPEN, callable_mp(this, &ProjectManager::_open_selected_projects_ask));
-		_project_list->set_horizontal_scroll_mode(ScrollContainer::SCROLL_MODE_DISABLED);
-		search_panel->add_child(_project_list);
-	}
-
-	{
-		// Project tab side bar
-		VBoxContainer *tree_vb = memnew(VBoxContainer);
 		tree_vb->set_custom_minimum_size(Size2(120, 120));
 		local_projects_hb->add_child(tree_vb);
 
@@ -2954,6 +2899,62 @@ ProjectManager::ProjectManager() {
 	}
 
 	{
+		// Projects + search bar
+		VBoxContainer *search_tree_vb = memnew(VBoxContainer);
+		local_projects_hb->add_child(search_tree_vb);
+		search_tree_vb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+
+		HBoxContainer *hb = memnew(HBoxContainer);
+		hb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+		search_tree_vb->add_child(hb);
+
+		search_box = memnew(LineEdit);
+		search_box->set_placeholder(TTR("Filter Projects"));
+		search_box->set_tooltip_text(TTR("This field filters projects by name and last path component.\nTo filter projects by name and full path, the query must contain at least one `/` character."));
+		search_box->set_clear_button_enabled(true);
+		search_box->connect("text_changed", callable_mp(this, &ProjectManager::_on_search_term_changed));
+		search_box->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+		hb->add_child(search_box);
+
+		loading_label = memnew(Label(TTR("Loading, please wait...")));
+		loading_label->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+		hb->add_child(loading_label);
+		// The loading label is shown later.
+		loading_label->hide();
+
+		Label *sort_label = memnew(Label);
+		sort_label->set_text(TTR("Sort:"));
+		hb->add_child(sort_label);
+
+		filter_option = memnew(OptionButton);
+		filter_option->set_clip_text(true);
+		filter_option->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+		filter_option->connect("item_selected", callable_mp(this, &ProjectManager::_on_order_option_changed));
+		hb->add_child(filter_option);
+
+		Vector<String> sort_filter_titles;
+		sort_filter_titles.push_back(TTR("Last Edited"));
+		sort_filter_titles.push_back(TTR("Name"));
+		sort_filter_titles.push_back(TTR("Path"));
+		sort_filter_titles.push_back(TTR("Tags"));
+
+		for (int i = 0; i < sort_filter_titles.size(); i++) {
+			filter_option->add_item(sort_filter_titles[i]);
+		}
+
+		search_panel = memnew(PanelContainer);
+		search_panel->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+		search_tree_vb->add_child(search_panel);
+
+		_project_list = memnew(ProjectList);
+		_project_list->connect(ProjectList::SIGNAL_SELECTION_CHANGED, callable_mp(this, &ProjectManager::_update_project_buttons));
+		_project_list->connect(ProjectList::SIGNAL_PROJECT_ASK_OPEN, callable_mp(this, &ProjectManager::_open_selected_projects_ask));
+		_project_list->set_horizontal_scroll_mode(ScrollContainer::SCROLL_MODE_DISABLED);
+		search_panel->add_child(_project_list);
+	}
+
+
+	{
 		// Version info and language options
 		settings_hb = memnew(HBoxContainer);
 		settings_hb->set_alignment(BoxContainer::ALIGNMENT_END);
@@ -2972,13 +2973,15 @@ ProjectManager::ProjectManager() {
 		if (hash.length() != 0) {
 			hash = " " + vformat("[%s]", hash.left(9));
 		}
-		version_btn->set_text("v" VERSION_FULL_BUILD + hash);
+		//version_btn->set_text("V:" VERSION_FULL_BUILD + hash);
+		version_btn->set_text("V:" VERSION_FULL_BUILD);
 		// Fade the version label to be less prominent, but still readable.
 		version_btn->set_self_modulate(Color(1, 1, 1, 0.6));
 		version_btn->set_underline_mode(LinkButton::UNDERLINE_MODE_ON_HOVER);
 		version_btn->set_tooltip_text(TTR("Click to copy."));
 		version_btn->connect("pressed", callable_mp(this, &ProjectManager::_version_button_pressed));
-		spacer_vb->add_child(version_btn);
+		//spacer_vb->add_child(version_btn);
+		tree_vb->add_child(version_btn);
 
 		// Add a small horizontal spacer between the version and language buttons
 		// to distinguish them.
@@ -3008,12 +3011,15 @@ ProjectManager::ProjectManager() {
 		}
 
 		String current_lang = EDITOR_GET("interface/editor/editor_language");
-		language_btn->set_text(current_lang);
+		String current_lang_abbr = current_lang.split("]", false)[0].substr(1);
+		language_btn->set_text(current_lang_abbr);
 
 		for (int i = 0; i < editor_languages.size(); i++) {
 			String lang = editor_languages[i];
 			String lang_name = TranslationServer::get_singleton()->get_locale_name(lang);
-			language_btn->add_item(vformat("[%s] %s", lang, lang_name), i);
+			//language_btn->add_item(vformat("[%s] %s", lang, lang_name), i);
+			language_btn->add_item(lang, i);
+
 			language_btn->set_item_metadata(i, lang);
 			if (current_lang == lang) {
 				language_btn->select(i);

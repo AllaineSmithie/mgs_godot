@@ -411,6 +411,9 @@ class AnimationTrackEditor : public VBoxContainer {
 	void _update_length(double p_new_len);
 	void _dropped_track(int p_from_track, int p_to_track);
 
+	void _cancel_add_node_pending();
+
+	void _add_child_node_pressed();
 	void _add_track(int p_type);
 	void _new_track_node_selected(NodePath p_path);
 	void _new_track_property_selected(String p_name);
@@ -457,6 +460,8 @@ class AnimationTrackEditor : public VBoxContainer {
 	void _insert_track(bool p_reset_wanted, bool p_create_beziers);
 
 	void _root_removed();
+	void _node_created(Node* node);
+	bool add_node_pending = false;
 
 	PropertyInfo _find_hint_for_track(int p_idx, NodePath &r_base_path, Variant *r_current_val = nullptr);
 

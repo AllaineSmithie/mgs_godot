@@ -1524,16 +1524,26 @@ void SceneTreeDialog::_filter_changed(const String &p_filter) {
 	tree->set_filter(p_filter);
 }
 
+void SceneTreeDialog::_add_child_node_pressed() {
+	emit_signal("add_child_node_pressed");
+}
+
 void SceneTreeDialog::_bind_methods() {
 	ClassDB::bind_method("_cancel", &SceneTreeDialog::_cancel);
 
 	ADD_SIGNAL(MethodInfo("selected", PropertyInfo(Variant::NODE_PATH, "path")));
+	ADD_SIGNAL(MethodInfo("add_child_node_pressed"));
 }
 
 SceneTreeDialog::SceneTreeDialog() {
 	set_title(TTR("Select a Node"));
 	VBoxContainer *vbc = memnew(VBoxContainer);
 	add_child(vbc);
+
+	add_child_node = memnew(Button);
+	add_child_node->set_name(TTR("Add Child Node"));
+	add_child_node->connect("pressed", callable_mp(this, &SceneTreeDialog::_add_child_node_pressed));
+	vbc->add_child(add_child_node);
 
 	filter = memnew(LineEdit);
 	filter->set_h_size_flags(Control::SIZE_EXPAND_FILL);

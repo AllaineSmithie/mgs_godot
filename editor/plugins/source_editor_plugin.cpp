@@ -1,568 +1,192 @@
 
-#include "source_editor_plugin.h"
-//#include "../ShowEngine.h"
+#include <assert.h>
+#include <core/os/time.h>
+#include <editor/plugins/animation_player_editor_plugin.h>
+#include "editor/editor_scale.h"
+#include "editor/editor_command_palette.h"
+#include "editor/gui/editor_file_dialog.h"
 #include <scene/gui/menu_button.h>
 #include <scene/gui/tab_container.h>
-#include <core/os/time.h>
+#include <scene/scene_string_names.h>
+#include "source_editor_plugin.h"
 #include <scene/gui/separator.h>
-#include <assert.h>
-#include "editor/editor_scale.h"
-
-//#include "../digishow/DigiShow/digishow_common.h"
-//#include "../digishow/DigiShow/digishow_slot.h"
-/*
-
-const PackedStringArray m_interfaceTypes =
-{
-	 "Midi",
-	 "Rioc",
-	 "Modbus",
-	 "Smartlight",
-	 "DMX",
-	 "OSC",
-	 "Artnet/sACN",
-	 "Remote",
-	 "Launch",
-	 "InputKey",
-	 "Metronome",
-	 "Audio",
-	 "Screen"
-};
-const Vector<int> m_interfaceTypesSortIdx =
-{
-	 0,
-	 4,
-	 9,
-	 10,
-	 11,
-	 12,
-	 5,
-	 6,
-	 7,
-	 3,
-	 1,
-	 2,
-	 8
-};
 
 
-const char* SourceEditor::sort_key[SORT_MAX] = {
-	"updated",
-	"updated",
-	"name",
-	"name",
-	"cost",
-	"cost",
-};
-
-const char* SourceEditor::sort_text[SORT_MAX] = {
-	TTRC("Newest Updated"),
-	TTRC("Oldest Updated"),
-	TTRC("Name (A-Z)"),
-	TTRC("Name (Z-A)"),
-	TTRC("ID (0-X)"), // "cost" stores the SPDX license name in the Godot Asset Library.
-	TTRC("ID (X-0)"), // "cost" stores the SPDX license name in the Godot Asset Library.
-};
-
-const char* SourceEditor::filter_key[FILTER_MAX] = {
-	"all",
-	"inputs",
-	"outputs",
-};
-
-const char* SourceEditor::filter_text[FILTER_MAX] = {
-	TTRC("All"),
-	TTRC("Inputs Only"),
-	TTRC("Outputs Only")
-};
+SourceEditor* SourceEditor::source_editor = nullptr;
 
 
-// ============================================================================================================================
-SlotItemDescription::SlotItemDescription()
-{
-	auto stylebox = get_theme_stylebox(SNAME("panel"), SNAME("Tree"));
-	if (stylebox->has_method("set_bg_color"))
-		stylebox->call("set_bg_color", Color(0.24, 0.24, 0.24, 1.0));
 
-	add_theme_style_override("panel", stylebox);
+void SourceEditor::_menu_option(int p_option) {
+	switch (p_option) {
+	case SOURCE_FILE_OPEN: {
+		file_dialog->set_file_mode(EditorFileDialog::FILE_MODE_OPEN_FILE);
+		file_dialog->set_access(EditorFileDialog::ACCESS_FILESYSTEM);
+		file_dialog_option = SOURCE_FILE_OPEN;
 
+		List<String> extensions;
+		ResourceLoader::get_recognized_extensions_for_type("Resource", &extensions);
+		file_dialog->clear_filters();
+		for (int i = 0; i < extensions.size(); i++) {
+			file_dialog->add_filter("*." + extensions[i], extensions[i].to_upper());
+		}
 
-	// Input
-
-	VBoxContainer* vbox = memnew(VBoxContainer);
-	add_child(vbox);
-
-	PanelContainer* name_pc = memnew(PanelContainer);
-	name_pc->add_child(memnew(Label("Slot Name:")));
-	name_pc->add_child(memnew(VSeparator));
-
-	m_name_edit = memnew(LineEdit);
-	m_name_edit->set_text("Enter Slot Name");
-	name_pc->add_child(m_name_edit);
-
-	vbox->add_child(name_pc);
-
-	MarginContainer* input_mc = memnew(MarginContainer);
-	vbox->add_child(input_mc);
-	PanelContainer* input_pc = memnew(PanelContainer);
-	input_mc->add_child(input_pc);
-	MarginContainer* input_mc2 = memnew(MarginContainer);
-	input_pc->add_child(input_mc2);
-	HBoxContainer* hbox = memnew(HBoxContainer);
-	input_mc2->add_child(hbox);
-
-	m_icon = memnew(TextureRect);
-	m_icon->set_custom_minimum_size(Size2(80, 60));
-
-	hbox->add_child(m_icon);
-	hbox->add_theme_constant_override("separation", 15 * EDSCALE);
-
-	VBoxContainer* input_vbox = memnew(VBoxContainer);
-	hbox->add_child(input_vbox);
-	HBoxContainer* input_hbox = memnew(HBoxContainer);
-	input_vbox->add_child(input_hbox);
-
-	input_hbox->add_child(memnew(Label("Input:")));
-	m_input_menu = memnew(OptionButton);
-	input_hbox->add_child(m_input_menu);
-
-	for (auto i = 0; i < m_interfaceTypes.size(); ++i)
-	{
-		m_input_menu->add_item(m_interfaceTypes[m_interfaceTypesSortIdx[i]]);
-	}
-	m_input_menu->set_h_size_flags(SIZE_EXPAND);
-
-	const auto input_hbox2 = memnew(HBoxContainer);
-	input_vbox->add_child(input_hbox2);
-
-	input_hbox2->add_child(memnew(Label("Channel:")));
-	m_input_channel = memnew(OptionButton);
-	m_input_channel->add_item("All");
-	for (auto i = 0; i < 16; ++i)
-	{
-		m_input_channel->add_item(String::num(i, 0));
-	}
-	input_hbox2->add_child(m_input_channel);
-
-	input_hbox2->add_child(memnew(Label("Value 1:")));
-	m_input_value_1 = memnew(OptionButton);
-	m_input_value_1->add_item("All");
-	for (auto i = 0; i < 128; ++i)
-	{
-		m_input_value_1->add_item(String::num(i, 0));
-	}
-	input_hbox2->add_child(m_input_value_1);
-
-	input_hbox2->add_child(memnew(Label("Value 2:")));
-	m_input_value_2 = memnew(SpinBox);
-	m_input_value_2->set_min(0);
-	m_input_value_2->set_max(128);
-	input_hbox2->add_child(m_input_value_2);
-
-
-	VBoxContainer* input_apply_vbox = memnew(VBoxContainer);
-	input_apply_vbox->set_alignment(BoxContainer::ALIGNMENT_END);
-	hbox->add_child(input_apply_vbox);
-	m_input_apply = memnew(Button("Apply"));
-
-
-	// Logic
-
-	MarginContainer* logic_mc = memnew(MarginContainer);
-	logic_mc->set_v_size_flags(SIZE_EXPAND_FILL);
-	vbox->add_child(logic_mc);
-	PanelContainer* logic_pc = memnew(PanelContainer);
-	logic_mc->add_child(logic_pc);
-	MarginContainer* logic_mc2 = memnew(MarginContainer);
-	logic_pc->add_child(logic_mc2);
-
-
-	m_logic_vbox = memnew(VBoxContainer);
-	m_logic_vbox->set_alignment(BoxContainer::ALIGNMENT_CENTER);
-	logic_mc2->add_child(m_logic_vbox);
-
-	m_logic_vbox->add_child(memnew(Label("Signal mapping transformation options")));
-	const auto sublabel = memnew(Label("Please select signal endpoints of both source and destination"));
-	sublabel->add_theme_color_override("font_color", Color(0.47, 0.47, 0.47, 1.0));
-	m_logic_vbox->add_child(sublabel);
-
-
-	// Output
-
-	MarginContainer* output_mc = memnew(MarginContainer);
-	vbox->add_child(output_mc);
-	PanelContainer* output_pc = memnew(PanelContainer);
-	output_mc->add_child(output_pc);
-	MarginContainer* output_mc2 = memnew(MarginContainer);
-	output_pc->add_child(output_mc2);
-	hbox = memnew(HBoxContainer);
-	output_mc2->add_child(hbox);
-
-	m_icon = memnew(TextureRect);
-	m_icon->set_custom_minimum_size(Size2(80, 60));
-
-	hbox->add_child(m_icon);
-	hbox->add_theme_constant_override("separation", 15 * EDSCALE);
-
-	VBoxContainer* output_vbox = memnew(VBoxContainer);
-	hbox->add_child(output_vbox);
-	HBoxContainer* output_hbox = memnew(HBoxContainer);
-	output_vbox->add_child(output_hbox);
-
-	output_hbox->add_child(memnew(Label("Output:")));
-	m_output_menu = memnew(OptionButton);
-	output_hbox->add_child(m_output_menu);
-
-	for (auto i = 0; i < m_interfaceTypes.size(); ++i)
-	{
-		m_output_menu->add_item(m_interfaceTypes[m_interfaceTypesSortIdx[i]]);
-	}
-	m_output_menu->set_h_size_flags(SIZE_EXPAND);
-
-	const auto output_hbox2 = memnew(HBoxContainer);
-	output_vbox->add_child(output_hbox2);
-
-	output_hbox2->add_child(memnew(Label("Channel:")));
-	m_output_channel = memnew(OptionButton);
-	m_output_channel->add_item("All");
-	for (auto i = 0; i < 16; ++i)
-	{
-		m_output_channel->add_item(String::num(i, 0));
-	}
-	output_hbox2->add_child(m_output_channel);
-
-	output_hbox2->add_child(memnew(Label("Value 1:")));
-	m_output_value_1 = memnew(OptionButton);
-	m_output_value_1->add_item("All");
-	for (auto i = 0; i < 128; ++i)
-	{
-		m_output_value_1->add_item(String::num(i, 0));
-	}
-	output_hbox2->add_child(m_output_value_1);
-
-	output_hbox2->add_child(memnew(Label("Value 2:")));
-	m_output_value_2 = memnew(SpinBox);
-	m_output_value_2->set_min(0);
-	m_output_value_2->set_max(128);
-	output_hbox2->add_child(m_output_value_2);
-
-
-}
-
-void SlotItemDescription::configure(Dictionary& info)
-{
-	OptionButton* m_input_menu = nullptr;
-	OptionButton* m_input_channel = nullptr;
-	OptionButton* m_input_value_1 = nullptr;
-	SpinBox* m_input_value_2 = nullptr;
-	Button* m_input_apply = nullptr;
-	OptionButton* m_output_menu = nullptr;
-	OptionButton* m_output_channel = nullptr;
-	OptionButton* m_output_value_1 = nullptr;
-	SpinBox* m_output_value_2 = nullptr;
-	Button* m_output_apply = nullptr;
-	VBoxContainer* m_logic_vbox = nullptr;
+		file_dialog->popup_file_dialog();
+		file_dialog->set_title(TTR("Open File"));
+		return;
+	} break;
 	
-	const Dictionary& source		= info["sourceInterface"];
-	const Dictionary& destination	= info["destinationInterface"];
-
-
-	const String name				= info["name"];
-
-	const int sourcetype			= source["type"];
-	const int sourcemode			= source["mode"];           // interface mode id
-	const bool sourceoutput			= source["output"];			// can output signal
-	const bool sourceinput			= source["input"];			// can input signal
-	const String sourcelabel		= source["label"];			// a label describes the interface
-
-	const int destinationtype		= destination["type"];
-	const int destinationmode		= destination["mode"];       // interface mode id
-	const bool destinationoutput	= destination["output"];     // can output signal
-	const bool destinationinput		= destination["input"];      // can input signal
-	const String destinationlabel	= destination["label"];      // a label describes the interface
-
-	m_icon->set_texture(get_theme_icon(StringName(name), SNAME("EditorIcons")));
-
-	//info["inputSignal"     ] = m_slotInfo.inputSignal;
-	//info["outputSignal"    ] = m_slotInfo.outputSignal;
-	info["inputRange"      ];
-	info["outputRange"     ];
-
-	info["inputLow"        ];
-	info["inputHigh"       ];
-	info["outputLow"       ];
-	info["outputHigh"      ];
-	info["inputInverted"   ];
-	info["outputInverted"  ];
-	info["outputLowAsZero" ];
-
-	info["envelopeAttack"  ];
-	info["envelopeHold"    ];
-	info["envelopeDecay"   ];
-	info["envelopeSustain" ];
-	info["envelopeRelease" ];
-	info["envelopeInDelay" ];
-	info["envelopeOutDelay"];
-
-	info["outputSmoothing" ];
-	info["outputInterval"  ];
+	}
 
 }
 
-// ============================================================================================================================
-
-void SlotItem::configure(const String& p_name,
-	RID p_rid,
-	const String& p_input_interface_type_name,
-	const String& p_output_interface_type_name,
-	const String& p_input_interface_name,
-	const String& p_output_interface_name,
-	const String& p_script_title,
-	const String& p_animation_title,
-	const bool active)
-{
-	m_slot_title->set_text(p_name);
-	m_slot_rid = p_rid;
-
-	m_input_title->set_text(p_input_interface_name);
-	m_output_title->set_text(p_output_interface_name);
-	m_script_title->set_text(p_script_title);
-	m_animation_title->set_text(p_animation_title);
-	m_input_icon = memnew(TextureRect);
-	m_output_icon = memnew(TextureRect);
-	if (!(p_input_interface_type_name.is_empty() || p_input_interface_type_name == "<null>") && get_theme_icon(StringName(p_input_interface_type_name), SNAME("EditorIcons")).is_valid())
-		m_input_icon->set_texture(EditorNode::get_singleton()->get_class_icon(StringName(p_input_interface_type_name), SNAME("EditorIcons")));
-	else
-		m_input_icon->set_texture(EditorNode::get_singleton()->get_class_icon(SNAME("Node"), SNAME("EditorIcons")));
-
-	if (!(p_output_interface_type_name.is_empty() || p_output_interface_type_name == "<null>") && get_theme_icon(StringName(p_output_interface_type_name), SNAME("EditorIcons")).is_valid())
-		m_output_icon->set_texture(EditorNode::get_singleton()->get_class_icon(StringName(p_output_interface_type_name), SNAME("EditorIcons")));
-	else
-		m_output_icon->set_texture(EditorNode::get_singleton()->get_class_icon(SNAME("Node"), SNAME("EditorIcons")));
-
-	m_enabled->set_pressed_no_signal(active);
+void SourceEditor::_window_changed(bool p_visible) {
+	make_floating->set_visible(!p_visible);
 }
 
+void SourceEditor::_tab_changed(int p_which) {
+	if (tab_container->get_tab_count() && tab_container->get_current_tab() >= 0) {
+		/*ScriptEditorBase* se = _get_current_editor();
+		if (se) {
+			se->enable_editor(this);
 
-void SlotItem::_bind_methods()
-{
-	ADD_SIGNAL(MethodInfo("slot_selected", PropertyInfo(Variant::INT, "id")));
-	ADD_SIGNAL(MethodInfo("slot_enabled", PropertyInfo(Variant::INT, "id"), PropertyInfo(Variant::BOOL, "enabled")));
+			if (!grab_focus_block && is_visible_in_tree()) {
+				se->ensure_focus();
+			}
+		}*/
+	}
 }
 
-void SlotItem::_onClicked()
-{
-	emit_signal("slot_selected", m_slot_rid);
+void SourceEditor::_file_dialog_action(String p_file) {
 }
 
-void SlotItem::_onEnabled()
-{
+void SourceEditor::_autosave() {
 
 }
 
-SlotItem::SlotItem()
-{
-	//set_mouse_filter(MOUSE_FILTER_IGNORE);
-
-
-	Ref<StyleBoxEmpty> border;
-	border.instantiate();
-	border->set_content_margin_all(5 * EDSCALE);
-	add_theme_style_override("panel", border);
-
-	auto button_mc = memnew(MarginContainer);
-	button_mc->add_theme_constant_override("margin_top", 22);
-	button_mc->add_theme_constant_override("margin_right", 2);
-	add_child(button_mc);
-
-	m_selected = memnew(Button);
-	button_mc->add_child(m_selected);
-	m_selected->connect("pressed", callable_mp(this, &SlotItem::_onClicked));
-	//m_enabled = memnew(CheckButton);
-	//m_enabled->add_theme_constant_override("check_v_offset", 6);
-	//m_enabled->set_icon(get_theme_icon("icon_default_project_icon"));
-	//m_enabled->set_mouse_filter(MOUSE_FILTER_PASS);
-	//m_enabled->set_focus_mode(FOCUS_NONE);
-	//m_enabled->set_expand_icon(true);
-	//button_mc->add_child(m_enabled);
-
-	auto selectbutton_mc = memnew(HBoxContainer);
-	selectbutton_mc->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	selectbutton_mc->set_alignment(HBoxContainer::ALIGNMENT_END);
-	selectbutton_mc->add_theme_constant_override("margin_right", 15);
-	//selectbutton_mc->add_theme_constant_override("margin_right", 55);
-	selectbutton_mc->set("layout_mode", LAYOUT_MODE_ANCHORS);
-	selectbutton_mc->set("anchors_preset", PRESET_CENTER_LEFT);
-	selectbutton_mc->set_v_size_flags(SIZE_EXPAND_FILL);
-	m_selected->add_child(selectbutton_mc);
-
-	m_enabled = memnew(CheckButton);
-	m_enabled->set_focus_mode(FOCUS_NONE);
-	m_enabled->set_icon(get_theme_icon("MoveRight"));
-	//m_enabled->add_theme_constant_override("check_v_offset", 6);
-	m_enabled->connect("pressed", callable_mp(this, &SlotItem::_onEnabled));
-	selectbutton_mc->add_child(m_enabled);
-
-	VBoxContainer* vb = memnew(VBoxContainer);
-	vb->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	// avoid hidden possibility to click enabled/disabled
-	vb->add_theme_constant_override("separation", 0);
-	add_child(vb);
-
-	m_slot_title = memnew(Label("Connection: Unnamed"));
-	m_slot_title->set_mouse_filter(MOUSE_FILTER_STOP);
-	vb->add_child(m_slot_title);
-
-	auto main_mc = memnew(MarginContainer);
-	main_mc->add_theme_constant_override("margin_left", 100);
-	main_mc->add_theme_constant_override("margin_right", 80);
-	main_mc->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	vb->add_child(main_mc);
-
-	vb->add_child(memnew(HSeparator));
-
-	HBoxContainer* hb = memnew(HBoxContainer);
-	// Add some spacing to visually separate the icon from the asset details.
-	hb->add_theme_constant_override("separation", 15 * EDSCALE);
-	hb->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	main_mc->add_child(hb);
-
-	// Input
-	MarginContainer* inputmargin = memnew(MarginContainer);
-	inputmargin->add_theme_constant_override("margin_left", 8);
-	inputmargin->add_theme_constant_override("margin_right", 8);
-	inputmargin->add_theme_constant_override("margin_top", 8);
-	inputmargin->add_theme_constant_override("margin_bottom", 8);
-	inputmargin->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	hb->add_child(inputmargin);
-
-
-	VBoxContainer* input_vb = memnew(VBoxContainer);
-	inputmargin->add_child(input_vb);
-	input_vb->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	input_vb->add_child(memnew(Label("Source")));
-
-	m_input_title = memnew(Label("no input"));
-	input_vb->add_child(m_input_title);
-
-	m_input_icon = memnew(TextureRect);
-	input_vb->add_child(m_input_icon);
-
-	TextureRect* input_symbol = memnew(TextureRect);
-	input_symbol->set_texture(EditorNode::get_singleton()->get_class_icon("Node"));
-	input_symbol->set_expand_mode(TextureRect::EXPAND_FIT_WIDTH_PROPORTIONAL);
-	input_symbol->set_stretch_mode(TextureRect::STRETCH_KEEP_ASPECT_CENTERED);
-	input_vb->add_child(input_symbol);
-
-	// Spacer 1
-	Control* spacer = memnew(Control);
-	spacer->set_h_size_flags(SIZE_EXPAND_FILL);
-	spacer->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	hb->add_child(spacer);
-
-	// Script + Spacer 2 & 3
-	VBoxContainer* script_vb = memnew(VBoxContainer);
-	script_vb->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	hb->add_child(script_vb);
-	spacer = memnew(Control);
-	spacer->set_v_size_flags(SIZE_EXPAND_FILL);
-	spacer->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	script_vb->add_child(spacer);
+void SourceEditor::set_window_layout(Ref<ConfigFile> p_layout) {
 	
-	script_vb->add_child(memnew(Label("Script:")));
-
-	m_script_title = memnew(Label("empty"));
-	script_vb->add_child(m_script_title);
-
-	spacer = memnew(Control);
-	spacer->set_v_size_flags(SIZE_EXPAND_FILL);
-	spacer->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	script_vb->add_child(spacer);
-
-	// Spacer 4
-	spacer = memnew(Control);
-	spacer->set_h_size_flags(SIZE_EXPAND_FILL);
-	spacer->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	hb->add_child(spacer);
-
-	// Animation + Spacer 5 & 6
-	VBoxContainer* animation_vb = memnew(VBoxContainer);
-	hb->add_child(animation_vb);
-	spacer = memnew(Control);
-	spacer->set_v_size_flags(SIZE_EXPAND_FILL);
-	spacer->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	animation_vb->add_child(spacer);
-	animation_vb->add_child(memnew(Label("Animation:")));
-
-	m_animation_title = memnew(Label("empty"));
-	animation_vb ->add_child(m_animation_title);
-
-	spacer = memnew(Control);
-	spacer->set_v_size_flags(SIZE_EXPAND_FILL);
-	spacer->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	animation_vb->add_child(spacer);
-
-	// Spacer 7
-	spacer = memnew(Control);
-	spacer->set_h_size_flags(SIZE_EXPAND_FILL);
-	spacer->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	hb->add_child(spacer);
-
-	// Output
-	MarginContainer* outputmargin = memnew(MarginContainer);
-	outputmargin->add_theme_constant_override("margin_left", 8);
-	outputmargin->add_theme_constant_override("margin_right", 8);
-	outputmargin->add_theme_constant_override("margin_top", 8);
-	outputmargin->add_theme_constant_override("margin_bottom", 8);
-	hb->add_child(outputmargin);
-
-
-	VBoxContainer* output_vb = memnew(VBoxContainer);
-	outputmargin->add_child(output_vb);
-	outputmargin->set_mouse_filter(MOUSE_FILTER_IGNORE);
-	output_vb->add_child(memnew(Label("Destination")));
-
-	m_output_title = memnew(Label("no output"));
-	output_vb->add_child(m_output_title);
-	m_output_icon = memnew(TextureRect);
-	output_vb->add_child(m_output_icon);
-
-
-	//set_custom_minimum_size(Size2(250, 100) * EDSCALE);
-	set_h_size_flags(Control::SIZE_EXPAND_FILL);
-}*/
-
-SourceEditor* SourceEditor::singleton = nullptr;
-
-SourceEditor* SourceEditor::get_singleton()
-{
-	return singleton;
 }
 
+void SourceEditor::get_window_layout(Ref<ConfigFile> p_layout) {
+	
+}
 
-SourceEditor::SourceEditor()
+void SourceEditor::_update_autosave_timer() {
+	if (!autosave_timer->is_inside_tree()) {
+		return;
+	}
+
+	float autosave_time = EDITOR_GET("text_editor/behavior/files/autosave_interval_secs");
+	if (autosave_time > 0) {
+		autosave_timer->set_wait_time(autosave_time);
+		autosave_timer->start();
+	}
+	else {
+		autosave_timer->stop();
+	}
+}
+
+void SourceEditor::_close_current_tab(bool p_save) {
+	//_close_tab(tab_container->get_current_tab(), p_save);
+}
+
+void SourceEditor::_close_discard_current_tab(const String& p_str) {
+	//_close_tab(tab_container->get_current_tab(), false);
+	erase_tab_confirm->hide();
+}
+
+SourceEditor::SourceEditor(WindowWrapper* p_wrapper)
 {
-	ERR_FAIL_COND(singleton != nullptr);
-	singleton = this;
+	source_window_wrapper = p_wrapper;
+	ERR_FAIL_COND(source_editor != nullptr);
 
 	// BG Stylebox
 	StyleBoxFlat* panelstylebox = memnew(StyleBoxFlat);
-	panelstylebox->set_bg_color(Color(0.14, 0.14, 0.14));
+	panelstylebox->set_bg_color(Color(0.10, 0.10, 0.10));
+	panelstylebox->set_border_width(Side::SIDE_LEFT, 0);
+	panelstylebox->set_border_width(Side::SIDE_RIGHT, 0);
+	panelstylebox->set_border_width(Side::SIDE_TOP, 0);
+	Color hot_color = get_theme_color(SNAME("accent_color"), SNAME("Editor"));
+	panelstylebox->set_border_color(hot_color);
 	add_theme_style_override("panel", panelstylebox);
 
 	set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
 
-	HBoxContainer* main_flow = memnew(HBoxContainer);
-	main_flow->set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
-	add_child(main_flow);
 	VBoxContainer* library_main = memnew(VBoxContainer);
 	add_child(library_main);
 
-	m_header_bar = memnew(TabContainer);
-	library_main->add_child(m_header_bar);
-	m_header_bar->set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
-	m_header_bar->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-	m_header_bar->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+	menu_hb = memnew(HBoxContainer);
+	library_main->add_child(menu_hb);
+
+	tab_container = memnew(TabContainer);
+	library_main->add_child(tab_container);
+	tab_container->set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
+	tab_container->set_h_size_flags(SIZE_EXPAND_FILL);
+	tab_container->set_v_size_flags(SIZE_EXPAND_FILL);
+	tab_container->add_theme_style_override("panel", panelstylebox);
+	tab_container->set_custom_minimum_size(Size2(200, 0) * EDSCALE);
+	tab_container->set_tabs_visible(false);
+
+	set_process_input(true);
+	set_process_shortcut_input(true);
+
+	file_menu = memnew(MenuButton);
+	file_menu->set_text(TTR("File"));
+	file_menu->set_switch_on_hover(true);
+	file_menu->set_shortcut_context(this);
+	menu_hb->add_child(file_menu);
+
+	file_menu->get_popup()->add_shortcut(ED_SHORTCUT("source_editor/open", TTR("Open...")), SOURCE_FILE_OPEN);
+
+	batch_tools_menu = memnew(MenuButton);
+	batch_tools_menu ->set_text(TTR("Batch Processing"));
+	batch_tools_menu ->set_switch_on_hover(true);
+	batch_tools_menu ->set_shortcut_context(this);
+	batch_tools_menu ->get_popup()->connect("id_pressed", callable_mp(this, &SourceEditor::_menu_option));
+	menu_hb->add_child(batch_tools_menu );
+
+	menu_hb->add_spacer();
+
+	if (p_wrapper->is_window_available()) {
+		make_floating = memnew(ScreenSelect);
+		make_floating->set_flat(true);
+		make_floating->set_tooltip_text(TTR("Make the script editor floating."));
+		make_floating->connect("request_open_in_screen", callable_mp(source_window_wrapper, &WindowWrapper::enable_window_on_screen).bind(true));
+
+		menu_hb->add_child(make_floating);
+		p_wrapper->connect("window_visibility_changed", callable_mp(this, &SourceEditor::_window_changed));
+	}
+
+	menu_hb->add_child(memnew(VSeparator));
+
+	tab_container->connect("tab_changed", callable_mp(this, &SourceEditor::_tab_changed));
+
+	erase_tab_confirm = memnew(ConfirmationDialog);
+	erase_tab_confirm->set_ok_button_text(TTR("Save"));
+	erase_tab_confirm->add_button(TTR("Discard"), DisplayServer::get_singleton()->get_swap_cancel_ok(), "discard");
+	erase_tab_confirm->connect("confirmed", callable_mp(this, &SourceEditor::_close_current_tab).bind(true));
+	erase_tab_confirm->connect("custom_action", callable_mp(this, &SourceEditor::_close_discard_current_tab));
+	add_child(erase_tab_confirm);
+
+	file_dialog_option = -1;
+	file_dialog = memnew(EditorFileDialog);
+	add_child(file_dialog);
+	file_dialog->connect("file_selected", callable_mp(this, &SourceEditor::_file_dialog_action));
+
+	error_dialog = memnew(AcceptDialog);
+	add_child(error_dialog);
+
+	source_editor = this;
+
+	autosave_timer = memnew(Timer);
+	autosave_timer->set_one_shot(false);
+	autosave_timer->connect(SceneStringNames::get_singleton()->tree_entered, callable_mp(this, &SourceEditor::_update_autosave_timer));
+	autosave_timer->connect("timeout", callable_mp(this, &SourceEditor::_autosave));
+	add_child(autosave_timer);
+
+	grab_focus_block = false;
+		
+	add_theme_style_override("panel", EditorNode::get_singleton()->get_gui_base()->get_theme_stylebox(SNAME("ScriptEditorPanel"), SNAME("EditorStyles")));
 	
 
 	// TO DO -> Add Detailed Connection Description
@@ -578,8 +202,8 @@ SourceEditor::SourceEditor()
 }
 SourceEditor::~SourceEditor()
 {
-	ERR_FAIL_COND(singleton != this);
-	singleton = nullptr;
+	ERR_FAIL_COND(source_editor != this);
+	source_editor = nullptr;
 }
 
 void SourceEditor::_bind_methods()
@@ -603,11 +227,13 @@ void SourceEditor::_notification(int p_what)
 
 		case NOTIFICATION_VISIBILITY_CHANGED: {
 			if (is_visible()) {
-	#ifndef ANDROID_ENABLED
-				// Focus the search box automatically when switching to the Templates tab (in the Project Manager)
-				// or switching to the AssetLib tab (in the editor).
-				// The Project Manager's project filter box is automatically focused in the project manager code.
-	#endif
+				/*EditorNode::get_singleton()->remove_bottom_panel_item(AnimationPlayerEditor::get_singleton());
+				register_extension(AnimationPlayerEditor::get_singleton());*/
+			}
+			else {
+				/*
+				unregister_extension(AnimationPlayerEditor::get_singleton());
+				EditorNode::get_singleton()->add_bottom_panel_item(TTR("Animation"), AnimationPlayerEditor::get_singleton());*/
 			}
 		} break;
 
@@ -633,32 +259,36 @@ void SourceEditor::_notification(int p_what)
 
 }
 
-void SourceEditor::register_extension(SourceEditorPluginExtension* p_extension)
+void SourceEditor::register_extension(Control* p_extension)
 {
-	ERR_FAIL_COND_MSG(p_extension->editor_page == nullptr, "Editor extension has no editor page");
+	ERR_FAIL_COND(p_extension == nullptr);
+	// ERR_FAIL_COND_MSG(p_extension->editor_page == nullptr, "Editor extension has no editor page");
 		
-	for (auto i = 0; i < m_header_bar->get_child_count(); ++i)
+	for (auto i = 0; i < tab_container->get_tab_count(); ++i)
 	{
-		Node* child = m_header_bar->get_child(i, false);
-		if (child == p_extension->editor_page)
+		Control* child = tab_container->get_tab_control(i);
+		if (child == p_extension)
 		{
 			// do nothing on double assignment
 			return;
 		}
 	}
-	m_header_bar->add_child(p_extension->editor_page);
+	tab_container->add_child(p_extension);
+	tab_container->set_current_tab(tab_container->get_tab_count() - 1);
 }
 
-void SourceEditor::unregister_extension(SourceEditorPluginExtension* p_extension)
+void SourceEditor::unregister_extension(Control* p_extension)
 {
-	for (auto i = 0; i < m_header_bar->get_child_count(); ++i)
+	for (auto i = 0; i < tab_container->get_tab_count(); ++i)
 	{
-		Node* child = m_header_bar->get_child(i, false);
-		if (child == p_extension->editor_page)
+		Control* child = tab_container->get_tab_control(i);
+		if (child == p_extension)
 		{
-			m_header_bar->remove_child(child);
+			tab_container->remove_child(child);
 		}
 	}
+	const int current_tab = tab_container->get_tab_count() > 0 ? tab_container->get_tab_count() - 1 : 0;
+	tab_container->set_current_tab(current_tab);
 }
 
 
@@ -667,6 +297,23 @@ void SourceEditor::unregister_extension(SourceEditorPluginExtension* p_extension
 
 // ==================================================================================================================
 
+
+void SourceEditorPlugin::_window_visibility_changed(bool p_visible) {
+	_focus_another_editor();
+	if (p_visible) {
+		source_editor->add_theme_style_override("panel", source_editor->get_theme_stylebox("SourceEditorPanelFloating", "EditorStyles"));
+	}
+	else {
+		source_editor->add_theme_style_override("panel", source_editor->get_theme_stylebox("SourceEditorPanel", "EditorStyles"));
+	}
+}
+
+void SourceEditorPlugin::_focus_another_editor() {
+	if (source_window_wrapper->get_window_enabled()) {
+		ERR_FAIL_COND(last_editor.is_empty());
+		EditorInterface::get_singleton()->set_main_screen_editor(last_editor);
+	}
+}
 Vector<Ref<SourceEditorPluginExtension>> SourceEditorPlugin::extensions;
 
 SourceEditorPlugin* SourceEditorPlugin::singleton = nullptr;
@@ -674,15 +321,26 @@ SourceEditorPlugin::SourceEditorPlugin()
 {
 	singleton = this;
 
-	_source_editor = memnew(SourceEditor);
-	_source_editor->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+	source_window_wrapper = memnew(WindowWrapper);
+	source_window_wrapper->set_window_title(TTR("Source Editor - Metro Gaya System"));
+	source_window_wrapper->set_margins_enabled(true);
+
+	source_editor = memnew(SourceEditor(source_window_wrapper));
+	source_editor->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+	Ref<Shortcut> make_floating_shortcut = ED_SHORTCUT_AND_COMMAND("source_editor/make_floating", TTR("Make Floating"));
+	source_window_wrapper->set_wrapped_control(source_editor, make_floating_shortcut);
+
+	EditorNode::get_singleton()->get_main_screen_control()->add_child(source_window_wrapper);
+	source_window_wrapper->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+	source_window_wrapper->hide();
+	source_window_wrapper->connect("window_visibility_changed", callable_mp(this, &SourceEditorPlugin::_window_visibility_changed));
 
 	// Panel Setup
-	const auto mainscreencontrols = EditorNode::get_singleton()->get_main_screen_control();
-	mainscreencontrols->add_child(_source_editor);
+	//const auto mainscreencontrols = EditorNode::get_singleton()->get_main_screen_control();
+	//mainscreencontrols->add_child(source_editor);
 
-	_source_editor->set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
-	_source_editor->hide();
+	source_editor->set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
+	source_editor->hide();
 
 
 	// =========================================
@@ -697,8 +355,8 @@ SourceEditorPlugin::~SourceEditorPlugin()
 {
 	// Panel Setup
 	const auto mainscreencontrols = EditorNode::get_singleton()->get_main_screen_control();
-	mainscreencontrols->remove_child(_source_editor);
-	memdelete(_source_editor);
+	mainscreencontrols->remove_child(source_editor);
+	memdelete(source_editor);
 }
 
 
@@ -725,11 +383,50 @@ void SourceEditorPlugin::_notification(int p_what)
 
 void SourceEditorPlugin::make_visible(bool p_visible)
 {
-	if (p_visible && _source_editor) {
-		_source_editor->show();
+	if (p_visible && source_editor) {
+		source_window_wrapper->show();
+		source_editor->show();
 	}
 	else {
-		_source_editor->hide();
+		source_window_wrapper->hide();
+		source_editor->hide();
+	}
+}
+
+void SourceEditorPlugin::set_window_layout(Ref<ConfigFile> p_layout) {
+	source_editor->set_window_layout(p_layout);
+
+	if (EDITOR_GET("interface/multi_window/restore_windows_on_load") && source_window_wrapper->is_window_available() && p_layout->has_section_key("SourceEditor", "window_rect")) {
+		source_window_wrapper->restore_window_from_saved_position(
+			p_layout->get_value("SourceEditor", "window_rect", Rect2i()),
+			p_layout->get_value("SourceEditor", "window_screen", -1),
+			p_layout->get_value("SourceEditor", "window_screen_rect", Rect2i()));
+	}
+	else {
+		source_window_wrapper->set_window_enabled(false);
+	}
+}
+
+void SourceEditorPlugin::get_window_layout(Ref<ConfigFile> p_layout) {
+	source_editor->get_window_layout(p_layout);
+
+	if (source_window_wrapper->get_window_enabled()) {
+		p_layout->set_value("SourceEditor", "window_rect", source_window_wrapper->get_window_rect());
+		int screen = source_window_wrapper->get_window_screen();
+		p_layout->set_value("SourceEditor", "window_screen", screen);
+		p_layout->set_value("SourceEditor", "window_screen_rect", DisplayServer::get_singleton()->screen_get_usable_rect(screen));
+
+	}
+	else {
+		if (p_layout->has_section_key("SourceEditor", "window_rect")) {
+			p_layout->erase_section_key("SourceEditor", "window_rect");
+		}
+		if (p_layout->has_section_key("SourceEditor", "window_screen")) {
+			p_layout->erase_section_key("SourceEditor", "window_screen");
+		}
+		if (p_layout->has_section_key("ScriptEditor", "window_screen_rect")) {
+			p_layout->erase_section_key("ScriptEditor", "window_screen_rect");
+		}
 	}
 }
 
@@ -777,20 +474,20 @@ void SourceEditorPlugin::clear()
 
 void SourceEditorPlugin::register_extension(Ref<SourceEditorPluginExtension> p_extension, bool p_at_front)
 {
-	ERR_FAIL_COND(p_extension.is_null());
+	/*ERR_FAIL_COND(p_extension.is_null());
 	if (p_at_front) {
 		extensions.insert(0, p_extension);
 	}
 	else {
 		extensions.push_back(p_extension);
-	}
+	}*/
 }
 
 void SourceEditorPlugin::unregister_extension(Ref<SourceEditorPluginExtension> p_extension)
 {
-	ERR_FAIL_COND(p_extension.is_null());
+	/*ERR_FAIL_COND(p_extension.is_null());
 	extensions.erase(p_extension);
-
+	*/
 }
 
 inline void SourceEditorPlugin::edited_scene_changed()

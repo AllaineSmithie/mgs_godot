@@ -191,13 +191,24 @@ EditorAbout::EditorAbout() {
 	tc->add_child(_populate_list(TTR("Donors"), donor_sections, donor_src, 3));
 	*/
 	// License
-
+	String mgs_license_text = "Copyright Metro Gaya System, Metro Gaya System Editor\n"
+						  "and Metro Gaya System Player are trademarks of Deadline Entertainment Gbr Germany.\n"
+						  "All rights reserved.\n"
+						  "Deadline Entertainment\n"
+						  "Faye Ryan and Stan Berzon\n"
+						  "79106 Freiburg\n"
+						  "Germany\n"
+						  "info@deadline-entertainment.com\n"
+						  "\n"
+						  "\n"
+						  "\n"
+						  "\n";
 	_license_text = memnew(RichTextLabel);
 	_license_text->set_threaded(true);
 	_license_text->set_name(TTR("License"));
 	_license_text->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 	_license_text->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-	_license_text->set_text(String::utf8(GODOT_LICENSE_TEXT));
+	_license_text->set_text(mgs_license_text + String::utf8(GODOT_LICENSE_TEXT));
 	tc->add_child(_license_text);
 
 	// Thirdparty License

@@ -42,6 +42,9 @@ class Animation : public Resource {
 
 public:
 	enum TrackType {
+		TYPE_AUDIO,
+		TYPE_MIDI,
+		TYPE_VIDEO,
 		TYPE_VALUE, ///< Set a value in a property, can be interpolated.
 		TYPE_POSITION_3D, ///< Position 3D track
 		TYPE_ROTATION_3D, ///< Rotation 3D track
@@ -49,7 +52,6 @@ public:
 		TYPE_BLEND_SHAPE, ///< Blend Shape track
 		TYPE_METHOD, ///< Call any method on a specific node.
 		TYPE_BEZIER, ///< Bezier curve
-		TYPE_AUDIO,
 		TYPE_ANIMATION,
 	};
 

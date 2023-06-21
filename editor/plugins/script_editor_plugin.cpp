@@ -4257,7 +4257,7 @@ void ScriptEditorPlugin::edited_scene_changed() {
 
 ScriptEditorPlugin::ScriptEditorPlugin() {
 	window_wrapper = memnew(WindowWrapper);
-	window_wrapper->set_window_title(TTR("Script Editor - Godot Engine"));
+	window_wrapper->set_window_title(TTR("Script Editor - Metro Gaya System"));
 	window_wrapper->set_margins_enabled(true);
 
 	script_editor = memnew(ScriptEditor(window_wrapper));

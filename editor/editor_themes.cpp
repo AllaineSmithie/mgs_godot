@@ -440,7 +440,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	float preset_contrast = 0;
 	bool preset_draw_extra_borders = false;
 
-	const float default_contrast = 0.35;
+	const float default_contrast = 0.57;
 
 	// Please use alphabetical order if you're adding a new theme here
 	// (after "Custom")
@@ -453,36 +453,54 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	}
 	else if (preset == "Gray")
 	{
-		preset_accent_color = Color(0.65, 0.0, 0.03);
+		preset_accent_color = Color(0.65, 0.0, 0.003);
 		preset_base_color = Color(0.24, 0.24, 0.24);
 		preset_contrast = 0.35;
+		icon_saturation = 0.3;
+		relationship_line_opacity = 0.01;
+		border_size = 0;
+		corner_radius = 3;
 	}
 	else if (preset == "Dark")
 	{
-		preset_accent_color = Color(0.65, 0.0, 0.03);
-		preset_base_color = Color(0.1, 0.1, 0.1);
-		preset_contrast = 0.1;
+		preset_accent_color = Color(0.56, 0.0, 0.01);
+		preset_base_color = Color(0.16, 0.16, 0.16);
+		preset_contrast = 0.65;
+		icon_saturation = 0.3;
+		relationship_line_opacity = 0.01;
+		border_size = 0;
+		corner_radius = 3;
 	}
 	else if (preset == "Light")
 	{
-		preset_accent_color = Color(0.65, 0.0, 0.03);
-		preset_base_color = Color(0.84, 0.84, 0.84);
-		preset_contrast = -0.15;
+		preset_accent_color = Color(0.65, 0.0, 0.003);
+		preset_base_color = Color(0.75, 0.75, 0.75);
+		relationship_line_opacity = 0.01;
+		preset_draw_extra_borders = true;
+		preset_contrast = -0.3;
+		icon_saturation = 0.7;
+		border_size = 2;
+		corner_radius = 6;
 		// A negative contrast rate looks better for light themes, since it better follows the natural order of UI "elevation".
 	}
 	else if (preset == "Black (OLED)")
 	{
-		preset_accent_color = Color(0.65, 0.0, 0.003);
+		preset_accent_color = Color(0.56, 0.0, 0.01);
 		preset_base_color = Color(0, 0, 0);
+		icon_saturation = 0.3;
 		// The contrast rate value is irrelevant on a fully black theme.
 		preset_contrast = 0.0;
+		relationship_line_opacity = 0.01;
 		preset_draw_extra_borders = true;
+		border_size = 0;
+		corner_radius = 3;
 	}
 	else
 	{ // Default
-		preset_accent_color = Color(0.65, 0.0, 0.03);
-		preset_base_color = Color(0.1, 0.1, 0.1);
+		preset_accent_color = Color(0.56, 0.0, 0.01);
+		preset_base_color = Color(0.16, 0.16, 0.16);
 		preset_contrast = default_contrast;
+		icon_saturation = 0.3;
 	}
 
 	if (preset != "Custom") {

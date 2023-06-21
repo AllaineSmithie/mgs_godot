@@ -173,7 +173,7 @@ class SceneTreeDialog : public ConfirmationDialog {
 	GDCLASS(SceneTreeDialog, ConfirmationDialog);
 
 	SceneTreeEditor *tree = nullptr;
-	//Button *select;
+	Button* add_child_node = nullptr;
 	//Button *cancel;
 	LineEdit *filter = nullptr;
 
@@ -181,6 +181,7 @@ class SceneTreeDialog : public ConfirmationDialog {
 	void _cancel();
 	void _selected_changed();
 	void _filter_changed(const String &p_filter);
+	void _add_child_node_pressed();
 	void _update_theme();
 
 protected:

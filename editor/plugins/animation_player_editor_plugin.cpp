@@ -43,6 +43,7 @@
 #include "editor/inspector_dock.h"
 #include "editor/plugins/canvas_item_editor_plugin.h" // For onion skinning.
 #include "editor/plugins/node_3d_editor_plugin.h" // For onion skinning.
+#include "editor/plugins/source_editor_plugin.h"
 #include "editor/scene_tree_dock.h"
 #include "scene/gui/separator.h"
 #include "scene/main/window.h"
@@ -102,17 +103,23 @@ void AnimationPlayerEditor::_notification(int p_what) {
 		} break;
 
 		case NOTIFICATION_ENTER_TREE: {
-			tool_anim->get_popup()->connect("id_pressed", callable_mp(this, &AnimationPlayerEditor::_animation_tool_menu));
+			if (!tool_anim->get_popup()->is_connected("id_pressed", callable_mp(this, &AnimationPlayerEditor::_animation_tool_menu)))
+				tool_anim->get_popup()->connect("id_pressed", callable_mp(this, &AnimationPlayerEditor::_animation_tool_menu));
 
-			onion_skinning->get_popup()->connect("id_pressed", callable_mp(this, &AnimationPlayerEditor::_onion_skinning_menu));
+			if (!onion_skinning->get_popup()->is_connected("id_pressed", callable_mp(this, &AnimationPlayerEditor::_onion_skinning_menu)))
+				onion_skinning->get_popup()->connect("id_pressed", callable_mp(this, &AnimationPlayerEditor::_onion_skinning_menu));
 
-			blend_editor.next->connect("item_selected", callable_mp(this, &AnimationPlayerEditor::_blend_editor_next_changed));
+			if (!blend_editor.next->is_connected("item_selected", callable_mp(this, &AnimationPlayerEditor::_onion_skinning_menu)))
+				blend_editor.next->connect("item_selected", callable_mp(this, &AnimationPlayerEditor::_blend_editor_next_changed));
 
-			get_tree()->connect("node_removed", callable_mp(this, &AnimationPlayerEditor::_node_removed));
+			if (!get_tree()->is_connected("node_removed", callable_mp(this, &AnimationPlayerEditor::_onion_skinning_menu)))
+				get_tree()->connect("node_removed", callable_mp(this, &AnimationPlayerEditor::_node_removed));
 
-			add_theme_style_override("panel", EditorNode::get_singleton()->get_gui_base()->get_theme_stylebox(SNAME("panel"), SNAME("Panel")));
 		} break;
 
+		case NOTIFICATION_POSTINITIALIZE: {
+			add_theme_style_override("panel", EditorNode::get_singleton()->get_gui_base()->get_theme_stylebox(SNAME("panel"), SNAME("Panel")));
+		}
 		case EditorSettings::NOTIFICATION_EDITOR_SETTINGS_CHANGED: {
 			add_theme_style_override("panel", EditorNode::get_singleton()->get_gui_base()->get_theme_stylebox(SNAME("panel"), SNAME("Panel")));
 		} break;
@@ -157,7 +164,7 @@ void AnimationPlayerEditor::_notification(int p_what) {
 #define ITEM_ICON(m_item, m_icon) tool_anim->get_popup()->set_item_icon(tool_anim->get_popup()->get_item_index(m_item), get_theme_icon(SNAME(m_icon), SNAME("EditorIcons")))
 
 			ITEM_ICON(TOOL_NEW_ANIM, "New");
-			ITEM_ICON(TOOL_ANIM_LIBRARY, "AnimationLibrary");
+			ITEM_ICON(TOOL_ANIM_LIBRARY, "Library");
 			ITEM_ICON(TOOL_DUPLICATE_ANIM, "Duplicate");
 			ITEM_ICON(TOOL_RENAME_ANIM, "Rename");
 			ITEM_ICON(TOOL_EDIT_TRANSITIONS, "Blend");
@@ -324,7 +331,7 @@ void AnimationPlayerEditor::_animation_selected(int p_which) {
 
 void AnimationPlayerEditor::_animation_new() {
 	int count = 1;
-	String base = "new_animation";
+	String base = "New Song";
 	String current_library_name = "";
 	if (animation->has_selectable_items()) {
 		String current_animation_name = animation->get_item_text(animation->get_selected());
@@ -350,9 +357,9 @@ void AnimationPlayerEditor::_animation_new() {
 	_update_name_dialog_library_dropdown();
 
 	name_dialog_op = TOOL_NEW_ANIM;
-	name_dialog->set_title(TTR("Create New Animation"));
+	name_dialog->set_title(TTR("Create New Edit"));
 	name_dialog->popup_centered(Size2(300, 90));
-	name_title->set_text(TTR("New Animation Name:"));
+	name_title->set_text(TTR("New Edit's Name:"));
 	name->set_text(base);
 	name->select_all();
 	name->grab_focus();
@@ -370,8 +377,8 @@ void AnimationPlayerEditor::_animation_rename() {
 		selected_name = selected_name.get_slice("/", 1);
 	}
 
-	name_dialog->set_title(TTR("Rename Animation"));
-	name_title->set_text(TTR("Change Animation Name:"));
+	name_dialog->set_title(TTR("Rename Edit"));
+	name_title->set_text(TTR("Change Edit Name:"));
 	name->set_text(selected_name);
 	name_dialog_op = TOOL_RENAME_ANIM;
 	name_dialog->popup_centered(Size2(300, 90));
@@ -387,7 +394,7 @@ void AnimationPlayerEditor::_animation_remove() {
 
 	String current = animation->get_item_text(animation->get_selected());
 
-	delete_dialog->set_text(vformat(TTR("Delete Animation '%s'?"), current));
+	delete_dialog->set_text(vformat(TTR("Delete Edit '%s'?"), current));
 	delete_dialog->popup_centered();
 }
 
@@ -458,7 +465,7 @@ void AnimationPlayerEditor::_animation_name_edited() {
 
 	String new_name = name->get_text();
 	if (!AnimationLibrary::is_valid_animation_name(new_name)) {
-		error_dialog->set_text(TTR("Invalid animation name!"));
+		error_dialog->set_text(TTR("Invalid edit name!"));
 		error_dialog->popup_centered();
 		return;
 	}
@@ -1133,9 +1140,9 @@ void AnimationPlayerEditor::_animation_duplicate() {
 	_update_name_dialog_library_dropdown();
 
 	name_dialog_op = TOOL_DUPLICATE_ANIM;
-	name_dialog->set_title(TTR("Duplicate Animation"));
+	name_dialog->set_title(TTR("Duplicate Edit"));
 	// TRANSLATORS: This is a label for the new name field in the "Duplicate Animation" dialog.
-	name_title->set_text(TTR("Duplicated Animation Name:"));
+	name_title->set_text(TTR("Duplicated Edit Name:"));
 	name->set_text(new_name);
 	name_dialog->popup_centered(Size2(300, 90));
 	name->select_all();
@@ -1668,6 +1675,10 @@ AnimationPlayer *AnimationPlayerEditor::get_player() const {
 }
 
 AnimationPlayerEditor::AnimationPlayerEditor(AnimationPlayerEditorPlugin *p_plugin) {
+
+	if (plugin == p_plugin && singleton)
+		return;
+
 	plugin = p_plugin;
 	singleton = this;
 
@@ -1682,27 +1693,27 @@ AnimationPlayerEditor::AnimationPlayerEditor(AnimationPlayerEditorPlugin *p_plug
 
 	play_bw_from = memnew(Button);
 	play_bw_from->set_flat(true);
-	play_bw_from->set_tooltip_text(TTR("Play selected animation backwards from current pos. (A)"));
+	play_bw_from->set_tooltip_text(TTR("Play selected edit backwards from current pos. (A)"));
 	hb->add_child(play_bw_from);
 
 	play_bw = memnew(Button);
 	play_bw->set_flat(true);
-	play_bw->set_tooltip_text(TTR("Play selected animation backwards from end. (Shift+A)"));
+	play_bw->set_tooltip_text(TTR("Play selected edit backwards from end. (Shift+A)"));
 	hb->add_child(play_bw);
 
 	stop = memnew(Button);
 	stop->set_flat(true);
 	hb->add_child(stop);
-	stop->set_tooltip_text(TTR("Pause/stop animation playback. (S)"));
+	stop->set_tooltip_text(TTR("Pause/stop edit playback. (S)"));
 
 	play = memnew(Button);
 	play->set_flat(true);
-	play->set_tooltip_text(TTR("Play selected animation from start. (Shift+D)"));
+	play->set_tooltip_text(TTR("Play selected edit from start. (Shift+D)"));
 	hb->add_child(play);
 
 	play_from = memnew(Button);
 	play_from->set_flat(true);
-	play_from->set_tooltip_text(TTR("Play selected animation from current pos. (D)"));
+	play_from->set_tooltip_text(TTR("Play selected edit from current pos. (D)"));
 	hb->add_child(play_from);
 
 	frame = memnew(SpinBox);
@@ -1710,7 +1721,7 @@ AnimationPlayerEditor::AnimationPlayerEditor(AnimationPlayerEditorPlugin *p_plug
 	frame->set_custom_minimum_size(Size2(80, 0) * EDSCALE);
 	frame->set_stretch_ratio(2);
 	frame->set_step(0.0001);
-	frame->set_tooltip_text(TTR("Animation position (in seconds)."));
+	frame->set_tooltip_text(TTR("Edit position (in seconds)."));
 
 	hb->add_child(memnew(VSeparator));
 
@@ -1718,7 +1729,7 @@ AnimationPlayerEditor::AnimationPlayerEditor(AnimationPlayerEditorPlugin *p_plug
 	hb->add_child(scale);
 	scale->set_h_size_flags(SIZE_EXPAND_FILL);
 	scale->set_stretch_ratio(1);
-	scale->set_tooltip_text(TTR("Scale animation playback globally for the node."));
+	scale->set_tooltip_text(TTR("Scale playback globally for the node."));
 	scale->hide();
 
 	delete_dialog = memnew(ConfirmationDialog);
@@ -1728,11 +1739,11 @@ AnimationPlayerEditor::AnimationPlayerEditor(AnimationPlayerEditorPlugin *p_plug
 	tool_anim = memnew(MenuButton);
 	tool_anim->set_shortcut_context(this);
 	tool_anim->set_flat(false);
-	tool_anim->set_tooltip_text(TTR("Animation Tools"));
-	tool_anim->set_text(TTR("Animation"));
+	tool_anim->set_tooltip_text(TTR("Timeline management and tools"));
+	tool_anim->set_text(TTR("Timeline"));
 	tool_anim->get_popup()->add_shortcut(ED_SHORTCUT("animation_player_editor/new_animation", TTR("New")), TOOL_NEW_ANIM);
 	tool_anim->get_popup()->add_separator();
-	tool_anim->get_popup()->add_shortcut(ED_SHORTCUT("animation_player_editor/animation_libraries", TTR("Manage Animations...")), TOOL_ANIM_LIBRARY);
+	tool_anim->get_popup()->add_shortcut(ED_SHORTCUT("animation_player_editor/animation_libraries", TTR("Manage Timelines...")), TOOL_ANIM_LIBRARY);
 	tool_anim->get_popup()->add_separator();
 	tool_anim->get_popup()->add_shortcut(ED_SHORTCUT("animation_player_editor/duplicate_animation", TTR("Duplicate...")), TOOL_DUPLICATE_ANIM);
 	tool_anim->get_popup()->add_separator();
@@ -1747,7 +1758,7 @@ AnimationPlayerEditor::AnimationPlayerEditor(AnimationPlayerEditorPlugin *p_plug
 	animation = memnew(OptionButton);
 	hb->add_child(animation);
 	animation->set_h_size_flags(SIZE_EXPAND_FILL);
-	animation->set_tooltip_text(TTR("Display list of animations in player."));
+	animation->set_tooltip_text(TTR("Display list of edits in player."));
 	animation->set_clip_text(true);
 	animation->set_auto_translate(false);
 
@@ -1805,7 +1816,7 @@ AnimationPlayerEditor::AnimationPlayerEditor(AnimationPlayerEditorPlugin *p_plug
 	pin = memnew(Button);
 	pin->set_flat(true);
 	pin->set_toggle_mode(true);
-	pin->set_tooltip_text(TTR("Pin AnimationPlayer"));
+	pin->set_tooltip_text(TTR("Pin Edit"));
 	hb->add_child(pin);
 	pin->connect("pressed", callable_mp(this, &AnimationPlayerEditor::_pin_pressed));
 
@@ -1813,13 +1824,13 @@ AnimationPlayerEditor::AnimationPlayerEditor(AnimationPlayerEditorPlugin *p_plug
 	add_child(file);
 
 	name_dialog = memnew(ConfirmationDialog);
-	name_dialog->set_title(TTR("Create New Animation"));
+	name_dialog->set_title(TTR("Create New Timeline-Edit"));
 	name_dialog->set_hide_on_ok(false);
 	add_child(name_dialog);
 	VBoxContainer *vb = memnew(VBoxContainer);
 	name_dialog->add_child(vb);
 
-	name_title = memnew(Label(TTR("Animation Name:")));
+	name_title = memnew(Label(TTR("Timeline Name:")));
 	vb->add_child(name_title);
 
 	HBoxContainer *name_hb = memnew(HBoxContainer);
@@ -1998,10 +2009,12 @@ void AnimationPlayerEditorPlugin::make_visible(bool p_visible) {
 
 AnimationPlayerEditorPlugin::AnimationPlayerEditorPlugin() {
 	anim_editor = memnew(AnimationPlayerEditor(this));
-	EditorNode::get_singleton()->add_bottom_panel_item(TTR("Animation"), anim_editor);
+	// EditorNode::get_singleton()->add_bottom_panel_item(TTR("Animation"), anim_editor);
+	SourceEditor::get_singleton()->register_extension(anim_editor);
 }
 
 AnimationPlayerEditorPlugin::~AnimationPlayerEditorPlugin() {
+	//SourceEditor::get_singleton()->unregister_extension(anim_editor);
 }
 
 // AnimationTrackKeyEditEditorPlugin

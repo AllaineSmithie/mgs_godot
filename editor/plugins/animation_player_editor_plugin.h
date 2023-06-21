@@ -249,7 +249,6 @@ class AnimationPlayerEditorPlugin : public EditorPlugin {
 	GDCLASS(AnimationPlayerEditorPlugin, EditorPlugin);
 
 	AnimationPlayerEditor *anim_editor = nullptr;
-
 protected:
 	void _notification(int p_what);
 
