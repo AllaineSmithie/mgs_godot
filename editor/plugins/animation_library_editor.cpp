@@ -736,7 +736,7 @@ void AnimationLibraryEditor::_bind_methods() {
 }
 
 AnimationLibraryEditor::AnimationLibraryEditor() {
-	set_title(TTR("Edit Animation Libraries"));
+	set_title(TTR("Edit Libraries"));
 
 	file_dialog = memnew(EditorFileDialog);
 	add_child(file_dialog);

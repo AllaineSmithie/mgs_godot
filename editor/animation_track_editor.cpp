@@ -6492,7 +6492,7 @@ AnimationTrackEditor::AnimationTrackEditor() {
 	timeline_vbox->add_theme_constant_override("separation", 0);
 
 	info_message = memnew(Label);
-	info_message->set_text(TTR("Select an AnimationPlayer node to create and edit animations."));
+	info_message->set_text(TTR("Select an AnimationPlayer node to create and edit timelines."));
 	info_message->set_vertical_alignment(VERTICAL_ALIGNMENT_CENTER);
 	info_message->set_horizontal_alignment(HORIZONTAL_ALIGNMENT_CENTER);
 	info_message->set_autowrap_mode(TextServer::AUTOWRAP_WORD_SMART);
@@ -6596,7 +6596,7 @@ AnimationTrackEditor::AnimationTrackEditor() {
 	step->set_step(0.0001);
 	step->set_hide_slider(true);
 	step->set_custom_minimum_size(Size2(100, 0) * EDSCALE);
-	step->set_tooltip_text(TTR("Animation step value."));
+	step->set_tooltip_text(TTR("Timeline step value."));
 	bottom_hb->add_child(step);
 	step->connect("value_changed", callable_mp(this, &AnimationTrackEditor::_update_step));
 	step->set_read_only(true);
@@ -6649,9 +6649,9 @@ AnimationTrackEditor::AnimationTrackEditor() {
 	edit->get_popup()->add_separator();
 	edit->get_popup()->add_shortcut(ED_SHORTCUT("animation_editor/apply_reset", TTR("Apply Reset")), EDIT_APPLY_RESET);
 	edit->get_popup()->add_separator();
-	edit->get_popup()->add_item(TTR("Bake Animation"), EDIT_BAKE_ANIMATION);
-	edit->get_popup()->add_item(TTR("Optimize Animation (no undo)"), EDIT_OPTIMIZE_ANIMATION);
-	edit->get_popup()->add_item(TTR("Clean-Up Animation (no undo)"), EDIT_CLEAN_UP_ANIMATION);
+	edit->get_popup()->add_item(TTR("Bake Timeline"), EDIT_BAKE_ANIMATION);
+	edit->get_popup()->add_item(TTR("Optimize Timeline (no undo)"), EDIT_OPTIMIZE_ANIMATION);
+	edit->get_popup()->add_item(TTR("Clean-Up Timeline (no undo)"), EDIT_CLEAN_UP_ANIMATION);
 
 	edit->get_popup()->connect("id_pressed", callable_mp(this, &AnimationTrackEditor::_edit_menu_pressed));
 	edit->get_popup()->connect("about_to_popup", callable_mp(this, &AnimationTrackEditor::_edit_menu_about_to_popup));
@@ -6708,7 +6708,7 @@ AnimationTrackEditor::AnimationTrackEditor() {
 
 	optimize_dialog = memnew(ConfirmationDialog);
 	add_child(optimize_dialog);
-	optimize_dialog->set_title(TTR("Animation Optimizer"));
+	optimize_dialog->set_title(TTR("Timeline Optimizer"));
 	VBoxContainer *optimize_vb = memnew(VBoxContainer);
 	optimize_dialog->add_child(optimize_vb);
 
@@ -6752,10 +6752,10 @@ AnimationTrackEditor::AnimationTrackEditor() {
 	cleanup_vb->add_child(cleanup_tracks);
 
 	cleanup_all = memnew(CheckBox);
-	cleanup_all->set_text(TTR("Clean-up all animations"));
+	cleanup_all->set_text(TTR("Clean-up all timelines"));
 	cleanup_vb->add_child(cleanup_all);
 
-	cleanup_dialog->set_title(TTR("Clean-Up Animation(s) (NO UNDO!)"));
+	cleanup_dialog->set_title(TTR("Clean-Up Timeline(s) (NO UNDO!)"));
 	cleanup_dialog->set_ok_button_text(TTR("Clean-Up"));
 
 	cleanup_dialog->connect("confirmed", callable_mp(this, &AnimationTrackEditor::_edit_menu_pressed).bind(EDIT_CLEAN_UP_ANIMATION_CONFIRM));
@@ -6817,7 +6817,7 @@ AnimationTrackEditor::AnimationTrackEditor() {
 
 	//
 	bake_dialog = memnew(ConfirmationDialog);
-	bake_dialog->set_title(TTR("Animation Baker"));
+	bake_dialog->set_title(TTR("Timeline Baker"));
 	bake_dialog->connect("confirmed", callable_mp(this, &AnimationTrackEditor::_edit_menu_pressed).bind(EDIT_BAKE_ANIMATION_CONFIRM));
 	add_child(bake_dialog);
 	GridContainer *bake_grid = memnew(GridContainer);
@@ -6907,7 +6907,7 @@ void AnimationTrackKeyEditEditor::_time_edit_exited() {
 
 	int existing = animation->track_find_key(track, new_time, Animation::FIND_MODE_APPROX);
 	EditorUndoRedoManager *undo_redo = EditorUndoRedoManager::get_singleton();
-	undo_redo->create_action(TTR("Animation Change Keyframe Time"), UndoRedo::MERGE_ENDS);
+	undo_redo->create_action(TTR("Timeline Change Keyframe Time"), UndoRedo::MERGE_ENDS);
 
 	if (existing != -1) {
 		undo_redo->add_do_method(animation.ptr(), "track_remove_key_at_time", track, animation->track_get_key_time(track, existing));
