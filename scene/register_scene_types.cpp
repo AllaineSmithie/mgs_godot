@@ -80,6 +80,7 @@
 #include "scene/animation/root_motion_view.h"
 #include "scene/animation/tween.h"
 #include "scene/audio/audio_stream_player.h"
+#include "scene/audio/midi_player.h"
 #include "scene/debugger/scene_debugger.h"
 #include "scene/gui/aspect_ratio_container.h"
 #include "scene/gui/box_container.h"
@@ -907,6 +908,9 @@ void register_scene_types() {
 	OS::get_singleton()->yield(); // may take time to init
 
 	GDREGISTER_CLASS(Audio);
+
+	GDREGISTER_CLASS(MidiPlayer);
+	GDREGISTER_CLASS(MidiFile);
 	GDREGISTER_CLASS(AudioStreamPlayer);
 	GDREGISTER_CLASS(AudioStreamPlayer2D);
 #ifndef _3D_DISABLED

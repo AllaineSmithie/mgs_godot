@@ -7588,7 +7588,7 @@ EditorNode::EditorNode() {
 
 		// Add the renderers name to the UI.
 		if (rendering_method == "forward_plus") {
-			renderer->add_item(TTR("PC+"));
+			renderer->add_item(TTR("HQ+"));
 		}
 		if (rendering_method == "mobile") {
 			renderer->add_item(TTR("Mobile"));
