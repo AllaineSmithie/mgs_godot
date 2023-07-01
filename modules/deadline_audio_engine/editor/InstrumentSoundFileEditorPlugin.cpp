@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  godot_linuxbsd.cpp                                                    */
+/*  version_control_editor_plugin.cpp                                     */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,66 +28,64 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#include "os_linuxbsd.h"
+#include "InstrumentSoundFileEditorPlugin.h"
 
-#include "main/main.h"
+#include "core/config/project_settings.h"
+#include "core/os/keyboard.h"
+#include "core/os/time.h"
+#include "editor/editor_file_system.h"
+#include "editor/editor_node.h"
+#include "editor/editor_scale.h"
+#include "editor/editor_settings.h"
+#include "editor/filesystem_dock.h"
+#include "editor/plugins/script_editor_plugin.h"
+#include "scene/gui/separator.h"
 
-#include <limits.h>
-#include <locale.h>
-#include <stdlib.h>
-#include <unistd.h>
 
-#if defined(SANITIZERS_ENABLED)
-#include <sys/resource.h>
-#endif
+InstrumentSoundFileEditorPlugin* InstrumentSoundFileEditorPlugin::singleton = nullptr;
 
-int main(int argc, char *argv[]) {
-#if defined(SANITIZERS_ENABLED)
-	// Note: Set stack size to be at least 30 MB (vs 8 MB default) to avoid overflow, address sanitizer can increase stack usage up to 3 times.
-	struct rlimit stack_lim = { 0x1E00000, 0x1E00000 };
-	setrlimit(RLIMIT_STACK, &stack_lim);
-#endif
-
-	OS_LinuxBSD os;
-
-	setlocale(LC_CTYPE, "");
-
-	// We must override main when testing is enabled
-	TEST_MAIN_OVERRIDE
-
-	char *cwd = (char *)malloc(PATH_MAX);
-	ERR_FAIL_COND_V(!cwd, ERR_OUT_OF_MEMORY);
-	char *ret = getcwd(cwd, PATH_MAX);
-
-	Error err = Main::setup(argv[0], argc - 1, &argv[1]);
-	if (err != OK) {
-		free(cwd);
-
-		if (err == ERR_HELP) { // Returned by --help and --version, so success.
-			return 0;
-		}
-		return 255;
-	}
-
-	if (Main::start()) {
-		os.set_exit_code(EXIT_SUCCESS);
-		os.run(); // it is actually the OS that decides how to run
-	}
-	Main::cleanup();
-
-	if (ret) { // Previous getcwd was successful
-		if (chdir(cwd) != 0) {
-			ERR_PRINT("Couldn't return to previous working directory.");
-		}
-	}
-	free(cwd);
-
-	return os.get_exit_code();
+//
+void InstrumentSoundFileEditorPlugin::_bind_methods()
+{
+	// No binds required so far.
 }
 
-#if defined(LIBRARY_ENABLED)
-#include "core/libgodot/libgodot.h"
-extern "C" LIBGODOT_API int godot_main(int argc, char* argv[]) {
-	return main(argc, argv);
+
+
+InstrumentSoundFileEditorPlugin* InstrumentSoundFileEditorPlugin::get_singleton() {
+	return singleton ? singleton : memnew(InstrumentSoundFileEditorPlugin);
 }
-#endif
+
+void InstrumentSoundFileEditorPlugin::register_editor()
+{
+	EditorNode::get_singleton()->add_control_to_dock(EditorNode::DOCK_SLOT_RIGHT_UL, mic_positions_dock);
+
+	mic_positions_dock_button = EditorNode::get_singleton()->add_bottom_panel_item(TTR("Mic Group"), mic_positions_dock);
+}
+
+void InstrumentSoundFileEditorPlugin::shut_down()
+{
+	if (!EditorVCSInterface::get_singleton()) {
+		return;
+	}
+
+	
+	EditorNode::get_singleton()->remove_control_from_dock(mic_positions_dock);
+
+}
+
+InstrumentSoundFileEditorPlugin::InstrumentSoundFileEditorPlugin()
+{
+	singleton = this;
+
+	mic_positions_dock = memnew(VBoxContainer);
+	mic_positions_dock->set_visible(false);
+	mic_positions_dock->set_name(TTR("Mic Groups"));
+
+}
+
+InstrumentSoundFileEditorPlugin::~InstrumentSoundFileEditorPlugin()
+{
+	shut_down();
+	memdelete(mic_positions_dock);
+}

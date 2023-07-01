@@ -45,7 +45,7 @@ void (*lib_godot_call)(void *, const void *, int, void *, void *);
 extern "C" {
 #endif
 
-GDExtensionBool (*initialization_function)(const GDExtensionInterface *, GDExtensionClassLibraryPtr, GDExtensionInitialization *);
+GDExtensionBool (*initialization_function)(const GDExtensionInterfaceGetProcAddress, GDExtensionClassLibraryPtr, GDExtensionInitialization *);
 void (*scene_load_function)(void *);
 void (*project_settings_load_function)(void *);
 
@@ -57,7 +57,7 @@ LIBGODOT_API void libgodot_bind_custom_callable(uint32_t (*callable_hash_bind)(v
 	lib_godot_call = call_bind;
 }
 
-LIBGODOT_API void libgodot_bind(GDExtensionBool (*initialization_bind)(const GDExtensionInterface *, GDExtensionClassLibraryPtr, GDExtensionInitialization *), void (*scene_function_bind)(void *), void (*project_settings_function_bind)(void *)) {
+LIBGODOT_API void libgodot_bind(GDExtensionBool (*initialization_bind)(const GDExtensionInterfaceGetProcAddress, GDExtensionClassLibraryPtr, GDExtensionInitialization *), void (*scene_function_bind)(void *), void (*project_settings_function_bind)(void *)) {
 	initialization_function = initialization_bind;
 	scene_load_function = scene_function_bind;
 	project_settings_load_function = project_settings_function_bind;

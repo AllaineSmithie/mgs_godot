@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  godot_linuxbsd.cpp                                                    */
+/*  version_control_editor_plugin.h                                       */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,66 +28,41 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#include "os_linuxbsd.h"
+#ifndef INSTRUMENT_SOUND_FILE_EDITOR_PLUGIN_H
+#define INSTRUMENT_SOUND_FILE_EDITOR_PLUGIN_H
 
-#include "main/main.h"
+#include "editor/editor_plugin.h"
+#include "editor/editor_vcs_interface.h"
+#include "scene/gui/check_button.h"
+#include "scene/gui/container.h"
+#include "scene/gui/file_dialog.h"
+#include "scene/gui/menu_button.h"
+#include "scene/gui/rich_text_label.h"
+#include "scene/gui/tab_container.h"
+#include "scene/gui/text_edit.h"
+#include "scene/gui/tree.h"
 
-#include <limits.h>
-#include <locale.h>
-#include <stdlib.h>
-#include <unistd.h>
+class InstrumentSoundFileEditorPlugin : public EditorPlugin
+{
+	GDCLASS(InstrumentSoundFileEditorPlugin, EditorPlugin)
 
-#if defined(SANITIZERS_ENABLED)
-#include <sys/resource.h>
-#endif
+	VBoxContainer* mic_positions_dock = nullptr;
+	Button* mic_positions_dock_button = nullptr;
 
-int main(int argc, char *argv[]) {
-#if defined(SANITIZERS_ENABLED)
-	// Note: Set stack size to be at least 30 MB (vs 8 MB default) to avoid overflow, address sanitizer can increase stack usage up to 3 times.
-	struct rlimit stack_lim = { 0x1E00000, 0x1E00000 };
-	setrlimit(RLIMIT_STACK, &stack_lim);
-#endif
+	static InstrumentSoundFileEditorPlugin* singleton;
 
-	OS_LinuxBSD os;
+protected:
+	static void _bind_methods();
 
-	setlocale(LC_CTYPE, "");
+public:
+	static InstrumentSoundFileEditorPlugin* get_singleton();
 
-	// We must override main when testing is enabled
-	TEST_MAIN_OVERRIDE
+	
+	void register_editor();
+	void shut_down();
 
-	char *cwd = (char *)malloc(PATH_MAX);
-	ERR_FAIL_COND_V(!cwd, ERR_OUT_OF_MEMORY);
-	char *ret = getcwd(cwd, PATH_MAX);
+	InstrumentSoundFileEditorPlugin();
+	~InstrumentSoundFileEditorPlugin();
+};
 
-	Error err = Main::setup(argv[0], argc - 1, &argv[1]);
-	if (err != OK) {
-		free(cwd);
-
-		if (err == ERR_HELP) { // Returned by --help and --version, so success.
-			return 0;
-		}
-		return 255;
-	}
-
-	if (Main::start()) {
-		os.set_exit_code(EXIT_SUCCESS);
-		os.run(); // it is actually the OS that decides how to run
-	}
-	Main::cleanup();
-
-	if (ret) { // Previous getcwd was successful
-		if (chdir(cwd) != 0) {
-			ERR_PRINT("Couldn't return to previous working directory.");
-		}
-	}
-	free(cwd);
-
-	return os.get_exit_code();
-}
-
-#if defined(LIBRARY_ENABLED)
-#include "core/libgodot/libgodot.h"
-extern "C" LIBGODOT_API int godot_main(int argc, char* argv[]) {
-	return main(argc, argv);
-}
-#endif
+#endif // INSTRUMENT_SOUND_FILE_EDITOR_PLUGIN_H
