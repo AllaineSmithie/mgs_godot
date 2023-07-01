@@ -1,5 +1,96 @@
 #!/usr/bin/env python
 
 Import("env")
+
 env_libgodot = env.Clone()
-env_libgodot.add_source_files(env.core_sources, "*.cpp")
+module_obj = []
+if env["build_vst"]:
+    env.Prepend(CPPPATH=["#thirdparty/vst3sdk/"])
+    vst_obj = []
+    env_vst = env_libgodot.Clone()
+    vst3sdk_root = "#thirdparty/vst3sdk/"
+    vst3sdk_sources = [
+                        vst3sdk_root + "base/source/baseiids.cpp",
+                        vst3sdk_root + "base/source/fbuffer.cpp",
+                        vst3sdk_root + "base/source/fobject.cpp",
+                        vst3sdk_root + "base/source/fstreamer.cpp",
+                        vst3sdk_root + "base/source/fstring.cpp",
+                        vst3sdk_root + "base/source/updatehandler.cpp",
+                        vst3sdk_root + "base/thread/source/flock.cpp",
+                        vst3sdk_root + "pluginterfaces/base/conststringtable.cpp",
+                        vst3sdk_root + "pluginterfaces/base/coreiids.cpp",
+                        vst3sdk_root + "pluginterfaces/base/funknown.cpp",
+                        vst3sdk_root + "pluginterfaces/base/ustring.cpp",
+                        vst3sdk_root + "public.sdk/source/common/commoniids.cpp",
+                        vst3sdk_root + "public.sdk/source/common/memorystream.cpp",
+                        vst3sdk_root + "public.sdk/source/common/openurl.cpp",
+                        vst3sdk_root + "public.sdk/source/common/pluginview.cpp",
+                        vst3sdk_root + "public.sdk/source/common/readfile.cpp",
+                        vst3sdk_root + "public.sdk/source/main/moduleinit.cpp",
+                        vst3sdk_root + "public.sdk/source/main/pluginfactory.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstaudioeffect.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstbus.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstcomponent.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstcomponentbase.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vsteditcontroller.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstguieditor.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstinitiids.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstnoteexpressiontypes.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstparameters.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstpresetfile.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstrepresentation.cpp",
+                        vst3sdk_root + "public.sdk/source/vst/vstsinglecomponenteffect.cpp"
+                    ]
+    if env.dev_build:
+        env_vst.Append(CPPDEF=["_DEBUG"])
+    vst3sdk_sources.append(vst3sdk_root + "base/source/fdebug.cpp")
+        
+    if env["platform"] == "linuxbsd":
+        vst3sdk_sources.append(vst3sdk_root + "public.sdk/source/common/systemclipboard_linux.cpp")
+        vst3sdk_sources.append(vst3sdk_root + "public.sdk/source/common/threadchecker_linux.cpp")
+    if env["platform"] == "windows":
+        vst3sdk_sources.append(vst3sdk_root + "public.sdk/source/common/systemclipboard_win32.cpp")
+        vst3sdk_sources.append(vst3sdk_root + "public.sdk/source/common/threadchecker_win32.cpp")
+    env_vst.add_source_files(vst_obj, vst3sdk_sources)
+    # env_vst.add_source_files(vst_obj, vst3sdk_root + "public.sdk/source/vst/vstgui_win32_bundle_support.cpp")
+
+    # env_vst.add_source_files(vst_obj, "#thirdparty/vst3sdk/public.sdk/source/vst/hosting/*.cpp")
+    env.core_sources += vst_obj
+    
+    env_libgodot.add_source_files(module_obj, "plugins/vst3/ui/*.cpp")
+    env_libgodot.add_source_files(module_obj, "plugins/vst3/*.cpp")
+
+    env_libgodot.Append(CPPDEF=["SMTG_CREATE_MODULE_INFO=false"])
+    env_libgodot.Append(CPPDEF=["SMTG_CPP17=1"])
+
+    #####################
+    # Compiler settings #
+    #####################
+
+    env_libgodot.Append(CPPDEF=["PLUGIN_COPYRIGHT=\"Deadline Entertainment 2022\""])
+    env_libgodot.Append(CPPDEF=["PLUGIN_MAJOR_VERSION=0"])
+    env_libgodot.Append(CPPDEF=["PLUGIN_MINOR_VERSION=0"])
+    env_libgodot.Append(CPPDEF=["PLUGIN_RELEASE_NUMBER=1"])
+    env_libgodot.Append(CPPDEF=["PLUGIN_BUILD_NUMBER=1"])
+
+    # if env_libgodot["platform"] == "macOS":
+    #     set(vst2_sources
+    #         ${vst2_sources}
+    #         ${VST3_SDK_ROOT}/public.sdk/source/common/threadchecker_mac.mm
+    #     )
+    # elseif(WIN)
+    #     set(vst2_sources
+    #         ${vst2_sources}
+    #         ${VST3_SDK_ROOT}/public.sdk/source/common/threadchecker_win32.cpp
+    #     )
+    # endif()
+
+
+    # add the VST2 source files when compiling a VST2 (not supported on Linux)
+    
+
+env_libgodot.add_source_files(module_obj, "*.cpp")
+env.core_sources += module_obj
+
+if env["build_vst"]:
+    env.Depends(module_obj, vst_obj)

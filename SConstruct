@@ -263,6 +263,7 @@ opts.Add(BoolVariable("builtin_squish", "Use the built-in squish library", True)
 opts.Add(BoolVariable("builtin_xatlas", "Use the built-in xatlas library", True))
 opts.Add(BoolVariable("builtin_zlib", "Use the built-in zlib library", True))
 opts.Add(BoolVariable("builtin_zstd", "Use the built-in Zstd library", True))
+opts.Add(BoolVariable("build_vst", "Build VST", False))
 
 # Compilation environment setup
 opts.Add("CXX", "C++ compiler")
@@ -280,13 +281,12 @@ opts.Update(env_base)
 # Platform selection: validate input, and add options.
 
 selected_platform = ""
-
+if env_base["build_vst"]:
+    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
 if env_base["library_type"] == "static_library":
     env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
-    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
 elif env_base["library_type"] == "shared_library":
     env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
-    env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
     env_base.Append(CCFLAGS=["-fPIC"])
     env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
 elif env_base["library_type"] == "vst":
@@ -295,6 +295,7 @@ elif env_base["library_type"] == "vst":
     env_base.Append(CCFLAGS=["-fPIC"])
     env_base.Append(STATIC_AND_SHARED_OBJECTS_ARE_THE_SAME=True)
     env_base["library_type"] == "shared_library"
+    env_base["build_vst"] = True
 elif env_base["library_type"] == "au":
     env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
     env_base.Append(CPPDEFINES=["MGS_AU_BUILD"])

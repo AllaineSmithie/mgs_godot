@@ -1,0 +1,80 @@
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2020 Igor Zinken - https://www.igorski.nl
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+#include "vst.h"
+#include "ui/controller.h"
+#include "global.h"
+#include "version.h"
+
+#include <thirdparty/vst3sdk/public.sdk/source/main/pluginfactory.h>
+#include <thirdparty/vst3sdk/public.sdk/source/main/pluginfactory_constexpr.h>
+
+#if TARGET_OS_IPHONE
+#include "public.sdk/source/vst/vstguieditor.h"
+extern void* moduleHandle;
+#endif
+
+using namespace Steinberg::Vst;
+using namespace MetroGayaVST;
+
+#if IOS_ENABLED
+#include "public.sdk/source/vst/vstguieditor.h"
+extern void* moduleHandle;
+#endif
+
+static constexpr size_t numberOfClasses = 1;
+static DECLARE_UID(TestPluginUID, 0x00000001, 0x00000002, 0x00000003, 0x00000004);
+//------------------------------------------------------------------------
+//  VST Plug-in Entry
+//------------------------------------------------------------------------
+// Windows: do not forget to include a .def file in your project to export
+// GetPluginFactory function!
+//------------------------------------------------------------------------
+
+BEGIN_FACTORY_DEF( "Deadline Entertainment",
+                   "https://www.deadline-entertainment.com",
+                   "mailto:info@deadline-entertainment.com",
+					numberOfClasses)
+
+    //---First Plug-in included in this factory-------
+    // its kVstAudioEffectClass component
+    DEF_CLASS2( INLINE_UID_FROM_FUID( MetroGayaVST::VST::PluginProcessorUID ),
+                PClassInfo::kManyInstances,      // cardinality
+                kVstAudioEffectClass,            // the component category (do not change this)
+				MetroGayaVST::VST::NAME,              // plug-in name
+                Vst::kDistributable,             // means that component and controller could be distributed on different computers
+                "Fx",                            // Subcategory for this Plug-in
+                FULL_VERSION_STR,                // Plug-in version
+                kVstVersionString,               // the VST 3 SDK version (do not change this)
+				MetroGayaVST::createInstance )       // function pointer called when this component should be instantiated
+
+    // its kVstComponentControllerClass component
+    DEF_CLASS2( INLINE_UID_FROM_FUID(MetroGayaVST::VST::PluginControllerUID ),
+                PClassInfo::kManyInstances,   // cardinality
+                kVstComponentControllerClass, // the Controller category (do not change this)
+                "MetroGayaVSTController",  // controller name (could be the same as component name)
+                0, "",                        // neither of these are used here
+                FULL_VERSION_STR,             // Plug-in version
+                kVstVersionString,            // the VST 3 SDK version (do not change this)
+                PluginController::createInstance ) // function pointer called when this component should be instantiated
+
+END_FACTORY
