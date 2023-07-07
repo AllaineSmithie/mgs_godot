@@ -1,0 +1,23 @@
+#!python
+Import("env")
+Import("env_modules")
+
+env_osc = env_modules.Clone()
+
+ip_path = 'oscpack/ip/posix'
+
+if platform == "windows":
+	ip_path = 'oscpack/ip/win32'
+
+
+env_osc.Append(CPPPATH=['.', 'src/', 'oscpack/', 'oscpack/osc/', 'oscpack/ip/', ip_path])
+
+if platform == "windows":
+	env_osc.Append(LIBS=["ws2_32", "wsock32", "winmm"])
+
+
+sources = []
+env_osc.add_sources(sources, "src/*.cpp")
+env_osc.add_sources(sources, "oscpack/osc/*.cpp")
+env_osc.add_sources(sources, "oscpack/ip/*.cpp")
+env_osc.add_sources(sources, ip_path/*.cpp")
