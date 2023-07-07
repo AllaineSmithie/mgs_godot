@@ -4,3 +4,24 @@
 [submodule "modules/deadline_audio_engine"]
 	path = modules/deadline_audio_engine
 	url = https://github.com/AllaineSmithie/deadline_audio_engine.git
+[submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\message_pack"]
+	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\message_pack
+	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\message_pack
+[submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\show_engine"]
+	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\show_engine
+	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\show_engine
+[submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\scene_merge"]
+	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\scene_merge
+	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\scene_merge
+[submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\serial_port"]
+	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\serial_port
+	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\serial_port
+[submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\hueplusplus"]
+	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\hueplusplus
+	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\hueplusplus
+[submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\simde"]
+	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\simde
+	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\simde
+[submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\xml2json"]
+	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\xml2json
+	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\xml2json
