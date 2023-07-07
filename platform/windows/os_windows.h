@@ -37,14 +37,19 @@
 #include "core/config/project_settings.h"
 #include "core/input/input.h"
 #include "core/os/os.h"
-#include "drivers/unix/ip_unix.h"
-#include "drivers/wasapi/audio_driver_wasapi.h"
-#include "drivers/winmidi/midi_driver_winmidi.h"
-#include "servers/audio_server.h"
 
+#if LIBRARY_ENABLED
+#include <core/libgodot/libgodot.h>
+#else
+#include "drivers/wasapi/audio_driver_wasapi.h"
 #ifdef XAUDIO2_ENABLED
 #include "drivers/xaudio2/audio_driver_xaudio2.h"
 #endif
+#endif // LIBRARY_ENABLED
+
+#include "drivers/unix/ip_unix.h"
+#include "drivers/winmidi/midi_driver_winmidi.h"
+#include "servers/audio_server.h"
 
 #if defined(VULKAN_ENABLED)
 #include "vulkan_context_win.h"
@@ -103,12 +108,16 @@ class OS_Windows : public OS {
 	HINSTANCE hInstance;
 	MainLoop *main_loop = nullptr;
 
+#if LIBRARY_ENABLED
+	AudioDriverLibGodot driver_libgodot;
+#else
 #ifdef WASAPI_ENABLED
 	AudioDriverWASAPI driver_wasapi;
 #endif
 #ifdef XAUDIO2_ENABLED
 	AudioDriverXAudio2 driver_xaudio2;
 #endif
+#endif // LIBRARY_ENABLED
 #ifdef WINMIDI_ENABLED
 	MIDIDriverWinMidi driver_midi;
 #endif
@@ -231,6 +240,7 @@ public:
 	virtual String get_system_ca_certificates() override;
 
 	void set_main_window(HWND p_main_window) { main_window = p_main_window; }
+	HWND get_main_window() { return main_window; }
 
 	HINSTANCE get_hinstance() { return hInstance; }
 	OS_Windows(HINSTANCE _hInstance);

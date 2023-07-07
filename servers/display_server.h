@@ -55,6 +55,7 @@ public:
 		WINDOW_MODE_MAXIMIZED,
 		WINDOW_MODE_FULLSCREEN,
 		WINDOW_MODE_EXCLUSIVE_FULLSCREEN,
+		WINDOW_MODE_HIDDEN,
 	};
 
 	// Keep the VSyncMode enum values in sync with the `display/window/vsync/vsync_mode`
@@ -529,7 +530,8 @@ public:
 	static const char *get_create_function_name(int p_index);
 	static Vector<String> get_create_function_rendering_drivers(int p_index);
 	static DisplayServer *create(int p_index, const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Error &r_error);
-
+	virtual void init_windows(WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i* p_position, const Vector2i& p_resolution, int p_screen, Error& r_error) {};
+	virtual void deinit_windows() {};
 	DisplayServer();
 	~DisplayServer();
 };

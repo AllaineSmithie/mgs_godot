@@ -85,7 +85,8 @@ void OS_MacOS::initialize_core() {
 }
 
 void OS_MacOS::finalize() {
-#ifdef COREMIDI_ENABLED
+#if LIBRARY_ENABLED
+#elif defined COREMIDI_ENABLED
 	midi_driver.close();
 #endif
 
@@ -738,8 +739,10 @@ OS_MacOS::OS_MacOS() {
 	Vector<Logger *> loggers;
 	loggers.push_back(memnew(MacOSTerminalLogger));
 	_set_logger(memnew(CompositeLogger(loggers)));
-
-#ifdef COREAUDIO_ENABLED
+	
+#if LIBRARY_ENABLED
+	AudioDriverManager::add_driver(&driver_libgodot);
+#elif defined COREAUDIO_ENABLED
 	AudioDriverManager::add_driver(&audio_driver);
 #endif
 

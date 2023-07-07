@@ -34,6 +34,9 @@
 #include "crash_handler_macos.h"
 #include "joypad_macos.h"
 
+#if LIBRARY_ENABLED
+ #include "core/libgodot/libgodot.h"
+#endif
 #include "core/input/input.h"
 #import "drivers/coreaudio/audio_driver_coreaudio.h"
 #import "drivers/coremidi/midi_driver_coremidi.h"
@@ -43,11 +46,15 @@
 class OS_MacOS : public OS_Unix {
 	JoypadMacOS *joypad_macos = nullptr;
 
+#if LIBRARY_ENABLED
+	//AudioDriverLibGodot driver_libgodot;
+#else
 #ifdef COREAUDIO_ENABLED
 	AudioDriverCoreAudio audio_driver;
 #endif
 #ifdef COREMIDI_ENABLED
 	MIDIDriverCoreMidi midi_driver;
+#endif
 #endif
 
 	CrashHandler crash_handler;

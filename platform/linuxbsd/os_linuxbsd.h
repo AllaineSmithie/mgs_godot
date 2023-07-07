@@ -69,7 +69,8 @@ class OS_LinuxBSD : public OS_Unix {
 	AudioDriverALSA driver_alsa;
 #endif
 
-#ifdef ALSAMIDI_ENABLED
+#if LIBRARY_ENABLED
+#elif ALSAMIDI_ENABLED
 	MIDIDriverALSAMidi driver_alsamidi;
 #endif
 

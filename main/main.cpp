@@ -220,6 +220,7 @@ static int fixed_fps = -1;
 static MovieWriter *movie_writer = nullptr;
 static bool disable_vsync = false;
 static bool print_fps = false;
+static bool no_splash = false;
 #ifdef TOOLS_ENABLED
 static bool dump_gdextension_interface = false;
 static bool dump_extension_api = false;
@@ -771,6 +772,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 
 	// Add command line arguments.
 	for (int i = 0; i < argc; i++) {
+		print_line(argv[i]);
 		args.push_back(String::utf8(argv[i]));
 	}
 
@@ -1304,7 +1306,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 				OS::get_singleton()->print("Missing number of iterations, aborting.\n");
 				goto error;
 			}
-		} else if (I->get().ends_with("project.godot")) {
+		} else if (I->get().ends_with("project.godot") || I->get().ends_with("project.mgs")) {
 			String path;
 			String file = I->get();
 			int sep = MAX(file.rfind("/"), file.rfind("\\"));
@@ -1450,6 +1452,8 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 
 		} else if (I->get() == "--benchmark") {
 			OS::get_singleton()->set_use_benchmark(true);
+		} else if (I->get() == "--no-splash") {
+			no_splash = true;
 		} else if (I->get() == "--benchmark-file") {
 			if (I->next()) {
 				OS::get_singleton()->set_use_benchmark(true);
@@ -2190,10 +2194,8 @@ Error Main::setup2() {
 	input = memnew(Input);
 
 	/* Initialize Display Server */
-
 	{
 		String display_driver = DisplayServer::get_create_function_name(display_driver_idx);
-
 		Vector2i *window_position = nullptr;
 		Vector2i position = init_custom_pos;
 		if (init_use_custom_pos) {
@@ -2349,7 +2351,7 @@ Error Main::setup2() {
 	Color clear = GLOBAL_DEF_BASIC("rendering/environment/defaults/default_clear_color", Color(0.02, 0.02, 0.02));
 	RenderingServer::get_singleton()->set_default_clear_color(clear);
 
-	if (show_logo) { //boot logo!
+	if (show_logo && !no_splash) { //boot logo!
 		const bool boot_logo_image = GLOBAL_DEF_BASIC("application/boot_splash/show_image", true);
 		const String boot_logo_path = String(GLOBAL_DEF_BASIC(PropertyInfo(Variant::STRING, "application/boot_splash/image", PROPERTY_HINT_FILE, "*.png"), String())).strip_edges();
 		const bool boot_logo_scale = GLOBAL_DEF_BASIC("application/boot_splash/fullsize", true);
@@ -2596,6 +2598,27 @@ Error Main::setup2() {
 
 	return OK;
 }
+
+#if LIBRARY_ENABLED
+void Main::init_windows()
+{
+	String display_driver = DisplayServer::get_create_function_name(display_driver_idx);
+	Vector2i* window_position = nullptr;
+	Vector2i position = init_custom_pos;
+	if (init_use_custom_pos) {
+		window_position = &position;
+	}
+	// rendering_driver now held in static global String in main and initialized in setup()
+	Error err;
+	display_server->init_windows(window_mode, window_vsync_mode, window_flags, window_position, window_size, init_screen, err);
+}
+
+void Main::deinit_windows()
+{
+	display_server->deinit_windows();
+}
+#endif
+
 
 String Main::get_rendering_driver_name() {
 	return rendering_driver;

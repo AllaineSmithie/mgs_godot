@@ -835,6 +835,8 @@ void DisplayServerWindows::show_window(WindowID p_id) {
 		SetFocus(wd.hWnd); // Set keyboard focus.
 	} else if (wd.minimized) {
 		ShowWindow(wd.hWnd, SW_SHOWMINIMIZED);
+	} else if (wd.hidden) {
+		ShowWindow(wd.hWnd, SW_HIDE);
 	} else if (wd.no_focus) {
 		// https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
 		ShowWindow(wd.hWnd, SW_SHOWNA);
@@ -1377,47 +1379,56 @@ void DisplayServerWindows::window_set_mode(WindowMode p_mode, WindowID p_window)
 	ERR_FAIL_COND(!windows.has(p_window));
 	WindowData &wd = windows[p_window];
 
-	if (wd.fullscreen && p_mode != WINDOW_MODE_FULLSCREEN && p_mode != WINDOW_MODE_EXCLUSIVE_FULLSCREEN) {
-		RECT rect;
-
-		wd.fullscreen = false;
-		wd.multiwindow_fs = false;
-		wd.maximized = wd.was_maximized;
-
-		_update_window_style(p_window, false);
-
-		if (wd.pre_fs_valid) {
-			rect = wd.pre_fs_rect;
-		} else {
-			rect.left = 0;
-			rect.right = wd.width;
-			rect.top = 0;
-			rect.bottom = wd.height;
-			wd.pre_fs_valid = true;
-		}
-
-		MoveWindow(wd.hWnd, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, TRUE);
-
-		if (restore_mouse_trails > 1) {
-			SystemParametersInfoA(SPI_SETMOUSETRAILS, restore_mouse_trails, 0, 0);
-			restore_mouse_trails = 0;
-		}
-	} else if (p_mode == WINDOW_MODE_WINDOWED) {
-		ShowWindow(wd.hWnd, SW_RESTORE);
+	if (p_mode == WINDOW_MODE_HIDDEN) {
+		ShowWindow(wd.hWnd, SW_HIDE);
 		wd.maximized = false;
 		wd.minimized = false;
+		wd.hidden = true;
 	}
+	else
+	{
+		wd.hidden = false;
+		if (wd.fullscreen && p_mode != WINDOW_MODE_FULLSCREEN && p_mode != WINDOW_MODE_EXCLUSIVE_FULLSCREEN) {
+			RECT rect;
 
-	if (p_mode == WINDOW_MODE_MAXIMIZED) {
-		ShowWindow(wd.hWnd, SW_MAXIMIZE);
-		wd.maximized = true;
-		wd.minimized = false;
-	}
+			wd.fullscreen = false;
+			wd.multiwindow_fs = false;
+			wd.maximized = wd.was_maximized;
 
-	if (p_mode == WINDOW_MODE_MINIMIZED) {
-		ShowWindow(wd.hWnd, SW_MINIMIZE);
-		wd.maximized = false;
-		wd.minimized = true;
+			_update_window_style(p_window, false);
+
+			if (wd.pre_fs_valid) {
+				rect = wd.pre_fs_rect;
+			} else {
+				rect.left = 0;
+				rect.right = wd.width;
+				rect.top = 0;
+				rect.bottom = wd.height;
+				wd.pre_fs_valid = true;
+			}
+
+			MoveWindow(wd.hWnd, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, TRUE);
+
+			if (restore_mouse_trails > 1) {
+				SystemParametersInfoA(SPI_SETMOUSETRAILS, restore_mouse_trails, 0, 0);
+				restore_mouse_trails = 0;
+			}
+		} else if (p_mode == WINDOW_MODE_WINDOWED) {
+			ShowWindow(wd.hWnd, SW_RESTORE);
+			wd.maximized = false;
+			wd.minimized = false;
+		}
+		if (p_mode == WINDOW_MODE_MAXIMIZED) {
+			ShowWindow(wd.hWnd, SW_MAXIMIZE);
+			wd.maximized = true;
+			wd.minimized = false;
+		}
+
+		if (p_mode == WINDOW_MODE_MINIMIZED) {
+			ShowWindow(wd.hWnd, SW_MINIMIZE);
+			wd.maximized = false;
+			wd.minimized = true;
+		}
 	}
 
 	if (p_mode == WINDOW_MODE_EXCLUSIVE_FULLSCREEN) {
@@ -1504,7 +1515,7 @@ void DisplayServerWindows::window_set_flag(WindowFlags p_flag, bool p_enabled, W
 			wd.borderless = p_enabled;
 			_update_window_style(p_window);
 			_update_window_mouse_passthrough(p_window);
-			ShowWindow(wd.hWnd, (wd.no_focus || wd.is_popup) ? SW_SHOWNOACTIVATE : SW_SHOW); // Show the window.
+			ShowWindow(wd.hWnd, wd.hidden ? SW_HIDE : (wd.no_focus || wd.is_popup) ? SW_SHOWNOACTIVATE : SW_SHOW); // Show the window.
 		} break;
 		case WINDOW_FLAG_ALWAYS_ON_TOP: {
 			ERR_FAIL_COND_MSG(wd.transient_parent != INVALID_WINDOW_ID && p_enabled, "Transient windows can't become on top");
@@ -2060,10 +2071,14 @@ void DisplayServerWindows::process_events() {
 	_THREAD_SAFE_METHOD_
 
 	MSG msg;
-
+#if LIBRARY_ENABLED
+	if (!drop_events && joypad) {
+#else
 	if (!drop_events) {
+#endif // LIBRARY_ENABLED
 		joypad->process_joypads();
 	}
+
 
 	while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
@@ -3602,6 +3617,9 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 
 		} break;
 		case WM_DEVICECHANGE: {
+#if LIBRARY_ENABLED
+			if (joypad)
+#endif
 			joypad->probe_joypads();
 		} break;
 		case WM_DESTROY: {
@@ -4143,7 +4161,9 @@ void DisplayServerWindows::tablet_set_current_driver(const String &p_driver) {
 		ERR_PRINT("Unknown tablet driver " + p_driver + ".");
 	}
 }
-
+#if LIBRARY_ENABLED
+#include "servers/rendering/dummy/rasterizer_dummy.h"
+#endif // LIBRARY_ENABLED
 DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Error &r_error) {
 	KeyMappingWindows::initialize();
 
@@ -4301,7 +4321,8 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 	Point2i window_position;
 	if (p_position != nullptr) {
 		window_position = *p_position;
-	} else {
+	}
+	else {
 		if (p_screen == SCREEN_OF_MAIN_WINDOW) {
 			p_screen = SCREEN_PRIMARY;
 		}
@@ -4311,6 +4332,13 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 	WindowID main_window = _create_window(p_mode, p_vsync_mode, p_flags, Rect2i(window_position, p_resolution));
 	ERR_FAIL_COND_MSG(main_window == INVALID_WINDOW_ID, "Failed to create main window.");
 
+#if LIBRARY_ENABLED
+	{
+		WindowData& wd = windows[main_window];
+		wd.hidden = true;
+	}
+#endif // LIBRARY_ENABLED
+
 	joypad = new JoypadWindows(&windows[MAIN_WINDOW_ID].hWnd);
 
 	for (int i = 0; i < WINDOW_FLAG_MAX; i++) {
@@ -4318,18 +4346,17 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 			window_set_flag(WindowFlags(i), true, main_window);
 		}
 	}
-
 	show_window(MAIN_WINDOW_ID);
+	#if defined(VULKAN_ENABLED)
 
-#if defined(VULKAN_ENABLED)
+		if (rendering_driver == "vulkan") {
+			rendering_device_vulkan = memnew(RenderingDeviceVulkan);
+			rendering_device_vulkan->initialize(context_vulkan);
 
-	if (rendering_driver == "vulkan") {
-		rendering_device_vulkan = memnew(RenderingDeviceVulkan);
-		rendering_device_vulkan->initialize(context_vulkan);
+			RendererCompositorRD::make_current();
+		}
+	#endif
 
-		RendererCompositorRD::make_current();
-	}
-#endif
 
 	if (!Engine::get_singleton()->is_editor_hint() && !OS::get_singleton()->is_in_low_processor_usage_mode()) {
 		// Increase priority for projects that are not in low-processor mode (typically games)
@@ -4350,13 +4377,99 @@ DisplayServerWindows::DisplayServerWindows(const String &p_rendering_driver, Win
 
 	cursor_shape = CURSOR_ARROW;
 
+/*#if LIBRARY_ENABLED
+#else*/
 	_update_real_mouse_position(MAIN_WINDOW_ID);
 
 	r_error = OK;
 
 	static_cast<OS_Windows *>(OS::get_singleton())->set_main_window(windows[MAIN_WINDOW_ID].hWnd);
 	Input::get_singleton()->set_event_dispatch_function(_dispatch_input_events);
+//#endif // LIBRARY_ENABLED
+
 }
+#if LIBRARY_ENABLED
+void DisplayServerWindows::init_windows(WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i* p_position, const Vector2i& p_resolution, int p_screen, Error& r_error)
+{
+	/*Point2i window_position;
+	if (p_position != nullptr) {
+		window_position = *p_position;
+	}
+	else {
+		if (p_screen == SCREEN_OF_MAIN_WINDOW) {
+			p_screen = SCREEN_PRIMARY;
+		}
+		window_position = screen_get_position(p_screen) + (screen_get_size(p_screen) - p_resolution) / 2;
+	}
+
+	WindowID main_window = _create_window(p_mode, p_vsync_mode, p_flags, Rect2i(window_position, p_resolution));
+	ERR_FAIL_COND_MSG(main_window == INVALID_WINDOW_ID, "Failed to create main window.");
+
+	joypad = new JoypadWindows(&windows[MAIN_WINDOW_ID].hWnd);
+
+	for (int i = 0; i < WINDOW_FLAG_MAX; i++) {
+		if (p_flags & (1 << i)) {
+			window_set_flag(WindowFlags(i), true, main_window);
+		}
+	}
+	*/
+
+	window_set_mode(WINDOW_MODE_WINDOWED, MAIN_WINDOW_ID);
+	//WindowData& wd = windows[MAIN_WINDOW_ID];
+	//wd.hidden = false;
+	//show_window(MAIN_WINDOW_ID);
+	/*
+#if defined(VULKAN_ENABLED)
+
+	if (rendering_driver == "vulkan") {
+		if (!rendering_device_vulkan) {
+			rendering_device_vulkan = memnew(RenderingDeviceVulkan);
+			rendering_device_vulkan->initialize(context_vulkan);
+		}
+		RendererCompositorRD::make_current();
+	}
+#endif
+
+	_update_real_mouse_position(MAIN_WINDOW_ID);
+
+	r_error = OK;
+
+	static_cast<OS_Windows*>(OS::get_singleton())->set_main_window(windows[MAIN_WINDOW_ID].hWnd);
+	Input::get_singleton()->set_event_dispatch_function(_dispatch_input_events);*/
+}
+
+void DisplayServerWindows::deinit_windows()
+{
+	window_set_mode(WINDOW_MODE_HIDDEN, MAIN_WINDOW_ID);
+	//show_window(MAIN_WINDOW_ID);
+	/*RasterizerDummy::make_current();
+	if (user_proc) {
+		SetWindowLongPtr(windows[MAIN_WINDOW_ID].hWnd, GWLP_WNDPROC, (LONG_PTR)user_proc);
+	}
+
+	// Close power request handle.
+	screen_set_keep_on(false);
+
+	if (windows.has(MAIN_WINDOW_ID)) {
+#ifdef GLES3_ENABLED
+		if (gl_manager) {
+			gl_manager->window_destroy(MAIN_WINDOW_ID);
+		}
+#endif
+#ifdef VULKAN_ENABLED
+		if (context_vulkan) {
+			context_vulkan->window_destroy(MAIN_WINDOW_ID);
+		}
+#endif
+		if (wintab_available && windows[MAIN_WINDOW_ID].wtctx) {
+			wintab_WTClose(windows[MAIN_WINDOW_ID].wtctx);
+			windows[MAIN_WINDOW_ID].wtctx = 0;
+		}
+		DestroyWindow(windows[MAIN_WINDOW_ID].hWnd);
+	}*/
+}
+#endif // LIBRARY_ENABLED
+
 
 Vector<String> DisplayServerWindows::get_rendering_drivers_func() {
 	Vector<String> drivers;
@@ -4400,6 +4513,9 @@ void DisplayServerWindows::register_windows_driver() {
 }
 
 DisplayServerWindows::~DisplayServerWindows() {
+#if LIBRARY_ENABLED
+	if (joypad)
+#endif
 	delete joypad;
 	touch_state.clear();
 

@@ -28,17 +28,21 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifdef LIBRARY_ENABLED
+#if defined(LIBRARY_ENABLED)
 #include "libgodot.h"
-#include "core/extension/gdextension_manager.h"
-#include "core/variant/callable.h"
 #include "libgodot_callable.h"
+#include "core/config/project_settings.h"
+#include "core/extension/gdextension_manager.h"
+#include "core/os/midi_driver.h"
+#include "core/variant/callable.h"
+//#include "modules/deadline_audio_engine/juce/juce_MidiBuffer.h"
 
 uint32_t (*lib_godot_callable_hash)(void *);
 void *(*lib_godot_get_as_text)(void *);
 uint64_t (*lib_godot_get_object)(void *);
 void (*lib_godot_disposes)(void *);
 void (*lib_godot_call)(void *, const void *, int, void *, void *);
+void (*create_process_function_ptr)(const char*, int, const char*, int);
 
 
 #ifdef __cplusplus
@@ -49,6 +53,10 @@ GDExtensionBool (*initialization_function)(const GDExtensionInterfaceGetProcAddr
 void (*scene_load_function)(void *);
 void (*project_settings_load_function)(void *);
 
+/*LIBGODOT_API void register_create_process_cb(void (*p_function_ptr)(const char*, int, const char*, int))
+{
+	create_process_function_ptr = p_function_ptr;
+}*/
 LIBGODOT_API void libgodot_bind_custom_callable(uint32_t (*callable_hash_bind)(void *), void *(*get_as_text_bind)(void *), uint64_t (*get_object_bind)(void *), void (*disposes_bind)(void *), void (*call_bind)(void *, const void *, int, void *, void *)) {
 	lib_godot_callable_hash = callable_hash_bind;
 	lib_godot_get_as_text = get_as_text_bind;
@@ -79,9 +87,41 @@ void libgodot_scene_load(void *scene) {
 	}
 }
 
+LIBGODOT_API void godot_initialize_audio(int num_channels, int samplesperblock, float samplerate) {
+	// get plugin host data
+	GLOBAL_DEF_INTERNAL("audio/driver/enable_input", false);
+	GLOBAL_DEF_INTERNAL("audio/driver/mix_rate", samplerate);
+	GLOBAL_DEF_INTERNAL("audio/driver/num_channels", num_channels);
+	GLOBAL_DEF_INTERNAL("audio/driver/samples_per_block", samplesperblock);
+	GLOBAL_DEF_INTERNAL("audio/driver/mix_rate.web", 0); // Safer default output_latency for web (use browser default).
+	GLOBAL_DEF_INTERNAL("audio/driver/output_latency", (float)samplesperblock / samplerate * 1000.0);
+	GLOBAL_DEF_INTERNAL("audio/driver/output_latency.web", (float)samplesperblock / samplerate * 1000.0); // Safer default output_latency for web.
+}
+
+LIBGODOT_API void godot_process_audio(int numchannels, int samplesperblock, float* const* buffer) {
+	// assumed it's always the first one
+	AudioDriver* driver = AudioDriverManager::get_driver(0);
+	if (auto lib_godot_driver = static_cast<AudioDriverLibGodot*>(driver)) {
+		lib_godot_driver->process_samples(numchannels, samplesperblock, buffer);
+	}
+}
+
+void godot_process_midi(const unsigned char* p_buffer, int buffer_size)
+{
+	/*juce::MidiBuffer buffer(p_buffer, buffer_size);
+	for (auto& e : buffer) {
+		MIDIDriver::get_singleton()->receive_input_packet((uint64_t)e.getMessage().getTimeStamp(), (uint8_t*)&e.data, 3);
+	}*/
+}
+
 bool libgodot_is_scene_loadable() {
 	return scene_load_function != nullptr;
 }
+/*
+void call_create_process_callback(const char* path, int path_size, const char* args, int args_size) {
+	if (create_process_function_ptr)
+		create_process_function_ptr(path, path_size, args, args_size);
+}*/
 
 void libgodot_init_resource() {
 	if (initialization_function != nullptr) {

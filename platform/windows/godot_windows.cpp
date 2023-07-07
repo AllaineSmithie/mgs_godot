@@ -256,38 +256,73 @@ extern "C" LIBGODOT_API int godot_main(int argc, char* argv[]) {
 //#else
 //#endif
 }
+extern "C" LIBGODOT_API int godot_my_very_first_hello_world(int argc) {
+	return argc * 2;
+}
 OS_Windows* os = nullptr;
-extern "C" LIBGODOT_API int godot_main_setup(int argc, char* argv_utf8[], HINSTANCE handle = nullptr) {
-	OS_Windows _os(handle);
-	os = &_os;
+extern "C" LIBGODOT_API int godot_main_setup(int argc, char* argv_utf8[], void* handle, bool secondphase) {
+	if (handle != nullptr)
+	{
+		HINSTANCE handle_h = reinterpret_cast<HINSTANCE>(handle);
+		os = memnew(OS_Windows(handle_h));
+	}
+	else
+	{
+		os = memnew(OS_Windows(nullptr));
+	}
 
 	setlocale(LC_CTYPE, "");
 
 	TEST_MAIN_PARAM_OVERRIDE(argc, argv_utf8)
 
-	Error err = Main::setup(argv_utf8[0], argc - 1, &argv_utf8[1]);
+	Error err = Main::setup(argv_utf8[0], argc, &argv_utf8[1], secondphase);
+	if (secondphase)
+		Main::start();
+	return 0;
+}
+
+extern "C" LIBGODOT_API int godot_main_setup2() {
+	Error err = Main::setup2();
 
 	Main::start();
 	return 0;
 }
 
-extern "C" LIBGODOT_API void godot_main_run_pre(int argc, char* argv[], HINSTANCE handle = nullptr) {
+extern "C" LIBGODOT_API void godot_init_windows() {
+	Main::init_windows();
+}
 
-	if (os->get_main_loop())
+extern "C" LIBGODOT_API void godot_deinit_windows() {
+	Main::deinit_windows();
+}
+
+extern "C" LIBGODOT_API void* godot_get_native_window() {
+
+	if (!os)
+		return nullptr;
+
+	return os->get_main_window();
+}
+
+extern "C" LIBGODOT_API void godot_main_run_pre() {
+
+	if (!os->get_main_loop())
 		return;
 
 	os->get_main_loop()->initialize();
 }
 
-extern "C" LIBGODOT_API void godot_main_run_iteration(int argc, char* argv[], HINSTANCE handle = nullptr) {
+extern "C" LIBGODOT_API void godot_main_run_iteration() {
 	DisplayServer::get_singleton()->process_events(); // get rid of pending events
 	Main::iteration();
 }
 
-extern "C" LIBGODOT_API int godot_main_finalize(int argc, char* argv[], HINSTANCE handle = nullptr) {
+extern "C" LIBGODOT_API int godot_main_finalize() {
 	os->get_main_loop()->finalize();
 	Main::cleanup();
-	return os->get_exit_code();
+	const int result = os->get_exit_code();
+	memdelete(os);
+	return result;
 }
 
 #else

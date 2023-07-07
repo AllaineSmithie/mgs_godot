@@ -170,7 +170,8 @@ void OS_LinuxBSD::finalize() {
 	}
 	main_loop = nullptr;
 
-#ifdef ALSAMIDI_ENABLED
+#if LIBRARY_ENABLED
+#elif ALSAMIDI_ENABLED
 	driver_alsamidi.close();
 #endif
 

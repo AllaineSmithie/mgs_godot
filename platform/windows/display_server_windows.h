@@ -362,6 +362,7 @@ class DisplayServerWindows : public DisplayServer {
 		bool pre_fs_valid = false;
 		RECT pre_fs_rect;
 		bool maximized = false;
+		bool hidden = false;
 		bool minimized = false;
 		bool fullscreen = false;
 		bool multiwindow_fs = false;
@@ -647,6 +648,10 @@ public:
 	static void register_windows_driver();
 
 	DisplayServerWindows(const String &p_rendering_driver, WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i *p_position, const Vector2i &p_resolution, int p_screen, Error &r_error);
+#if LIBRARY_ENABLED
+	void init_windows(WindowMode p_mode, VSyncMode p_vsync_mode, uint32_t p_flags, const Vector2i* p_position, const Vector2i& p_resolution, int p_screen, Error& r_error) override;
+	void deinit_windows() override;
+#endif // LIBRARY_ENABLED
 	~DisplayServerWindows();
 };
 

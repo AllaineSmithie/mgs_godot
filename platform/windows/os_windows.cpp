@@ -255,6 +255,9 @@ void OS_Windows::finalize() {
 		dwrite_factory->Release();
 		dwrite_factory = nullptr;
 	}
+#if LIBRARY_ENABLED
+#else
+#endif
 #ifdef WINMIDI_ENABLED
 	driver_midi.close();
 #endif
@@ -1716,12 +1719,16 @@ OS_Windows::OS_Windows(HINSTANCE _hInstance) {
 
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
+#if LIBRARY_ENABLED
+	AudioDriverManager::add_driver(&driver_libgodot);
+#else
 #ifdef WASAPI_ENABLED
 	AudioDriverManager::add_driver(&driver_wasapi);
 #endif
 #ifdef XAUDIO2_ENABLED
 	AudioDriverManager::add_driver(&driver_xaudio2);
 #endif
+#endif // LIBRARY_ENABLED
 
 	DisplayServerWindows::register_windows_driver();
 

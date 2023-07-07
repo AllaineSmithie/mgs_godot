@@ -23,3 +23,7 @@
 /AudioSampleStreamPlayer.windows.editor.x86_64.obj
 /AudioSampleStreamPlayer.windows.editor.dev.x86_64.obj
 /sfizz_copy_after_git_clone
+/audio_analysis/advanced_spectrum_analyzer.windows.editor.dev.x86_64.obj
+/audio_analysis/midi_note_container.windows.editor.dev.x86_64.obj
+/audio_analysis/piano_roll.windows.editor.dev.x86_64.obj
+/editor/advanced_spectrum_analyzer_plugin.windows.editor.dev.x86_64.obj
