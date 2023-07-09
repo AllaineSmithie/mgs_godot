@@ -191,7 +191,7 @@
 			</description>
 		</method>
 		<method name="get_preset_names" qualifiers="const">
-			<return type="PoolStringArray" />
+			<return type="PackedStringArray" />
 			<description>
 				Returns a list of preset names stored in the SoundFont.
 			</description>
