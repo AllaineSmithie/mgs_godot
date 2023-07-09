@@ -30,3 +30,6 @@
 [submodule "modules/show_engine"]
 	path = modules/show_engine
 	url = https://github.com/AllaineSmithie/show_engine.git
+[submodule "thirdparty/hueplusplus"]
+	path = thirdparty/hueplusplus
+	url = https://github.com/enwi/hueplusplus.git
