@@ -89,7 +89,6 @@ class OS_LinuxBSD : public OS_Unix {
  #ifdef PORT_AUDIO
 	PortAudioVirtualDriver driver_portaudio;
  #endif
-#endif
 
 	CrashHandler crash_handler;
 

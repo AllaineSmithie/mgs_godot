@@ -4,8 +4,8 @@
 #include "scene/resources/texture.h"
 #include "core/io/resource_loader.h"
 #include "servers/audio/audio_stream.h"
-#include "../sfizz/src/sfizz.h"
-#include "../DeadlineAudioEngine.h"
+#include "modules/deadline_audio_engine/sfizz/src/sfizz.h"
+#include "modules/deadline_audio_engine/DeadlineAudioEngine.h"
 //#include "../sfizz/external/st_audiofile/thirdparty/dr_libs/dr_flac.h"
 
 class AudioStreamPRO;

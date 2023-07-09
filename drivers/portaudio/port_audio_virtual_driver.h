@@ -78,7 +78,7 @@ public:
 
 	void set_use_threads(bool p_use_threads);
 	virtual void set_stream_resolution(const int p_bytes_per_sample) override;
-	virtual void frames_per_buffer_changed();
+	virtual void frames_per_buffer_changed() override;
 	void set_speaker_mode(SpeakerMode p_mode);
 	void set_mix_rate(int p_rate);
 
