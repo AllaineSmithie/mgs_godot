@@ -494,49 +494,7 @@ void EditorSettings::_load_defaults(Ref<ConfigFile> p_extra_config) {
 	EDITOR_SETTING(Variant::BOOL, PROPERTY_HINT_NONE, "interface/multi_window/maximize_window", false, "");
 	set_restart_if_changed("interface/multi_window/enable", true);
 
-	/* Interfaces Manager */
-	// Temporarily here, should merge with existing structure and advanced rules like audio
-
-	// Audio
-	const PackedStringArray all_devices = AudioServer::get_singleton()->get_input_device_list();
-	String all_devices_string = "none";
-	for (auto d : all_devices)
-		all_devices_string = all_devices_string + "," + d;
-
-	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/audio/driver", 0, all_devices_string)
-	const String samplerates_hint = "External,22.05 khz,44.1 khz,48.0 khz,88.2 khz,96.0 khz,192.0 khz";
-	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/audio/samplerate", 2, samplerates_hint)
-	const String bit_hint = "16bit,24bit,32bit(float),64bit(float)";
-	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/audio/quality", 2, bit_hint)
-
-	// Midi
-	OS::get_singleton()->close_midi_inputs();
-	OS::get_singleton()->open_midi_inputs();
-	const PackedStringArray all_midi_devices = OS::get_singleton()->get_connected_midi_inputs();
-	all_devices_string = "none";
-	for (auto d : all_midi_devices)
-		all_devices_string = all_devices_string + "," + d;
-
-	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/midi/interface", 0, all_devices_string)
-	const String channel_hint = "Omni,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16";
-	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/midi/channel", 0, channel_hint)
-
-	// DMX
-	all_devices_string = "none";
-	/*const PackedStringArray all_dmx_usb_devices = ShowEngine::get_singleton()->get_connected_dmx_usb_inputs();
 	
-	for (auto d : all_dmx_usb_devices )
-		all_devices_string = all_devices_string + "," + d;
-		*/
-	all_devices_string += ",Artnet";
-	all_devices_string += ",sACN";
-	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_ENUM, "interfaces_manager/dmx/interface", 0, all_devices_string)
-	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_RANGE, "interfaces_manager/dmx/channel", -1, "-1,511,1")
-
-	// OSC
-	EDITOR_SETTING(Variant::STRING, PROPERTY_HINT_LINK, "interfaces_manager/osc/adress", "/", all_devices_string)
-	EDITOR_SETTING(Variant::INT, PROPERTY_HINT_RANGE, "interfaces_manager/dmx/channel", -1, "-1,511,1")
-
 	/* Filesystem */
 
 	// External Programs

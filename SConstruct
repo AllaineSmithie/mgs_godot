@@ -192,6 +192,7 @@ opts.Add(BoolVariable("deprecated", "Enable compatibility code for deprecated an
 opts.Add(EnumVariable("precision", "Set the floating-point precision level", "single", ("single", "double")))
 opts.Add(BoolVariable("minizip", "Enable ZIP archive support using minizip", True))
 opts.Add(BoolVariable("brotli", "Enable Brotli for decompresson and WOFF2 fonts support", True))
+opts.Add(BoolVariable("portaudio", "Enable Portaudio", True))
 opts.Add(BoolVariable("xaudio2", "Enable the XAudio2 audio driver", False))
 opts.Add(BoolVariable("vulkan", "Enable the vulkan rendering driver", True))
 opts.Add(BoolVariable("opengl3", "Enable the OpenGL/GLES3 rendering driver", True))
@@ -280,6 +281,9 @@ opts.Update(env_base)
 # Platform selection: validate input, and add options.
 
 selected_platform = ""
+
+if env_base["portaudio"]:
+    env_base.Append(CPPDEFINES=["PORT_AUDIO"])
 
 if env_base["library_type"] == "static_library":
     env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])

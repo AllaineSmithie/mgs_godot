@@ -49,6 +49,13 @@
 #endif
 #endif
 
+#if LIBRARY_ENABLED
+#include <core/libgodot/libgodot_audio_driver.h>
+#endif
+#ifdef PORT_AUDIO
+ #include "drivers/portaudio/port_audio_virtual_driver.h"
+#endif
+
 class OS_LinuxBSD : public OS_Unix {
 	virtual void delete_main_loop() override;
 
@@ -69,13 +76,19 @@ class OS_LinuxBSD : public OS_Unix {
 	AudioDriverALSA driver_alsa;
 #endif
 
-#if LIBRARY_ENABLED
-#elif ALSAMIDI_ENABLED
+#if ALSAMIDI_ENABLED
 	MIDIDriverALSAMidi driver_alsamidi;
 #endif
 
-#ifdef PULSEAUDIO_ENABLED
+#if LIBRARY_ENABLED
+	LibGodotAudioDriver libgodot_audio_driver;
+#endif
+ #ifdef PULSEAUDIO_ENABLED
 	AudioDriverPulseAudio driver_pulseaudio;
+ #endif
+ #ifdef PORT_AUDIO
+	PortAudioVirtualDriver driver_portaudio;
+ #endif
 #endif
 
 	CrashHandler crash_handler;

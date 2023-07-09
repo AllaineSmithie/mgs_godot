@@ -1728,6 +1728,9 @@ OS_Windows::OS_Windows(HINSTANCE _hInstance) {
 #ifdef XAUDIO2_ENABLED
 	AudioDriverManager::add_driver(&driver_xaudio2);
 #endif
+#if PORT_AUDIO
+	AudioDriverManager::add_driver(&port_audio_audio_driver);
+#endif
 #endif // LIBRARY_ENABLED
 
 	DisplayServerWindows::register_windows_driver();

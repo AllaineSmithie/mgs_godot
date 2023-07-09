@@ -769,6 +769,12 @@ void DeadlineAudioEngine::_mix_audio()
 void DeadlineAudioEngine::on_bus_layout_changed()
 {
 	lock_render = true;
+
+	// TEMPORARILY DISABLED
+	// for PortAudio implementation
+	/*
+
+	
 	// always update sfz_mix_buffer_sizer
 	sfz_mix_buffer.setSize(AudioServer::get_singleton()->get_channel_count() * 2, AudioServer::get_singleton()->thread_get_mix_buffer_size());
 	// moved or renamed
@@ -812,6 +818,8 @@ void DeadlineAudioEngine::on_bus_layout_changed()
 	}
 
 	sfizzPlayer = new_sort;
+	*/
+
 	lock_render = false;
 }
 

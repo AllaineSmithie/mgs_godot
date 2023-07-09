@@ -14,6 +14,8 @@ SConscript("coreaudio/SCsub")
 SConscript("pulseaudio/SCsub")
 if env["platform"] == "windows":
     SConscript("wasapi/SCsub")
+    if env["portaudio"]:
+        SConscript("portaudio/SCsub")
 if env["xaudio2"]:
     SConscript("xaudio2/SCsub")
 

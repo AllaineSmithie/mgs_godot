@@ -55,6 +55,10 @@ class OS_MacOS : public OS_Unix {
 #ifdef COREMIDI_ENABLED
 	MIDIDriverCoreMidi midi_driver;
 #endif
+#if PORT_AUDIO
+#include <drivers/portaudio/port_audio_virtual_driver.h>
+	PortAudioVirtualDriver port_audio_audio_driver;
+#endif
 #endif
 
 	CrashHandler crash_handler;

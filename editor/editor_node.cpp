@@ -151,6 +151,10 @@
 #include "editor/scene_tree_dock.h"
 #include "editor/window_wrapper.h"
 
+#if PORT_AUDIO
+ #include <modules/portaudio/port_audio.h>
+#endif // PORT_AUDIO
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6634,6 +6638,11 @@ void EditorNode::_bind_methods() {
 	ADD_SIGNAL(MethodInfo("resource_saved", PropertyInfo(Variant::OBJECT, "obj")));
 	ADD_SIGNAL(MethodInfo("scene_saved", PropertyInfo(Variant::STRING, "path")));
 	ADD_SIGNAL(MethodInfo("project_settings_changed"));
+
+#if PORT_AUDIO
+	PortAudio::get_singleton()->editor_node_register_signal(EditorNode::get_singleton());
+#endif // PORT_AUDIO
+
 	ADD_SIGNAL(MethodInfo("scene_changed"));
 	ADD_SIGNAL(MethodInfo("scene_closed", PropertyInfo(Variant::STRING, "path")));
 }
@@ -6763,6 +6772,7 @@ EditorNode::EditorNode() {
 	}
 
 	singleton = this;
+
 
 	EditorUndoRedoManager::get_singleton()->connect("version_changed", callable_mp(this, &EditorNode::_update_undo_redo_allowed));
 	EditorUndoRedoManager::get_singleton()->connect("history_changed", callable_mp(this, &EditorNode::_update_undo_redo_allowed));

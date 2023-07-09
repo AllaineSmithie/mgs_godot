@@ -22,7 +22,7 @@ class MIDINoteNode : public Line2D
 	Area2D* area = nullptr;
 	HBoxContainer* container = nullptr;
 
-	int subdivision = 0;
+	int subdivision = 9;
 	int velocity = 127;
 	int note = 0;
 	float begin = 0.0f;

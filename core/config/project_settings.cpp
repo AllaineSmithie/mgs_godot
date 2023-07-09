@@ -1132,6 +1132,7 @@ bool ProjectSettings::_property_get_revert(const StringName &p_name, Variant &r_
 
 void ProjectSettings::set_setting(const String &p_setting, const Variant &p_value) {
 	set(p_setting, p_value);
+	emit_signal("project_settings_changed", p_setting);
 }
 
 Variant ProjectSettings::get_setting(const String &p_setting, const Variant &p_default_value) const {
@@ -1225,6 +1226,8 @@ void ProjectSettings::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("load_resource_pack", "pack", "replace_files", "offset"), &ProjectSettings::_load_resource_pack, DEFVAL(true), DEFVAL(0));
 
 	ClassDB::bind_method(D_METHOD("save_custom", "file"), &ProjectSettings::_save_custom_bnd);
+
+	ADD_SIGNAL(MethodInfo("project_settings_changed", PropertyInfo(Variant::STRING, "settings_name")));
 }
 
 void ProjectSettings::_add_builtin_input_map() {

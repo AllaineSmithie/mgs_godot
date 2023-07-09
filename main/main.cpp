@@ -1924,8 +1924,11 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 	// Store this in a globally accessible place, so we can retrieve the rendering drivers
 	// list from the display driver for the editor UI.
 	OS::get_singleton()->set_display_driver_id(display_driver_idx);
-
+#if PORT_AUDIO
+	GLOBAL_DEF_INTERNAL("audio/driver/driver", AudioDriverManager::get_driver(0)->get_name());
+#else
 	GLOBAL_DEF_RST_NOVAL("audio/driver/driver", AudioDriverManager::get_driver(0)->get_name());
+#endif
 	if (audio_driver.is_empty()) { // Specified in project.godot.
 		audio_driver = GLOBAL_GET("audio/driver/driver");
 	}

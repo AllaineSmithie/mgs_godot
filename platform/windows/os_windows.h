@@ -67,6 +67,10 @@
 #include <windows.h>
 #include <windowsx.h>
 
+#if PORT_AUDIO
+#include <drivers/portaudio/port_audio_virtual_driver.h>
+#endif
+
 #ifdef DEBUG_ENABLED
 // forward error messages to OutputDebugString
 #define WINDOWS_DEBUG_OUTPUT_ENABLED
@@ -116,6 +120,9 @@ class OS_Windows : public OS {
 #endif
 #ifdef XAUDIO2_ENABLED
 	AudioDriverXAudio2 driver_xaudio2;
+#endif
+#if PORT_AUDIO
+	PortAudioVirtualDriver port_audio_audio_driver;
 #endif
 #endif // LIBRARY_ENABLED
 #ifdef WINMIDI_ENABLED

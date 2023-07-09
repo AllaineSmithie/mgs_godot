@@ -85,6 +85,7 @@ public:
 		SPEAKER_SURROUND_31,
 		SPEAKER_SURROUND_51,
 		SPEAKER_SURROUND_71,
+		SPEAKER_MULTIOUT,
 	};
 
 	static AudioDriver *get_singleton();
@@ -166,6 +167,7 @@ public:
 		SPEAKER_SURROUND_31,
 		SPEAKER_SURROUND_51,
 		SPEAKER_SURROUND_71,
+		SPEAKER_MULTIOUT,
 	};
 
 	enum {
@@ -315,6 +317,8 @@ public:
 				return 3;
 			case SPEAKER_SURROUND_71:
 				return 4;
+			case SPEAKER_MULTIOUT:
+				return 128;
 		}
 		ERR_FAIL_V(1);
 	}

@@ -1140,6 +1140,9 @@ OS_LinuxBSD::OS_LinuxBSD() {
 #ifdef PULSEAUDIO_ENABLED
 	AudioDriverManager::add_driver(&driver_pulseaudio);
 #endif
+#ifdef PORT_AUDIO
+	AudioDriverManager::add_driver(&driver_portaudio);
+#endif
 
 #ifdef ALSA_ENABLED
 	AudioDriverManager::add_driver(&driver_alsa);

@@ -27,6 +27,9 @@ files = [
     "gl_manager_macos_legacy.mm",
 ]
 
+if env["portaudio"]:
+    SConscript("portaudio/SCsub")
+
 if env["library_type"] == "static_library":
     prog = env.add_library("#bin/mgs", files)
 elif env["library_type"] == "shared_library":

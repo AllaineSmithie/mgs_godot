@@ -742,8 +742,13 @@ OS_MacOS::OS_MacOS() {
 	
 #if LIBRARY_ENABLED
 	AudioDriverManager::add_driver(&driver_libgodot);
-#elif defined COREAUDIO_ENABLED
+#else
+ #if defined COREAUDIO_ENABLED
 	AudioDriverManager::add_driver(&audio_driver);
+ #endif
+ #if defined PORT_AUDIO
+	AudioDriverManager::add_driver(&port_audio_audio_driver);
+ #endif
 #endif
 
 	DisplayServerMacOS::register_macos_driver();

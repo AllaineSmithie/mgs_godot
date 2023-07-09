@@ -25,7 +25,10 @@ using InternalFormat = juce::AudioData::Format<int32_t, juce::AudioData::NativeE
 Error AudioDriverLibGodot::init_from_external(bool p_reinit) {
 
 	channels = ProjectSettings::get_singleton()->get_setting("audio/driver/num_channels", 2);
-	mix_rate = ProjectSettings::get_singleton()->get_setting("audio/driver/mix_rate", 44100);
+	if (ProjectSettings::get_singleton()->has_setting("audio/driver/mix_rate"))
+		mix_rate = ProjectSettings::get_singleton()->get_setting("audio/driver/mix_rate", 44100);
+	else
+		mix_rate = ProjectSettings::get_singleton()->get_setting("audio/driver/sample_rate", 44100);
 	buffer_frames = ProjectSettings::get_singleton()->get_setting("audio/driver/samples_per_block", 2);
 	target_latency_ms = (int)((real_t)buffer_frames / mix_rate * 1000.0);
 	real_latency = 0.0;

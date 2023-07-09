@@ -1082,8 +1082,8 @@ void AudioGraphEditor::_notification(int p_what)
 	case NOTIFICATION_DRAW:
 	{
 		_draw();
-		for (auto i = 0; i < 127; ++i)
-			draw_rect(Rect2(midi_note_tracks[i]->get_position(), midi_note_tracks[i]->get_position() + Vector2(get_size().width, (double)get_size().height / 128.0)), Color(0.5, 0.0, 0.0, 0.3));
+		/*for (auto i = 0; i < 127; ++i)
+			draw_rect(Rect2(midi_note_tracks[i]->get_position(), midi_note_tracks[i]->get_position() + Vector2(get_size().width, (double)get_size().height / 128.0)), Color(0.5, 0.0, 0.0, 0.3));*/
 		break;
 	}
 	default:

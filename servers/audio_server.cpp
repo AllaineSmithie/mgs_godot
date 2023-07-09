@@ -117,6 +117,8 @@ void AudioDriver::input_buffer_write(int32_t sample) {
 
 int AudioDriver::_get_configured_mix_rate() {
 	StringName audio_driver_setting = "audio/driver/mix_rate";
+	if (!ProjectSettings::get_singleton()->has_setting(audio_driver_setting))
+		audio_driver_setting = "audio/driver/sample_rate";
 	int mix_rate = GLOBAL_GET(audio_driver_setting);
 
 	// In the case of invalid mix rate, let's default to a sensible value..
@@ -138,9 +140,14 @@ AudioDriver::SpeakerMode AudioDriver::get_speaker_mode_by_total_channels(int p_c
 		case 8:
 			return SPEAKER_SURROUND_71;
 	}
+	if (p_channels > 8)
+		return SPEAKER_MULTIOUT;
 
 	// Default to STEREO
-	return SPEAKER_MODE_STEREO;
+	if (p_channels < 3)
+		return SPEAKER_MODE_STEREO;
+
+	return SPEAKER_MULTIOUT;
 }
 
 int AudioDriver::get_total_channels_by_speaker_mode(AudioDriver::SpeakerMode p_mode) const {
@@ -153,6 +160,8 @@ int AudioDriver::get_total_channels_by_speaker_mode(AudioDriver::SpeakerMode p_m
 			return 6;
 		case SPEAKER_SURROUND_71:
 			return 8;
+		case SPEAKER_MULTIOUT:
+			return 256;
 	}
 
 	ERR_FAIL_V(2);
@@ -198,6 +207,12 @@ int AudioDriverManager::get_driver_count() {
 
 void AudioDriverManager::initialize(int p_driver) {
 #if LIBRARY_ENABLED
+#elif PORT_AUDIO
+	GLOBAL_DEF_BASIC("audio/driver/enable_input", false);
+	GLOBAL_DEF_INTERNAL("audio/driver/mix_rate", DEFAULT_MIX_RATE);
+	GLOBAL_DEF_INTERNAL("audio/driver/mix_rate.web", 0); // Safer default output_latency for web (use browser default).
+	GLOBAL_DEF_INTERNAL("audio/driver/output_latency", DEFAULT_OUTPUT_LATENCY);
+	GLOBAL_DEF_INTERNAL("audio/driver/output_latency.web", 50); // Safer default output_latency for web.
 #else
 	GLOBAL_DEF_RST("audio/driver/enable_input", false);
 	GLOBAL_DEF_RST("audio/driver/mix_rate", DEFAULT_MIX_RATE);
@@ -1364,6 +1379,10 @@ void AudioServer::notify_listener_changed() {
 void AudioServer::init_channels_and_buffers() {
 	channel_count = get_channel_count();
 	temp_buffer.resize(channel_count);
+	if (AudioDriver::get_singleton()->get_latency() > 0.0f)
+		buffer_size = AudioDriver::get_singleton()->get_latency() * AudioDriver::get_singleton()->get_mix_rate() * channel_count;
+	else if (AudioDriver::get_singleton()->get_mix_rate() == 0)
+		buffer_size = 512 * channel_count;
 	mix_buffer.resize(buffer_size + LOOKAHEAD_BUFFER_SIZE);
 
 	for (int i = 0; i < temp_buffer.size(); i++) {
@@ -1382,7 +1401,8 @@ void AudioServer::init_channels_and_buffers() {
 void AudioServer::init() {
 	channel_disable_threshold_db = GLOBAL_DEF_RST("audio/buses/channel_disable_threshold_db", -60.0);
 	channel_disable_frames = float(GLOBAL_DEF_RST(PropertyInfo(Variant::FLOAT, "audio/buses/channel_disable_time", PROPERTY_HINT_RANGE, "0,5,0.01,or_greater"), 2.0)) * get_mix_rate();
-	buffer_size = 512; //hardcoded for now
+	buffer_size =
+		buffer_size = AudioDriver::get_singleton()->get_latency() * AudioDriver::get_singleton()->get_mix_rate() * channel_count;;
 
 	init_channels_and_buffers();
 
@@ -1784,6 +1804,7 @@ void AudioServer::_bind_methods() {
 	BIND_ENUM_CONSTANT(SPEAKER_SURROUND_31);
 	BIND_ENUM_CONSTANT(SPEAKER_SURROUND_51);
 	BIND_ENUM_CONSTANT(SPEAKER_SURROUND_71);
+	BIND_ENUM_CONSTANT(SPEAKER_MULTIOUT);
 }
 
 AudioServer::AudioServer() {
