@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		This is a resource which stores MIDI data used by [MidiPlayer]. At load time, [member format] will be set accordingly.
-		To load data into the MidiPlayer simply load a [MidiFile] with [constant FORMAT_MIDI] into [member MidiPlayer.midi] or a [MidiFile] with [constant FORMAT_SF2] into [member MidiPlayer.soundfont].
+		To load data into the MidiPlayer simply load a [MidiFile] with FORMAT_MIDI into [member MidiPlayer.midi] or a [MidiFile] with FORMAT_SF2 into [member MidiPlayer.soundfont].
 		[b]Note[/b]: It is not recommended that you set byte [member data] directly or change the [member format]. These methods are more useful when loading MIDI data from a [FileAccess] and you need to set byte data and format manually.
 	</description>
 	<tutorials>
