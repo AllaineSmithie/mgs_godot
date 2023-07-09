@@ -24,3 +24,9 @@
 [submodule "modules/message_pack"]
 	path = modules/message_pack
 	url = https://github.com/matrixant/message_pack.git
+[submodule "modules/serial_port"]
+	path = modules/serial_port
+	url = https://github.com/matrixant/serial_port.git
+[submodule "modules/show_engine"]
+	path = modules/show_engine
+	url = https://github.com/AllaineSmithie/show_engine.git
