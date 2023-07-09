@@ -36,10 +36,9 @@
 #include <modules/portaudio/port_audio.h>
 #endif
 
-PortAudioVirtualDriver* PortAudioVirtualDriver::singleton = nullptr;
+PortAudioVirtualDriver *PortAudioVirtualDriver::singleton = nullptr;
 
-void PortAudioVirtualDriver::trigger_process_samples()
-{
+void PortAudioVirtualDriver::trigger_process_samples() {
 	mix_audio();
 }
 
@@ -52,8 +51,7 @@ Error PortAudioVirtualDriver::init() {
 
 	Ref<PortAudioStream> pa_stream = PortAudio::get_singleton()->get_main_stream();
 
-	if (pa_stream.is_valid())
-	{
+	if (pa_stream.is_valid()) {
 		StringName audio_driver_setting = "audio/driver/mix_rate";
 		if (!ProjectSettings::get_singleton()->has_setting(audio_driver_setting))
 			audio_driver_setting = "audio/driver/sample_rate";
@@ -61,7 +59,7 @@ Error PortAudioVirtualDriver::init() {
 
 		buffer_frames = (int)((float)(pa_stream->get_frames_per_buffer()));
 	}
-	
+
 	channels = get_channels();
 	samples_in = memnew_arr(int32_t, (size_t)buffer_frames * channels);
 	/*if (use_threads) {
@@ -71,8 +69,8 @@ Error PortAudioVirtualDriver::init() {
 	return OK;
 }
 
-void PortAudioVirtualDriver::thread_func(void* p_udata) {
-	PortAudioVirtualDriver* ad = static_cast<PortAudioVirtualDriver*>(p_udata);
+void PortAudioVirtualDriver::thread_func(void *p_udata) {
+	PortAudioVirtualDriver *ad = static_cast<PortAudioVirtualDriver *>(p_udata);
 
 	Ref<PortAudioStream> pa_stream = PortAudio::get_singleton()->get_main_stream();
 
@@ -80,9 +78,7 @@ void PortAudioVirtualDriver::thread_func(void* p_udata) {
 
 	while (!ad->exit_thread.is_set()) {
 		if (ad->active.is_set()) {
-
-			if (PortAudio::get_singleton()->get_main_stream_input_buffer(ad->samples_in, ad->buffer_frames) == 0)
-			{
+			if (PortAudio::get_singleton()->get_main_stream_input_buffer(ad->samples_in, ad->buffer_frames) == 0) {
 				//ad->semaphore.wait();
 				continue;
 			}
@@ -128,7 +124,6 @@ void PortAudioVirtualDriver::set_use_threads(bool p_use_threads) {
 }
 
 void PortAudioVirtualDriver::frames_per_buffer_changed() {
-
 	Ref<PortAudioStream> pa_stream = PortAudio::get_singleton()->get_main_stream();
 	if (pa_stream.is_null())
 		return;
@@ -136,14 +131,13 @@ void PortAudioVirtualDriver::frames_per_buffer_changed() {
 	channels = get_channels();
 	lock();
 	buffer_frames = pa_stream->get_frames_per_buffer();
-	int32_t* _samples_in = samples_in;
+	int32_t *_samples_in = samples_in;
 	samples_in = memnew_arr(int32_t, buffer_frames * channels);
 	memdelete_arr(_samples_in);
 	unlock();
 }
 
 void PortAudioVirtualDriver::set_stream_resolution(int p_stream_size_bytes) {
-
 }
 
 void PortAudioVirtualDriver::set_speaker_mode(SpeakerMode p_mode) {
@@ -165,8 +159,7 @@ uint32_t PortAudioVirtualDriver::get_channels() const {
 
 void PortAudioVirtualDriver::mix_audio() {
 	ERR_FAIL_COND(!active.is_set()); // If not active, should not mix.
-	if (PortAudio::get_singleton()->get_main_stream_input_buffer(samples_in, buffer_frames) == 0)
-	{
+	if (PortAudio::get_singleton()->get_main_stream_input_buffer(samples_in, buffer_frames) == 0) {
 		return;
 	}
 	start_counting_ticks();
@@ -193,17 +186,15 @@ void PortAudioVirtualDriver::finish() {
 	}
 }
 
-void PortAudioVirtualDriver::stop()
-{
+void PortAudioVirtualDriver::stop() {
 	active.clear();
 }
 
-float PortAudioVirtualDriver::get_latency()
-{
+float PortAudioVirtualDriver::get_latency() {
 	Ref<PortAudioStream> pa_stream = PortAudio::get_singleton()->get_main_stream();
 	if (pa_stream.is_null())
 		return (float)buffer_frames / 44100.0;
-	
+
 	return (float)buffer_frames / pa_stream->get_sample_rate();
 }
 

@@ -1,12 +1,11 @@
 #ifndef VIRTUAL_AUDIO_DRIVER_H
 #define VIRTUAL_AUDIO_DRIVER_H
-#include <servers/audio_server.h>
 #include "core/object/ref_counted.h"
 #include "core/os/semaphore.h"
 #include "core/templates/vector.h"
+#include <servers/audio_server.h>
 
-class VirtualAudioDriver : public AudioDriver
-{
+class VirtualAudioDriver : public AudioDriver {
 public:
 	//virtual int process_samples(const Ref<RefCounted>& data) = 0;
 	virtual void trigger_process_samples() = 0;

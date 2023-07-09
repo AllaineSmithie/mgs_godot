@@ -8,7 +8,6 @@
 /* Copyright (c) 2022-present Deadline Entertainment					  */
 /**************************************************************************/
 
-
 #ifndef LIBGODOT_AUDIO_DRIVER_H
 #define LIBGODOT_AUDIO_DRIVER_H
 
@@ -20,7 +19,6 @@
 #include "servers/audio_server.h"
 
 class AudioDriverLibGodot : public AudioDriver {
-	
 	SafeFlag active;
 
 	unsigned int channels = 0;
@@ -36,8 +34,9 @@ class AudioDriverLibGodot : public AudioDriver {
 
 	PackedStringArray audio_device_get_list(bool p_input);
 	PackedInt32Array interleaved_buffer;
+
 public:
-	virtual const char* get_name() const override {
+	virtual const char *get_name() const override {
 		return "EXTERNAL";
 	}
 
@@ -53,16 +52,16 @@ public:
 
 	virtual PackedStringArray get_output_device_list() override;
 	virtual String get_output_device() override;
-	virtual void set_output_device(const String& p_name) override;
+	virtual void set_output_device(const String &p_name) override;
 
-	void process_samples(int num_channels, int samples_per_block, float* const* p_buffer);
+	void process_samples(int num_channels, int samples_per_block, float *const *p_buffer);
 
 	virtual Error input_start() override;
 	virtual Error input_stop() override;
 
 	virtual PackedStringArray get_input_device_list() override;
 	virtual String get_input_device() override;
-	virtual void set_input_device(const String& p_name) override;
+	virtual void set_input_device(const String &p_name) override;
 
 	AudioDriverLibGodot();
 };

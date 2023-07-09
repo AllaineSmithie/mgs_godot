@@ -1511,11 +1511,11 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 #ifdef LIBRARY_ENABLED
 		if (!libgodot_is_scene_loadable()) {
 #endif
-		const String error_msg = "Error: Couldn't load project data at path \"" + project_path + "\". Is the .pck file missing?\nIf you've renamed the executable, the associated .pck file should also be renamed to match the executable's name (without the extension).\n";
-		OS::get_singleton()->print("%s", error_msg.utf8().get_data());
-		OS::get_singleton()->alert(error_msg);
+			const String error_msg = "Error: Couldn't load project data at path \"" + project_path + "\". Is the .pck file missing?\nIf you've renamed the executable, the associated .pck file should also be renamed to match the executable's name (without the extension).\n";
+			OS::get_singleton()->print("%s", error_msg.utf8().get_data());
+			OS::get_singleton()->alert(error_msg);
 
-		goto error;
+			goto error;
 #ifdef LIBRARY_ENABLED
 		}
 #endif
@@ -2603,10 +2603,9 @@ Error Main::setup2() {
 }
 
 #if LIBRARY_ENABLED
-void Main::init_windows()
-{
+void Main::init_windows() {
 	String display_driver = DisplayServer::get_create_function_name(display_driver_idx);
-	Vector2i* window_position = nullptr;
+	Vector2i *window_position = nullptr;
 	Vector2i position = init_custom_pos;
 	if (init_use_custom_pos) {
 		window_position = &position;
@@ -2616,12 +2615,10 @@ void Main::init_windows()
 	display_server->init_windows(window_mode, window_vsync_mode, window_flags, window_position, window_size, init_screen, err);
 }
 
-void Main::deinit_windows()
-{
+void Main::deinit_windows() {
 	display_server->deinit_windows();
 }
 #endif
-
 
 String Main::get_rendering_driver_name() {
 	return rendering_driver;

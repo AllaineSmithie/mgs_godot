@@ -878,8 +878,7 @@ void AudioServer::move_bus(int p_bus, int p_to_pos) {
 	emit_signal(SNAME("bus_layout_changed"));
 }
 
-AudioServer::Bus* AudioServer::get_bus(int p_bus_index)
-{
+AudioServer::Bus *AudioServer::get_bus(int p_bus_index) {
 	if (p_bus_index < buses.size())
 		return buses[p_bus_index];
 	return nullptr;
@@ -936,8 +935,7 @@ String AudioServer::get_bus_name(int p_bus) const {
 	return buses[p_bus]->name;
 }
 
-uint32_t AudioServer::get_bus_uuid(int p_bus) const
-{
+uint32_t AudioServer::get_bus_uuid(int p_bus) const {
 	ERR_FAIL_INDEX_V(p_bus, buses.size(), uint32_t());
 	return buses[p_bus]->uuid;
 }
@@ -1402,7 +1400,8 @@ void AudioServer::init() {
 	channel_disable_threshold_db = GLOBAL_DEF_RST("audio/buses/channel_disable_threshold_db", -60.0);
 	channel_disable_frames = float(GLOBAL_DEF_RST(PropertyInfo(Variant::FLOAT, "audio/buses/channel_disable_time", PROPERTY_HINT_RANGE, "0,5,0.01,or_greater"), 2.0)) * get_mix_rate();
 	buffer_size =
-		buffer_size = AudioDriver::get_singleton()->get_latency() * AudioDriver::get_singleton()->get_mix_rate() * channel_count;;
+			buffer_size = AudioDriver::get_singleton()->get_latency() * AudioDriver::get_singleton()->get_mix_rate() * channel_count;
+	;
 
 	init_channels_and_buffers();
 

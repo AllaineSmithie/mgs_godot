@@ -42,9 +42,9 @@ class PortAudioVirtualDriver : public VirtualAudioDriver {
 	Thread thread;
 	Mutex mutex;
 
-	int32_t* samples_in = nullptr;
+	int32_t *samples_in = nullptr;
 
-	static void thread_func(void* p_udata);
+	static void thread_func(void *p_udata);
 
 	//int32_t mix_rate = -1;
 	SpeakerMode speaker_mode = SPEAKER_MODE_STEREO;
@@ -57,10 +57,10 @@ class PortAudioVirtualDriver : public VirtualAudioDriver {
 
 	bool use_threads = true;
 
-	static PortAudioVirtualDriver* singleton;
+	static PortAudioVirtualDriver *singleton;
 
 public:
-	virtual const char* get_name() const override {
+	virtual const char *get_name() const override {
 		return "PortAudio";
 	};
 	virtual void trigger_process_samples() override;
@@ -86,7 +86,7 @@ public:
 
 	void mix_audio();
 
-	static PortAudioVirtualDriver* get_singleton() { return singleton; }
+	static PortAudioVirtualDriver *get_singleton() { return singleton; }
 
 	PortAudioVirtualDriver();
 	~PortAudioVirtualDriver() {}

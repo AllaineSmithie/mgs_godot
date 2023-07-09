@@ -11,19 +11,18 @@
 #ifdef LIBRARY_ENABLED
 
 #include "libgodot_audio_driver.h"
-#include <modules/deadline_audio_engine/juce/juce_AudioSampleBuffer.h>
 #include <modules/deadline_audio_engine/juce/juce_AudioDataConverters.h>
+#include <modules/deadline_audio_engine/juce/juce_AudioSampleBuffer.h>
 
 #include "core/config/project_settings.h"
 #include "core/os/os.h"
 
-// SourceFormat 
+// SourceFormat
 using ExternalFormat = juce::AudioData::Format<juce::AudioData::Float32, juce::AudioData::BigEndian>;
 // DestFormat
 using InternalFormat = juce::AudioData::Format<int32_t, juce::AudioData::NativeEndian>;
 
 Error AudioDriverLibGodot::init_from_external(bool p_reinit) {
-
 	channels = ProjectSettings::get_singleton()->get_setting("audio/driver/num_channels", 2);
 	if (ProjectSettings::get_singleton()->has_setting("audio/driver/mix_rate"))
 		mix_rate = ProjectSettings::get_singleton()->get_setting("audio/driver/mix_rate", 44100);
@@ -84,19 +83,18 @@ String AudioDriverLibGodot::get_output_device() {
 	return name;
 }
 
-void AudioDriverLibGodot::set_output_device(const String& p_name) {
+void AudioDriverLibGodot::set_output_device(const String &p_name) {
 	lock();
 	//audio_output.new_device = p_name;
 	unlock();
 }
 
-void AudioDriverLibGodot::process_samples(int num_channels, int samples_per_block, float* const* p_buffer) {
-
+void AudioDriverLibGodot::process_samples(int num_channels, int samples_per_block, float *const *p_buffer) {
 	if (!active.is_set())
 		return;
 
 	juce::AudioSampleBuffer ad(p_buffer, num_channels, samples_per_block);
-	
+
 	lock();
 
 	for (auto i = 0; i < samples_per_block; ++i) {
@@ -126,7 +124,7 @@ void AudioDriverLibGodot::process_samples(int num_channels, int samples_per_bloc
 			juce::FloatVectorOperations::fill(ad.getWritePointer(i + 1), 0.0, ad.getNumSamples());
 			ad.copyFrom(i + 1, 0, tmp_buffer.getReadPointer(1), tmp_buffer.getNumSamples());
 		}
-		
+
 	}*/
 	unlock();
 }
@@ -176,7 +174,7 @@ Error AudioDriverLibGodot::input_stop() {
 		audio_input.audio_client->Stop();
 		audio_input.active.clear();
 		*/
-		return OK;
+	return OK;
 	//}
 
 	//return FAILED;
@@ -194,9 +192,9 @@ String AudioDriverLibGodot::get_input_device() {
 	return "External";
 }
 
-void AudioDriverLibGodot::set_input_device(const String& p_name) {
+void AudioDriverLibGodot::set_input_device(const String &p_name) {
 	lock();
-	
+
 	unlock();
 }
 
