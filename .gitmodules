@@ -1,6 +1,6 @@
 [submodule "modules/portaudio"]
 	path = modules/portaudio
-	url = https://github.com/sebastian-heinz/portaudio.git
+	url = https://github.com/AllaineSmithie/portaudio.git
 	branch = godot-4
 [submodule "modules/deadline_audio_engine"]
 	path = modules/deadline_audio_engine
