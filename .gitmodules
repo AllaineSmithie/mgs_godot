@@ -9,9 +9,6 @@
 [submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\show_engine"]
 	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\show_engine
 	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\show_engine
-[submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\scene_merge"]
-	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\scene_merge
-	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\scene_merge
 [submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\serial_port"]
 	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\serial_port
 	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\serial_port
