@@ -15,9 +15,6 @@
 [submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\hueplusplus"]
 	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\hueplusplus
 	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\hueplusplus
-[submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\simde"]
-	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\simde
-	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\simde
 [submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\xml2json"]
 	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\xml2json
 	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\xml2json
