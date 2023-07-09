@@ -23,16 +23,8 @@
 		<member name="data" type="PackedByteArray" setter="set_data" getter="get_data" default="PackedByteArray(  )">
 			A stream of bytes which represents MIDI data. This data is not meant to be modified, as MIDI files are imported automatically.
 		</member>
-		<member name="format" type="MidiFile.Format" setter="set_format" getter="get_format" default="0">
+		<member name="format" type="int" setter="set_format" getter="get_format" default="0">
 			Represents the internal format of the [MidiFile] data. This is set automatically at import time.
 		</member>
 	</members>
-	<constants>
-		<constant name="FORMAT_MIDI" value="0" enum="MidiFile.Format">
-			MIDI song data.
-		</constant>
-		<constant name="FORMAT_SF2" value="1" enum="MidiFile.Format">
-			SoundFont data.
-		</constant>
-	</constants>
 </class>
