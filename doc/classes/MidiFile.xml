@@ -13,7 +13,7 @@
 	<methods>
 		<method name="load">
 			<return type="int" enum="Error" />
-			<argument index="0" name="file_path" type="String" />
+			<param index="0" name="file_path" type="String" />
 			<description>
 				Load MIDI data from a file anywhere on the filesystem. It must be the correct format.
 			</description>
