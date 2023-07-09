@@ -1,5 +1,5 @@
-#ifndef AUDIO_STREAM_FLAC_H
-#define AUDIO_STREAM_FLAC_H
+#ifndef AUDIO_STREAM_PRO_H
+#define AUDIO_STREAM_PRO_H
 
 #include "core/io/resource_loader.h"
 #include "modules/deadline_audio_engine/DeadlineAudioEngine.h"
@@ -126,4 +126,4 @@ public:
 	virtual ~AudioStreamPRO();
 };
 
-#endif
+#endif // AUDIO_STREAM_PRO_H
