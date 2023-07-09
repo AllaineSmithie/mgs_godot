@@ -24,3 +24,6 @@
 [submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\xml2json"]
 	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\xml2json
 	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\thirdparty\\xml2json
+[submodule "modules/message_pack"]
+	path = modules/message_pack
+	url = https://github.com/matrixant/message_pack.git
