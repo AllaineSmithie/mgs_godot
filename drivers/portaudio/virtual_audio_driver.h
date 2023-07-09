@@ -1,5 +1,7 @@
+
 #ifndef VIRTUAL_AUDIO_DRIVER_H
 #define VIRTUAL_AUDIO_DRIVER_H
+
 #include "core/object/ref_counted.h"
 #include "core/os/semaphore.h"
 #include "core/templates/vector.h"
@@ -15,4 +17,4 @@ public:
 	//Semaphore semaphore;
 };
 
-#endif // !VIRTUAL_AUDIO_DRIVER_H
+#endif // VIRTUAL_AUDIO_DRIVER_H
