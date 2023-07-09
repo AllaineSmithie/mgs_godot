@@ -1,4 +1,12 @@
-
+/**************************************************************************/
+/*  audio_stream_pro.h                                                    */
+/**************************************************************************/
+/*                         This file is part of:                          */
+/*                             Metro Gaya Syste,                          */
+/*                        https://deadline-entertainment.com              */
+/**************************************************************************/
+/* Copyright (c) 2022-present Deadline Entertainment All rights reserved. */
+/**************************************************************************/
 #ifndef AUDIO_STREAM_PRO_H
 #define AUDIO_STREAM_PRO_H
 
