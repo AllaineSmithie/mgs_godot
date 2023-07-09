@@ -2,10 +2,6 @@
 	path = modules/portaudio
 	url = https://github.com/sebastian-heinz/portaudio.git
 	branch = godot-4
-[submodule "modules/deadline_audio_engine"]
-	path = modules/deadline_audio_engine
-	url = https://github.com/AllaineSmithie/deadline_audio_engine.git
-	branch = main
 [submodule "\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\message_pack"]
 	path = \\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\message_pack
 	url = I:\\code\\deadline_entertainment\\metro_gaya_system\\source\\modules\\message_pack
