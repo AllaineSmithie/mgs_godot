@@ -1,16 +1,16 @@
 #ifndef AUDIO_STREAM_FLAC_H
 #define AUDIO_STREAM_FLAC_H
 
-#include "scene/resources/texture.h"
 #include "core/io/resource_loader.h"
-#include "servers/audio/audio_stream.h"
-#include "modules/deadline_audio_engine/sfizz/src/sfizz.h"
 #include "modules/deadline_audio_engine/DeadlineAudioEngine.h"
+#include "modules/deadline_audio_engine/sfizz/src/sfizz.h"
+#include "scene/resources/texture.h"
+#include "servers/audio/audio_stream.h"
 //#include "../sfizz/external/st_audiofile/thirdparty/dr_libs/dr_flac.h"
 
 class AudioStreamPRO;
 
-class AudioStreamPlaybackPRO : public AudioStreamPlayback{
+class AudioStreamPlaybackPRO : public AudioStreamPlayback {
 	GDCLASS(AudioStreamPlaybackPRO, AudioStreamPlayback);
 
 	enum {
@@ -37,13 +37,13 @@ class AudioStreamPlaybackPRO : public AudioStreamPlayback{
 	String file_path;
 
 	juce::AudioSampleBuffer voice_buffer;
-	inline void _fillRBuffer(int k, int p_frames, AudioFrame* p_buffer);
+	inline void _fillRBuffer(int k, int p_frames, AudioFrame *p_buffer);
+
 protected:
-	virtual int mix(AudioFrame* p_buffer, float p_rate_scale, int p_frames) override;
+	virtual int mix(AudioFrame *p_buffer, float p_rate_scale, int p_frames) override;
 	//virtual float get_stream_sampling_rate() override;
 
 public:
-
 	virtual void start(double p_from_pos = 0.0) override;
 	virtual void stop() override;
 	virtual bool is_playing() const override;
@@ -60,7 +60,6 @@ public:
 };
 
 class AudioStreamPRO : public AudioStream {
-
 	GDCLASS(AudioStreamPRO, AudioStream);
 	OBJ_SAVE_TYPE(AudioStream) //children are all saved as AudioStream, so they can be exchanged
 	RES_BASE_EXTENSION("proaudiostr");
@@ -91,12 +90,11 @@ class AudioStreamPRO : public AudioStream {
 
 	String file_path;
 	void set_preview_mode(const bool p_stream_is_in_preview);
+
 protected:
 	static void _bind_methods();
 
 public:
-
-
 	void set_loop(bool p_enable);
 	virtual bool has_loop() const override;
 
