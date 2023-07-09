@@ -1,0 +1,20 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+/.vs/xml2json/v17/Browse.VC.opendb
+/.vs/xml2json/v17/Browse.VC.db-wal
+/.vs/xml2json/v17/Browse.VC.db-shm
+/.vs/xml2json/v17/Browse.VC.db
+/.vs/xml2json/v17
+/.vs/ProjectSettings.json
+/.vs/xml2json/FileContentIndex
