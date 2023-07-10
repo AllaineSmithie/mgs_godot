@@ -5,7 +5,7 @@
 /*                             Metro Gaya System                          */
 /*                        https://deadline-entertainment.com              */
 /**************************************************************************/
-/* Copyright (c) 2022-present Deadline Entertainment					  */
+/* Copyright (c) 2022-present Deadline Entertainment                      */
 /**************************************************************************/
 
 #include "source_editor_plugin.h"
