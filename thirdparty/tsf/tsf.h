@@ -45,7 +45,21 @@
 #ifndef TSF_INCLUDE_TSF_INL
 #define TSF_INCLUDE_TSF_INL
 
-#pragma warning(disable:4820, 4619, 4668, 4625, 4626, 4571, 4347, 4640, 4365, 4710, 4820, 4350, 4686, 4711, 4548)
+#pragma warning(disable:4820)
+#pragma warning(disable:4619)
+#pragma warning(disable:4668)
+#pragma warning(disable:4625)
+#pragma warning(disable:4626)
+#pragma warning(disable:4571)
+#pragma warning(disable:4347)
+#pragma warning(disable:4640)
+#pragma warning(disable:4365)
+#pragma warning(disable:4710)
+#pragma warning(disable:4820)
+#pragma warning(disable:4350)
+#pragma warning(disable:4686)
+#pragma warning(disable:4711)
+#pragma warning(disable:4548)
 
 #ifdef __cplusplus
 extern "C" {
