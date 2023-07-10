@@ -20,12 +20,12 @@ sampleRate = 44100
 pdfFilenameSuffix = "_wmme"
 
 pdfFile = PdfPages(
-    "patest_suggested_vs_streaminfo_latency_" + str(sampleRate) + pdfFilenameSuffix +".pdf"
-)  #output this pdf file
+    "patest_suggested_vs_streaminfo_latency_" + str(sampleRate) + pdfFilenameSuffix + ".pdf"
+)  # output this pdf file
 
 
 def loadCsvData(dataFileName):
-    params= ""
+    params = ""
     inputDevice = ""
     outputDevice = ""
 
