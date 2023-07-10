@@ -939,6 +939,9 @@ static int tsf_load_presets(tsf *res, struct tsf_hydra *hydra, unsigned int font
 			}
 		}
 
+		if (preset->regionNum == 0)
+			return 0;
+
 		preset->regions = (struct tsf_region *)TSF_MALLOC(preset->regionNum * sizeof(struct tsf_region));
 		if (!preset->regions) {
 			int i;
