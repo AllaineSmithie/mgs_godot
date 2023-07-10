@@ -62,6 +62,7 @@ extern "C" {
 #if defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wextra" // (Type*)0 division
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough" // (Type*)0 division
 #endif
 
 
