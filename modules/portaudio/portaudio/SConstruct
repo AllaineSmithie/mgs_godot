@@ -1,13 +1,13 @@
 import sys, os.path
 
 def rsplit(toSplit, sub, max=-1):
-    """str.rsplit seems to have been introduced in 2.4 :( """
+    """str.rsplit seems to have been introduced in 2.4 :("""
     l = []
     i = 0
     while i != max:
-        try: 
+        try:
             idx = toSplit.rindex(sub)
-        except ValueError: 
+        except ValueError:
             break
 
         toSplit, splitOff = toSplit[:idx], toSplit[idx + len(sub) :]
@@ -149,8 +149,12 @@ env.Install(includeDir, os.path.join("include", "portaudio.h"))
 if env["enableCxx"]:
     env.SConscriptChdir(True)
     cxxEnv = env.Copy()
-    sharedLibs, staticLibs, headers = env.SConscript(os.path.join("bindings", "cpp", "SConscript"),
-            exports={"env": cxxEnv, "buildDir": buildDir}, build_dir=os.path.join(buildDir, "portaudiocpp"), duplicate=False)
+    sharedLibs, staticLibs, headers = env.SConscript(
+        os.path.join("bindings", "cpp", "SConscript"),
+        exports={"env": cxxEnv, "buildDir": buildDir},
+        build_dir=os.path.join(buildDir, "portaudiocpp"),
+        duplicate=False,
+    )
     if env["enableStatic"]:
         env.Default(staticLibs)
         env.Install(libDir, staticLibs)
@@ -163,12 +167,13 @@ if env["enableCxx"]:
 # back-ends are available, and which includes back-end extension headers
 
 # Host-specific headers
-hostApiHeaders = {"ALSA": "pa_linux_alsa.h",
-                    "ASIO": "pa_asio.h",
-                    "COREAUDIO": "pa_mac_core.h",
-                    "JACK": "pa_jack.h",
-                    "WMME": "pa_winwmme.h",
-                    }
+hostApiHeaders = {
+    "ALSA": "pa_linux_alsa.h",
+    "ASIO": "pa_asio.h",
+    "COREAUDIO": "pa_mac_core.h",
+    "JACK": "pa_jack.h",
+    "WMME": "pa_winwmme.h",
+}
 
 def buildConfigH(target, source, env):
     """builder for portaudio_config.h"""
@@ -179,7 +184,7 @@ def buildConfigH(target, source, env):
 
         hostApiSpecificHeader = hostApiHeaders.get(hostApi, None)
         if hostApiSpecificHeader:
-            out += "#include \"%s\"\n" % hostApiSpecificHeader
+            out += '#include \"%s\"\n" % hostApiSpecificHeader
 
         out += "\n"
     # Strip the last newline
@@ -187,8 +192,10 @@ def buildConfigH(target, source, env):
         out = out[:-1]
 
     f = file(str(target[0]), "w")
-    try: f.write(out)
-    finally: f.close()
+    try:
+        f.write(out)
+    finally:
+        f.close()
     return 0
 
 # Define the builder for the config header
