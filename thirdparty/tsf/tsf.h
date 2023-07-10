@@ -59,6 +59,12 @@ extern "C" {
 #define TSFDEF extern
 #endif
 
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-pointer-subtraction" // (Type*)0 division
+#endif
+
+
 // The load functions will return a pointer to a struct tsf which all functions
 // thereafter take as the first parameter.
 // On error the tsf_load* functions will return NULL most likely due to invalid
@@ -632,8 +638,9 @@ static void tsf_region_operator(struct tsf_region *region, tsf_u16 genOper, unio
 
 		_GEN_MAX = 59,
 	};
-#define _TSFREGIONOFFSET(TYPE, FIELD) (unsigned char)(((TYPE *)&((struct tsf_region *)0)->FIELD) - (TYPE *)0)
-#define _TSFREGIONENVOFFSET(TYPE, ENV, FIELD) (unsigned char)(((TYPE *)&((&(((struct tsf_region *)0)->ENV))->FIELD)) - (TYPE *)0)
+	// (unsigned char)(((unsigned int*)&((struct tsf_region *)0)->offset - (unsigned int *)0))
+#define _TSFREGIONOFFSET(TYPE, FIELD)			(unsigned char)(((TYPE *)&((struct tsf_region *)0)->FIELD) - (TYPE *)0)
+#define _TSFREGIONENVOFFSET(TYPE, ENV, FIELD)	(unsigned char)(((TYPE *)&((&(((struct tsf_region *)0)->ENV))->FIELD)) - (TYPE *)0)
 	static const struct {
 		unsigned char mode, offset;
 	} genMetas[_GEN_MAX] = {
@@ -2227,6 +2234,10 @@ TSFDEF float tsf_channel_get_tuning(tsf *f, int channel) {
 
 #ifdef __cplusplus
 }
+#endif
+
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
 #endif
 
 #endif //TSF_IMPLEMENTATION
