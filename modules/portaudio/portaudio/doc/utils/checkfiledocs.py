@@ -62,6 +62,7 @@ docFiles = recursiveFindFiles(paHtmlDocDirectory, [".html"], [".svn"], False)
 
 currentFile = ""
 
+
 def printError(f, message):
     global currentFile
     if f != currentFile:
