@@ -282,6 +282,9 @@ opts.Update(env_base)
 
 selected_platform = ""
 
+if env_base["platform"] == "web":
+    env_base["portaudio"] = False
+
 if env_base["portaudio"]:
     env_base.Append(CPPDEFINES=["PORT_AUDIO"])
 
