@@ -2,6 +2,7 @@
 import matplotlib
 import matplotlib.pyplot as plot
 import matplotlib.pyplot.figure as figure
+import matplotlib.pyplot.gcf as gcf
 
 """
 
