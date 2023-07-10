@@ -4772,7 +4772,10 @@ void AnimationTrackEditor::_add_child_node_pressed() {
 		case Animation::TYPE_ANIMATION:
 			SceneTreeDock::get_singleton()->open_add_child_dialog("");
 			add_node_pending = true;
+			break;
 		default:
+			SceneTreeDock::get_singleton()->open_add_child_dialog("");
+			add_node_pending = true;
 			break;
 	}
 }
