@@ -150,7 +150,7 @@ for framesPerBuffer in compositeTestFramesPerBufferValues:
         setDisplayRangeSeconds(2.2)
         pdfFile.savefig()
         setDisplayRangeSeconds(0.1)
-        setFigureTitleAndAxisLabels("user frames per buffer: " + str(framesPerBufferText)+" (detail)")
+        setFigureTitleAndAxisLabels("user frames per buffer: " + str(framesPerBufferText) + " (detail)")
         pdfFile.savefig()
 
     isFirst = False
@@ -161,7 +161,7 @@ setDisplayRangeSeconds(2.2)
 pdfFile.savefig()
 setDisplayRangeSeconds(0.1)
 setFigureTitleAndAxisLabels(
-    "composite of frames per buffer values:\n" + str(compositeTestFramesPerBufferValues)+" (detail)"
+    "composite of frames per buffer values:\n" + str(compositeTestFramesPerBufferValues) + " (detail)"
 )
 pdfFile.savefig()
 
