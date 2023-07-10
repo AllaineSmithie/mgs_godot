@@ -45,7 +45,7 @@
 #ifndef TSF_INCLUDE_TSF_INL
 #define TSF_INCLUDE_TSF_INL
 
-#pragma warning(disable, 4996)
+#pragma warning(disable:4820, 4619, 4668, 4625, 4626, 4571, 4347, 4640, 4365, 4710, 4820, 4350, 4686, 4711, 4548)
 
 #ifdef __cplusplus
 extern "C" {
@@ -1904,5 +1904,4 @@ TSFDEF float tsf_channel_get_tuning(tsf* f, int channel)
 #ifdef __cplusplus
 }
 #endif
-#pragma warning(pop)
 #endif //TSF_IMPLEMENTATION
