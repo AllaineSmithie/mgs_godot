@@ -148,6 +148,9 @@ Error MovieWriterMJPEG::write_begin(const Size2i &p_movie_size, uint32_t p_fps, 
 		case AudioServer::SPEAKER_SURROUND_71:
 			channels = 8;
 			break;
+		case AudioServer::SPEAKER_MULTIOUT:
+			channels = 256;
+			break;
 	}
 	uint32_t blockalign = bit_depth / 8 * channels;
 
