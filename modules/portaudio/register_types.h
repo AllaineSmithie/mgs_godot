@@ -10,4 +10,4 @@ void uninitialize_portaudio_module(ModuleInitializationLevel p_level);
 
 #endif // PORT_AUDIO
 
-#endif
+#endif // PORTAUDIO_REGISTER_TYPES_H
