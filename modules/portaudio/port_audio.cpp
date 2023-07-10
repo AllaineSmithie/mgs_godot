@@ -1068,7 +1068,7 @@ void PortAudio::on_project_settings_changed(String p_setting) {
 				continue;
 
 			sample_rate_idx = (mix_rate - standard_sample_rates[i - 1]) < (standard_sample_rates[i] - mix_rate) ? i - 1 : i;
-			break;			
+			break;
 		}
 		if ((int)GLOBAL_GET("audio/driver/sample_rate") != sample_rate_idx)
 			ProjectSettings::get_singleton()->set_setting("audio/driver/sample_rate", sample_rate_idx);
@@ -1154,7 +1154,7 @@ void PortAudio::change_audio_driver(const int p_stored_current_driver_idx, const
 	{
 		String name = AudioDriverManager::get_driver(i)->get_name();
 		if (name == "PortAudio")
-		{			
+		{
 			native_streaming = false;
 			AudioDriverManager::initialize(i);
 			AudioDriver::get_singleton()->start();

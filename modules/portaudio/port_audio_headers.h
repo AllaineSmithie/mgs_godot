@@ -1,6 +1,7 @@
 #pragma once
 
-#pragma warning(disable: "C4189")
+#pragma warning(disable \
+				: "C4189")
 
 #ifdef PA_USE_WASAPI
 #include <pa_win_wasapi.h>
