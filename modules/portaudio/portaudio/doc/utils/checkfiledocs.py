@@ -84,6 +84,6 @@ for f in sourceFiles:
 
     if not "@brief" in s:
         printError(f, "no doxygen @brief tag")
-        
+
     if not "@ingroup" in s:
         printError(f, "no doxygen @ingroup tag")
