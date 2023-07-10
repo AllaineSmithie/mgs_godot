@@ -31,7 +31,7 @@ if env["portaudio"]:
             # "coreaudio", #
             # "oss",     #
         ]
-    elif module_env["platform"] == "x11":
+    elif module_env["platform"] == "linuxbsd":
         use_host_api = [  # only APIs that are not commented will be build
             # "skeleton", # Test Host Api for developers
             # "asio",      # ASIO (Audio Streaming Input Output)
