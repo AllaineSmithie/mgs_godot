@@ -1,42 +1,37 @@
 
+#include "source_editor_plugin.h"
+#include "editor/editor_command_palette.h"
+#include "editor/editor_scale.h"
+#include "editor/gui/editor_file_dialog.h"
 #include <assert.h>
 #include <core/os/time.h>
 #include <editor/plugins/animation_player_editor_plugin.h>
-#include "editor/editor_scale.h"
-#include "editor/editor_command_palette.h"
-#include "editor/gui/editor_file_dialog.h"
 #include <scene/gui/menu_button.h>
+#include <scene/gui/separator.h>
 #include <scene/gui/tab_container.h>
 #include <scene/scene_string_names.h>
-#include "source_editor_plugin.h"
-#include <scene/gui/separator.h>
 
-
-SourceEditor* SourceEditor::source_editor = nullptr;
-
-
+SourceEditor *SourceEditor::source_editor = nullptr;
 
 void SourceEditor::_menu_option(int p_option) {
 	switch (p_option) {
-	case SOURCE_FILE_OPEN: {
-		file_dialog->set_file_mode(EditorFileDialog::FILE_MODE_OPEN_FILE);
-		file_dialog->set_access(EditorFileDialog::ACCESS_FILESYSTEM);
-		file_dialog_option = SOURCE_FILE_OPEN;
+		case SOURCE_FILE_OPEN: {
+			file_dialog->set_file_mode(EditorFileDialog::FILE_MODE_OPEN_FILE);
+			file_dialog->set_access(EditorFileDialog::ACCESS_FILESYSTEM);
+			file_dialog_option = SOURCE_FILE_OPEN;
 
-		List<String> extensions;
-		ResourceLoader::get_recognized_extensions_for_type("Resource", &extensions);
-		file_dialog->clear_filters();
-		for (int i = 0; i < extensions.size(); i++) {
-			file_dialog->add_filter("*." + extensions[i], extensions[i].to_upper());
-		}
+			List<String> extensions;
+			ResourceLoader::get_recognized_extensions_for_type("Resource", &extensions);
+			file_dialog->clear_filters();
+			for (int i = 0; i < extensions.size(); i++) {
+				file_dialog->add_filter("*." + extensions[i], extensions[i].to_upper());
+			}
 
-		file_dialog->popup_file_dialog();
-		file_dialog->set_title(TTR("Open File"));
-		return;
-	} break;
-	
+			file_dialog->popup_file_dialog();
+			file_dialog->set_title(TTR("Open File"));
+			return;
+		} break;
 	}
-
 }
 
 void SourceEditor::_window_changed(bool p_visible) {
@@ -60,15 +55,12 @@ void SourceEditor::_file_dialog_action(String p_file) {
 }
 
 void SourceEditor::_autosave() {
-
 }
 
 void SourceEditor::set_window_layout(Ref<ConfigFile> p_layout) {
-	
 }
 
 void SourceEditor::get_window_layout(Ref<ConfigFile> p_layout) {
-	
 }
 
 void SourceEditor::_update_autosave_timer() {
@@ -80,8 +72,7 @@ void SourceEditor::_update_autosave_timer() {
 	if (autosave_time > 0) {
 		autosave_timer->set_wait_time(autosave_time);
 		autosave_timer->start();
-	}
-	else {
+	} else {
 		autosave_timer->stop();
 	}
 }
@@ -90,18 +81,17 @@ void SourceEditor::_close_current_tab(bool p_save) {
 	//_close_tab(tab_container->get_current_tab(), p_save);
 }
 
-void SourceEditor::_close_discard_current_tab(const String& p_str) {
+void SourceEditor::_close_discard_current_tab(const String &p_str) {
 	//_close_tab(tab_container->get_current_tab(), false);
 	erase_tab_confirm->hide();
 }
 
-SourceEditor::SourceEditor(WindowWrapper* p_wrapper)
-{
+SourceEditor::SourceEditor(WindowWrapper *p_wrapper) {
 	source_window_wrapper = p_wrapper;
 	ERR_FAIL_COND(source_editor != nullptr);
 
 	// BG Stylebox
-	StyleBoxFlat* panelstylebox = memnew(StyleBoxFlat);
+	StyleBoxFlat *panelstylebox = memnew(StyleBoxFlat);
 	panelstylebox->set_bg_color(Color(0.10, 0.10, 0.10));
 	panelstylebox->set_border_width(Side::SIDE_LEFT, 0);
 	panelstylebox->set_border_width(Side::SIDE_RIGHT, 0);
@@ -112,7 +102,7 @@ SourceEditor::SourceEditor(WindowWrapper* p_wrapper)
 
 	set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
 
-	VBoxContainer* library_main = memnew(VBoxContainer);
+	VBoxContainer *library_main = memnew(VBoxContainer);
 	add_child(library_main);
 
 	menu_hb = memnew(HBoxContainer);
@@ -139,11 +129,11 @@ SourceEditor::SourceEditor(WindowWrapper* p_wrapper)
 	file_menu->get_popup()->add_shortcut(ED_SHORTCUT("source_editor/open", TTR("Open...")), SOURCE_FILE_OPEN);
 
 	batch_tools_menu = memnew(MenuButton);
-	batch_tools_menu ->set_text(TTR("Batch Processing"));
-	batch_tools_menu ->set_switch_on_hover(true);
-	batch_tools_menu ->set_shortcut_context(this);
-	batch_tools_menu ->get_popup()->connect("id_pressed", callable_mp(this, &SourceEditor::_menu_option));
-	menu_hb->add_child(batch_tools_menu );
+	batch_tools_menu->set_text(TTR("Batch Processing"));
+	batch_tools_menu->set_switch_on_hover(true);
+	batch_tools_menu->set_shortcut_context(this);
+	batch_tools_menu->get_popup()->connect("id_pressed", callable_mp(this, &SourceEditor::_menu_option));
+	menu_hb->add_child(batch_tools_menu);
 
 	menu_hb->add_spacer();
 
@@ -185,9 +175,8 @@ SourceEditor::SourceEditor(WindowWrapper* p_wrapper)
 	add_child(autosave_timer);
 
 	grab_focus_block = false;
-		
+
 	add_theme_style_override("panel", EditorNode::get_singleton()->get_gui_base()->get_theme_stylebox(SNAME("ScriptEditorPanel"), SNAME("EditorStyles")));
-	
 
 	// TO DO -> Add Detailed Connection Description
 	//m_description = nullptr;
@@ -195,80 +184,60 @@ SourceEditor::SourceEditor(WindowWrapper* p_wrapper)
 	set_process(true);
 	set_process_shortcut_input(true); // Global shortcuts since there is no main element to be focused.
 
-
 	// Signals
 	//ShowEngine::get_singleton()->connect("slot_list_changed", callable_mp(this, &SourceEditor::_onSlotListChanged));
-
 }
-SourceEditor::~SourceEditor()
-{
+SourceEditor::~SourceEditor() {
 	ERR_FAIL_COND(source_editor != this);
 	source_editor = nullptr;
 }
 
-void SourceEditor::_bind_methods()
-{
+void SourceEditor::_bind_methods() {
 }
 
-void SourceEditor::_notification(int p_what)
-{
-	switch (p_what)
-	{
-		case NOTIFICATION_READY:
-		{
+void SourceEditor::_notification(int p_what) {
+	switch (p_what) {
+		case NOTIFICATION_READY: {
 			add_theme_style_override("panel", get_theme_stylebox(SNAME("bg"), SNAME("AssetLib")));
-		}
-		break;
+		} break;
 		case NOTIFICATION_ENTER_TREE:
-		case NOTIFICATION_THEME_CHANGED:
-			{
-			}
-			break;
+		case NOTIFICATION_THEME_CHANGED: {
+		} break;
 
 		case NOTIFICATION_VISIBILITY_CHANGED: {
 			if (is_visible()) {
 				/*EditorNode::get_singleton()->remove_bottom_panel_item(AnimationPlayerEditor::get_singleton());
 				register_extension(AnimationPlayerEditor::get_singleton());*/
-			}
-			else {
+			} else {
 				/*
 				unregister_extension(AnimationPlayerEditor::get_singleton());
 				EditorNode::get_singleton()->add_bottom_panel_item(TTR("Animation"), AnimationPlayerEditor::get_singleton());*/
 			}
 		} break;
 
-		case NOTIFICATION_PROCESS:
-		{
+		case NOTIFICATION_PROCESS: {
 			// To Do
 			// Process Input/Output Signal visualization
 
 		} break;
 
-		case NOTIFICATION_RESIZED:
-		{
+		case NOTIFICATION_RESIZED: {
 			//_update_asset_items_columns();
-		}
-		break;
+		} break;
 
-		case EditorSettings::NOTIFICATION_EDITOR_SETTINGS_CHANGED:
-		{
+		case EditorSettings::NOTIFICATION_EDITOR_SETTINGS_CHANGED: {
 			//_update_repository_options();
-		}
-		break;
+		} break;
 	}
-
 }
 
-void SourceEditor::register_extension(Control* p_extension)
-{
+void SourceEditor::register_extension(Control *p_extension) {
 	ERR_FAIL_COND(p_extension == nullptr);
 	// ERR_FAIL_COND_MSG(p_extension->editor_page == nullptr, "Editor extension has no editor page");
-		
-	for (auto i = 0; i < tab_container->get_tab_count(); ++i)
-	{
-		Control* child = tab_container->get_tab_control(i);
-		if (child == p_extension)
-		{
+
+	for (auto i = 0; i < tab_container->get_tab_count(); ++i) {
+		Control *child = tab_container->get_tab_control(i);
+		if (child == p_extension) {
 			// do nothing on double assignment
 			return;
 		}
@@ -277,13 +246,10 @@ void SourceEditor::register_extension(Control* p_extension)
 	tab_container->set_current_tab(tab_container->get_tab_count() - 1);
 }
 
-void SourceEditor::unregister_extension(Control* p_extension)
-{
-	for (auto i = 0; i < tab_container->get_tab_count(); ++i)
-	{
-		Control* child = tab_container->get_tab_control(i);
-		if (child == p_extension)
-		{
+void SourceEditor::unregister_extension(Control *p_extension) {
+	for (auto i = 0; i < tab_container->get_tab_count(); ++i) {
+		Control *child = tab_container->get_tab_control(i);
+		if (child == p_extension) {
 			tab_container->remove_child(child);
 		}
 	}
@@ -291,19 +257,15 @@ void SourceEditor::unregister_extension(Control* p_extension)
 	tab_container->set_current_tab(current_tab);
 }
 
-
 //VBoxContainer* get_main_screen_control();
 
-
 // ==================================================================================================================
-
 
 void SourceEditorPlugin::_window_visibility_changed(bool p_visible) {
 	_focus_another_editor();
 	if (p_visible) {
 		source_editor->add_theme_style_override("panel", source_editor->get_theme_stylebox("SourceEditorPanelFloating", "EditorStyles"));
-	}
-	else {
+	} else {
 		source_editor->add_theme_style_override("panel", source_editor->get_theme_stylebox("SourceEditorPanel", "EditorStyles"));
 	}
 }
@@ -316,9 +278,8 @@ void SourceEditorPlugin::_focus_another_editor() {
 }
 Vector<Ref<SourceEditorPluginExtension>> SourceEditorPlugin::extensions;
 
-SourceEditorPlugin* SourceEditorPlugin::singleton = nullptr;
-SourceEditorPlugin::SourceEditorPlugin()
-{
+SourceEditorPlugin *SourceEditorPlugin::singleton = nullptr;
+SourceEditorPlugin::SourceEditorPlugin() {
 	singleton = this;
 
 	source_window_wrapper = memnew(WindowWrapper);
@@ -342,38 +303,30 @@ SourceEditorPlugin::SourceEditorPlugin()
 	source_editor->set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
 	source_editor->hide();
 
-
 	// =========================================
 	// Editor Settings
 	// Interfaces Maneger
 
 	// EditorSettings::get_singleton()->set_setting(Variant::INT, PROPERTY_HINT_ENUM,, 0, display_scale_hint_string, PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_RESTART_IF_CHANGED)
-
 }
 
-SourceEditorPlugin::~SourceEditorPlugin()
-{
+SourceEditorPlugin::~SourceEditorPlugin() {
 	// Panel Setup
 	const auto mainscreencontrols = EditorNode::get_singleton()->get_main_screen_control();
 	mainscreencontrols->remove_child(source_editor);
 	memdelete(source_editor);
 }
 
-
-void SourceEditorPlugin::shortcut_input(const Ref<InputEvent>& p_event)
-{
+void SourceEditorPlugin::shortcut_input(const Ref<InputEvent> &p_event) {
 	ERR_FAIL_COND(p_event.is_null());
 	Ref<InputEventKey> k = p_event;
-	if ((k.is_valid() && k->is_pressed() && !k->is_echo()) || Object::cast_to<InputEventShortcut>(*p_event))
-	{
+	if ((k.is_valid() && k->is_pressed() && !k->is_echo()) || Object::cast_to<InputEventShortcut>(*p_event)) {
 		if (ED_IS_SHORTCUT("editor/source_editor", p_event))
 			EditorNode::get_singleton()->editor_select(get_index());
 	}
-
 }
 
-void SourceEditorPlugin::_notification(int p_what)
-{
+void SourceEditorPlugin::_notification(int p_what) {
 	/*
 	switch (p_what) {
 	case NOTIFICATION_INTERNAL_PROCESS: {
@@ -381,13 +334,11 @@ void SourceEditorPlugin::_notification(int p_what)
 	}*/
 }
 
-void SourceEditorPlugin::make_visible(bool p_visible)
-{
+void SourceEditorPlugin::make_visible(bool p_visible) {
 	if (p_visible && source_editor) {
 		source_window_wrapper->show();
 		source_editor->show();
-	}
-	else {
+	} else {
 		source_window_wrapper->hide();
 		source_editor->hide();
 	}
@@ -398,11 +349,10 @@ void SourceEditorPlugin::set_window_layout(Ref<ConfigFile> p_layout) {
 
 	if (EDITOR_GET("interface/multi_window/restore_windows_on_load") && source_window_wrapper->is_window_available() && p_layout->has_section_key("SourceEditor", "window_rect")) {
 		source_window_wrapper->restore_window_from_saved_position(
-			p_layout->get_value("SourceEditor", "window_rect", Rect2i()),
-			p_layout->get_value("SourceEditor", "window_screen", -1),
-			p_layout->get_value("SourceEditor", "window_screen_rect", Rect2i()));
-	}
-	else {
+				p_layout->get_value("SourceEditor", "window_rect", Rect2i()),
+				p_layout->get_value("SourceEditor", "window_screen", -1),
+				p_layout->get_value("SourceEditor", "window_screen_rect", Rect2i()));
+	} else {
 		source_window_wrapper->set_window_enabled(false);
 	}
 }
@@ -416,8 +366,7 @@ void SourceEditorPlugin::get_window_layout(Ref<ConfigFile> p_layout) {
 		p_layout->set_value("SourceEditor", "window_screen", screen);
 		p_layout->set_value("SourceEditor", "window_screen_rect", DisplayServer::get_singleton()->screen_get_usable_rect(screen));
 
-	}
-	else {
+	} else {
 		if (p_layout->has_section_key("SourceEditor", "window_rect")) {
 			p_layout->erase_section_key("SourceEditor", "window_rect");
 		}
@@ -430,50 +379,39 @@ void SourceEditorPlugin::get_window_layout(Ref<ConfigFile> p_layout) {
 	}
 }
 
-void SourceEditorPlugin::edit(Object* p_object)
-{
-	for (auto ext : extensions)
-	{
-		if (ext->handles(p_object))
-		{
+void SourceEditorPlugin::edit(Object *p_object) {
+	for (auto ext : extensions) {
+		if (ext->handles(p_object)) {
 			ext->edit(p_object);
 			return;
 		}
 	}
 }
 
-bool SourceEditorPlugin::handles(Object* p_object) const
-{
-	for (auto ext : extensions)
-	{
+bool SourceEditorPlugin::handles(Object *p_object) const {
+	for (auto ext : extensions) {
 		if (ext->handles(p_object))
 			return true;
-		
 	}
 	return false;
 }
 
-inline Dictionary SourceEditorPlugin::get_state() const
-{
+inline Dictionary SourceEditorPlugin::get_state() const {
 	return Dictionary();
 }
 
-const Ref<Texture2D> SourceEditorPlugin::get_icon() const
-{
+const Ref<Texture2D> SourceEditorPlugin::get_icon() const {
 	return Ref<Texture2D>();
 }
 
-inline void SourceEditorPlugin::set_state(const Dictionary& p_state)
-{
+inline void SourceEditorPlugin::set_state(const Dictionary &p_state) {
 }
 
-void SourceEditorPlugin::clear()
-{
+void SourceEditorPlugin::clear() {
 	extensions.clear();
 }
 
-void SourceEditorPlugin::register_extension(Ref<SourceEditorPluginExtension> p_extension, bool p_at_front)
-{
+void SourceEditorPlugin::register_extension(Ref<SourceEditorPluginExtension> p_extension, bool p_at_front) {
 	/*ERR_FAIL_COND(p_extension.is_null());
 	if (p_at_front) {
 		extensions.insert(0, p_extension);
@@ -483,22 +421,18 @@ void SourceEditorPlugin::register_extension(Ref<SourceEditorPluginExtension> p_e
 	}*/
 }
 
-void SourceEditorPlugin::unregister_extension(Ref<SourceEditorPluginExtension> p_extension)
-{
+void SourceEditorPlugin::unregister_extension(Ref<SourceEditorPluginExtension> p_extension) {
 	/*ERR_FAIL_COND(p_extension.is_null());
 	extensions.erase(p_extension);
 	*/
 }
 
-inline void SourceEditorPlugin::edited_scene_changed()
-{
+inline void SourceEditorPlugin::edited_scene_changed() {
 	for (auto e : extensions)
 		e->edited_scene_changed();
 }
 
-SourceEditorPluginExtension::~SourceEditorPluginExtension()
-{
+SourceEditorPluginExtension::~SourceEditorPluginExtension() {
 	if (editor_page != nullptr)
 		memdelete(editor_page);
-
 }
