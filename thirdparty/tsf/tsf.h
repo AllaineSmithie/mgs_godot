@@ -760,6 +760,11 @@ static int tsf_load_presets(tsf* res, struct tsf_hydra *hydra, unsigned int font
 			}
 		}
 
+		if (preset->regionNum < 1)
+		{
+			return 0;
+		}
+		
 		preset->regions = (struct tsf_region*)TSF_MALLOC(preset->regionNum * sizeof(struct tsf_region));
 		if (!preset->regions)
 		{
@@ -767,6 +772,7 @@ static int tsf_load_presets(tsf* res, struct tsf_hydra *hydra, unsigned int font
 			TSF_FREE(res->presets);
 			return 0;
 		}
+		
 		tsf_region_clear(&globalRegion, TSF_TRUE);
 
 		// Zones.
