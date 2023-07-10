@@ -87,5 +87,3 @@ for f in sourceFiles:
         
     if not "@ingroup" in s:
         printError(f, "no doxygen @ingroup tag")
-        
-
