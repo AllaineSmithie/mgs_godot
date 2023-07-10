@@ -3,7 +3,7 @@ import os.path
 import string
 
 paRootDirectory = "../../"
-paHtmlDocDirectory = os.path.join( paRootDirectory, "doc", "html")
+paHtmlDocDirectory = os.path.join(paRootDirectory, "doc", "html")
 
 ## Script to check documentation status
 ## this script assumes that html doxygen documentation has been generated
@@ -23,11 +23,13 @@ paHtmlDocDirectory = os.path.join( paRootDirectory, "doc", "html")
 ##  $ cd doc/utils
 ##  $ python checkfiledocs.py
 
+
 def oneOf_a_in_b(a, b):
     for x in a:
         if x in b:
             return True
     return False
+
 
 # recurse from top and return a list of all with the given
 # extensions. ignore .svn directories. return absolute paths
@@ -42,6 +44,7 @@ def recursiveFindFiles(top, extensions, dirBlacklist, includePaths):
                     else:
                         result.append(f)
     return result
+
 
 # generate the html file name that doxygen would use for
 # a particular source file. this is a brittle conversion
@@ -68,21 +71,21 @@ def printError(f, message):
 
 
 for f in sourceFiles:
-    if not doxygenHtmlDocFileName( os.path.basename(f) ) in docFiles:
+    if not doxygenHtmlDocFileName(os.path.basename(f)) in docFiles:
         printError( f, "no doxygen generated doc page" )
 
     s = file(f, "rt").read()
 
     if not "/**" in s:
-        printError( f, "no doxygen /** block" )  
+        printError(f, "no doxygen /** block")  
     
     if not "@file" in s:
-        printError( f, "no doxygen @file tag" )
+        printError(f, "no doxygen @file tag")
 
     if not "@brief" in s:
-        printError( f, "no doxygen @brief tag" )
+        printError(f, "no doxygen @brief tag")
         
     if not "@ingroup" in s:
-        printError( f, "no doxygen @ingroup tag" )
+        printError(f, "no doxygen @ingroup tag")
         
 
