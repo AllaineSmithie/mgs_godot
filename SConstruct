@@ -282,12 +282,6 @@ opts.Update(env_base)
 
 selected_platform = ""
 
-if env_base["platform"] == "web":
-    env_base["portaudio"] = False
-
-if env_base["portaudio"]:
-    env_base.Append(CPPDEFINES=["PORT_AUDIO"])
-
 if env_base["library_type"] == "static_library":
     env_base.Append(CPPDEFINES=["LIBRARY_ENABLED"])
     env_base.Append(CPPDEFINES=["MGS_VST_BUILD"])
@@ -370,6 +364,12 @@ if selected_platform in ["linux", "bsd", "x11"]:
 # Make sure to update this to the found, valid platform as it's used through the buildsystem as the reference.
 # It should always be re-set after calling `opts.Update()` otherwise it uses the original input value.
 env_base["platform"] = selected_platform
+
+if env_base["platform"] == "web":
+    env_base["portaudio"] = False
+
+if env_base["portaudio"]:
+    env_base.Append(CPPDEFINES=["PORT_AUDIO"])
 
 # Add platform-specific options.
 if selected_platform in platform_opts:
