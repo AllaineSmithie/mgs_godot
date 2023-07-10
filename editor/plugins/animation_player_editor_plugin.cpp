@@ -1675,7 +1675,6 @@ AnimationPlayer *AnimationPlayerEditor::get_player() const {
 }
 
 AnimationPlayerEditor::AnimationPlayerEditor(AnimationPlayerEditorPlugin *p_plugin) {
-
 	if (plugin == p_plugin && singleton)
 		return;
 
