@@ -1196,6 +1196,7 @@ PackedInt32Array PortAudio::get_available_buffer_sizes(const int p_device_index)
 	if (host_api_names[p_device_index] != "ASIO")
 		return standard_samples_per_block;
 
+#if PA_ASIO
 	long min_buffer_size_frames;
 	long max_buffer_size_frames;
 	long preferred_buffer_size_frames;
@@ -1213,22 +1214,28 @@ PackedInt32Array PortAudio::get_available_buffer_sizes(const int p_device_index)
 	}
 	result.append(max_buffer_size_frames);
 	return result;
+#endif
 }
 
 void PortAudio::show_asio_control_panel() {
+#if PA_ASIO
 	PaError err = PaAsio_ShowControlPanel(current_device_index, nullptr);
 	ERR_FAIL_COND(err != paNoError);
+#endif
 }
 //PaError 	PaAsio_GetInputChannelName(PaDeviceIndex device, int channelIndex, const char** channelName)
 //PaError 	PaAsio_GetOutputChannelName(PaDeviceIndex device, int channelIndex, const char** channelName)
 void PortAudio::set_main_stream_mix_rate(double p_mix_rate) {
 	if (main_stream.is_null())
 		return;
+#if PA_ASIO
 	PaError result = PaAsio_SetStreamSampleRate(main_stream->get_stream(), p_mix_rate);
 	if (result != paNoError) {
 		stop_stream(main_stream);
 	}
 	main_stream->set_sample_rate(p_mix_rate);
+#else
+#endif
 }
 
 PortAudio::PortAudio() {
