@@ -121,7 +121,7 @@ void ImageFramesLoader::cleanup() {
 
 // ImageFrames
 
-Ref<Resource> ResourceFormatLoaderImageFrames::load(const String& p_path, const String& p_original_path, Error* r_error, bool p_use_sub_threads, float* r_progress, CacheMode p_cache_mode) {
+Ref<Resource> ResourceFormatLoaderImageFrames::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	if (!f.is_valid()) {
 		if (r_error) {
@@ -188,7 +188,7 @@ String ResourceFormatLoaderImageFrames::get_resource_type(const String &p_path) 
 
 // AnimatedTexture
 
-Ref<Resource> ResourceFormatLoaderImageFrames::load(const String& p_path, const String& p_original_path, Error* r_error, bool p_use_sub_threads, float* r_progress, CacheMode p_cache_mode) {
+Ref<Resource> ResourceFormatLoaderImageFrames::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	if (!f.is_valid()) {
 		if (r_error) {
@@ -255,7 +255,7 @@ String ResourceFormatLoaderAnimatedTexture::get_resource_type(const String &p_pa
 
 // SpriteFrames
 
-Ref<Resource> ResourceFormatLoaderImageFrames::load(const String& p_path, const String& p_original_path, Error* r_error, bool p_use_sub_threads, float* r_progress, CacheMode p_cache_mode) {
+Ref<Resource> ResourceFormatLoaderImageFrames::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_use_sub_threads, float *r_progress, CacheMode p_cache_mode) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	if (!f.is_valid()) {
 		if (r_error) {

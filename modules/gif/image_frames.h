@@ -31,10 +31,10 @@
 #ifndef IMAGE_FRAMES_H
 #define IMAGE_FRAMES_H
 
+#include <core/error/error_macros.h>
 #include <core/io/image.h>
 #include <core/io/resource.h>
 #include <core/templates/vector.h>
-#include <core/error/error_macros.h>
 
 class ImageFrames;
 

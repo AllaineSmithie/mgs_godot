@@ -32,12 +32,13 @@
 
 #include "image_frames.h"
 
-#include <core/io/resource_loader.h>
 #include <core/io/file_access.h>
+#include <core/io/resource_loader.h>
 
 class ImageFramesFormatLoader {
 	friend class ImageFramesLoader;
 	friend class ResourceFormatLoaderImageFrames;
+
 public:
 	virtual Error load_image_frames(Ref<ImageFrames> &r_image_frames, const Ref<FileAccess> &p_f, int p_max_frames = 0) const = 0;
 	virtual void get_recognized_extensions(List<String> *p_extensions) const = 0;
@@ -49,8 +50,9 @@ public:
 class ImageFramesLoader {
 	static Vector<ImageFramesFormatLoader *> loader;
 	friend class ResourceFormatLoaderImageFrames;
+
 public:
-	static Error load_image_frames(String p_file, Ref<ImageFrames> p_image, const Ref<FileAccess>& p_custom = Ref<FileAccess>(), int p_max_frames = 0);
+	static Error load_image_frames(String p_file, Ref<ImageFrames> p_image, const Ref<FileAccess> &p_custom = Ref<FileAccess>(), int p_max_frames = 0);
 	static void get_recognized_extensions(List<String> *p_extensions);
 	static ImageFramesFormatLoader *recognize(const String &p_extension);
 
@@ -62,7 +64,7 @@ public:
 
 class ResourceFormatLoaderImageFrames : public ResourceFormatLoader {
 public:
-	virtual Ref<Resource> load(const String& p_path, const String& p_original_path = "", Error* r_error = nullptr, bool p_use_sub_threads = false, float* r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE);
+	virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE);
 	virtual void get_recognized_extensions(List<String> *p_extensions) const;
 	virtual bool handles_type(const String &p_type) const;
 	virtual String get_resource_type(const String &p_path) const;
@@ -70,7 +72,7 @@ public:
 
 class ResourceFormatLoaderAnimatedTexture : public ResourceFormatLoader {
 public:
-	virtual Ref<Resource> load(const String& p_path, const String& p_original_path = "", Error* r_error = nullptr, bool p_use_sub_threads = false, float* r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE);
+	virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE);
 	//virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_no_subresource_cache = false);
 	virtual void get_recognized_extensions(List<String> *p_extensions) const;
 	virtual bool handles_type(const String &p_type) const;
@@ -79,7 +81,7 @@ public:
 
 class ResourceFormatLoaderSpriteFrames : public ResourceFormatLoader {
 public:
-	virtual Ref<Resource> load(const String& p_path, const String& p_original_path = "", Error* r_error = nullptr, bool p_use_sub_threads = false, float* r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE);
+	virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_use_sub_threads = false, float *r_progress = nullptr, CacheMode p_cache_mode = CACHE_MODE_REUSE);
 	//virtual Ref<Resource> load(const String &p_path, const String &p_original_path = "", Error *r_error = nullptr, bool p_no_subresource_cache = false);
 	virtual void get_recognized_extensions(List<String> *p_extensions) const;
 	virtual bool handles_type(const String &p_type) const;
