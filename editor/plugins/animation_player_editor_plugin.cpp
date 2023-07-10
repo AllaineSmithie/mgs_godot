@@ -119,7 +119,7 @@ void AnimationPlayerEditor::_notification(int p_what) {
 
 		case NOTIFICATION_POSTINITIALIZE: {
 			add_theme_style_override("panel", EditorNode::get_singleton()->get_gui_base()->get_theme_stylebox(SNAME("panel"), SNAME("Panel")));
-		}
+		} break;
 		case EditorSettings::NOTIFICATION_EDITOR_SETTINGS_CHANGED: {
 			add_theme_style_override("panel", EditorNode::get_singleton()->get_gui_base()->get_theme_stylebox(SNAME("panel"), SNAME("Panel")));
 		} break;
