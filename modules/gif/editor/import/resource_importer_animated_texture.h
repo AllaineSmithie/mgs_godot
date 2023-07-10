@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  respirce_importer_animated_texture.h                                  */
+/*  resource_importer_animated_texture.h                                  */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
