@@ -2776,6 +2776,9 @@ void DisplayServerMacOS::window_set_mode(WindowMode p_mode, WindowID p_window) {
 		case WINDOW_MODE_WINDOWED: {
 			// Do nothing.
 		} break;
+		case WINDOW_MODE_HIDDEN: {
+			[wd.window_object deminiaturize:nil];
+		} break;
 		case WINDOW_MODE_MINIMIZED: {
 			[wd.window_object performMiniaturize:nil];
 		} break;
