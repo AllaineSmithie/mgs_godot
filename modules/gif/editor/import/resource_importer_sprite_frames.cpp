@@ -53,7 +53,7 @@ Error ResourceImporterSpriteFrames::import(const String& p_source_file, const St
 	//bool filter = p_options["flags/filter"];
 	//bool mipmaps = p_options["flags/mipmaps"];
 	//bool anisotropic = p_options["flags/anisotropic"];
-	int srgb = p_options["flags/srgb"];
+	//int srgb = p_options["flags/srgb"];
 
 	/*int tex_flags = 0;
 	if (repeat > 0) {
