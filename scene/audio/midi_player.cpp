@@ -432,6 +432,7 @@ void MidiPlayer::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_READY: {
 			set_process_internal(true);
+			break;
 		}
 		case NOTIFICATION_INTERNAL_PROCESS: {
 			// If soundfont and stream exist then start buferring.

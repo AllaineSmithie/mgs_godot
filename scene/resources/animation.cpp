@@ -2324,6 +2324,10 @@ void Animation::track_set_key_value(int p_track, int p_key_idx, const Variant &p
 			at->values.write[p_key_idx].value.stream = k["stream"];
 
 		} break;
+		case TYPE_MIDI:
+			break;
+		case TYPE_VIDEO:
+			break;
 		case TYPE_ANIMATION: {
 			AnimationTrack *at = static_cast<AnimationTrack *>(t);
 			ERR_FAIL_INDEX(p_key_idx, at->values.size());
