@@ -3,13 +3,13 @@
 import os
 import sys
 
-Import('env')
+Import("env")
 module_env = env.Clone()
 
 if env["portaudio"]:
   # Portaudio Setup - Start
   # define PA Version
-  module_env.Append(CPPDEFINES=[('PA_GIT_REVISION', 'godot-module-396fe4b'), "_CRT_SECURE_NO_WARNINGS"])
+  module_env.Append(CPPDEFINES=[("PA_GIT_REVISION", "godot-module-396fe4b"), "_CRT_SECURE_NO_WARNINGS"])
 
   # add to Godot include path allows to use PortAudio directly via `#include <portaudio.h>`
   #env.Append(CPPPATH=["#modules/portaudio/include"])
@@ -19,45 +19,45 @@ if env["portaudio"]:
   use_host_api = []
   if module_env["platform"] == "windows":
     use_host_api = [ # only APIs that are not commented will be build
-      #"skeleton", # Test Host Api for developers
+      # "skeleton", # Test Host Api for developers
       "asio",      # ASIO (Audio Streaming Input Output)
       "dsound",    # direct sound
-      #"jack",     #
-      #"wasapi",    # (WASAPI) Windows Audio Session API
-      #"wdmks",    # (WDM/KS) Windows Driver Model/Kernel Streaming
-      #"wmme",      #
-      #"alsa" ,    #
-      #"asihpi",   #
-      #"coreaudio", #
-      #"oss",      #
+      # "jack",     #
+      # "wasapi",    # (WASAPI) Windows Audio Session API
+      # "wdmks",    # (WDM/KS) Windows Driver Model/Kernel Streaming
+      # "wmme",      #
+      # "alsa" ,    #
+      # "asihpi",   #
+      # "coreaudio", #
+      # "oss",      #
     ]
   elif module_env["platform"] == "x11":
     use_host_api = [ # only APIs that are not commented will be build
-      #"skeleton", # Test Host Api for developers
-      #"asio",      # ASIO (Audio Streaming Input Output)
-      #"dsound",    # Direct Sound
-      #"jack",     #
-      #"wasapi",    # (WASAPI) Windows Audio Session API
-      #"wdmks",    # (WDM/KS) Windows Driver Model/Kernel Streaming
-      #"wmme",      #
+      # "skeleton", # Test Host Api for developers
+      # "asio",      # ASIO (Audio Streaming Input Output)
+      # "dsound",    # Direct Sound
+      # "jack",     #
+      # "wasapi",    # (WASAPI) Windows Audio Session API
+      # "wdmks",    # (WDM/KS) Windows Driver Model/Kernel Streaming
+      # "wmme",      #
       "alsa" ,    #
-      #"asihpi",   #
-      #"coreaudio", #
-      #"oss",      #
+      # "asihpi",   #
+      # "coreaudio", #
+      # "oss",      #
     ]
   elif module_env["platform"] == "osx":
     use_host_api = [ # only APIs that are not commented will be build
-      #"skeleton", # Test Host Api for developers
-      #"asio",      # ASIO (Audio Streaming Input Output)
-      #"dsound",    # Direct Sound
-      #"jack",     #
-      #"wasapi",    # (WASAPI) Windows Audio Session API
-      #"wdmks",    # (WDM/KS) Windows Driver Model/Kernel Streaming
-      #"wmme",      #
-      #"alsa" ,    #
-      #"asihpi",   #
+      # "skeleton", # Test Host Api for developers
+      # "asio",      # ASIO (Audio Streaming Input Output)
+      # "dsound",    # Direct Sound
+      # "jack",     #
+      # "wasapi",    # (WASAPI) Windows Audio Session API
+      # "wdmks",    # (WDM/KS) Windows Driver Model/Kernel Streaming
+      # "wmme",      #
+      # "alsa" ,    #
+      # "asihpi",   #
       "coreaudio", #
-      #"oss",      #
+      # "oss",      #
     ]
   #env.Append(CPPDEFINES=["NEED_LONG_INT"])
 
@@ -170,7 +170,7 @@ if env["portaudio"]:
 
     if(host_api == "wasapi"):
       # disable Godot WASAPI driver
-      env['CPPDEFINES'] = [ x for x in env['CPPDEFINES'] if 'WASAPI_ENABLED' not in x]
+      env["CPPDEFINES"] = [ x for x in env["CPPDEFINES"] if "WASAPI_ENABLED" not in x]
       module_env.Append(CPPDEFINES=["PA_USE_WASAPI"])
       module_env.Append(CPPPATH=[pa_root + "/src/hostapi/wasapi"])
       host_api_sources.append(pa_root + "/src/hostapi/wasapi/pa_win_wasapi.c")
@@ -225,4 +225,5 @@ if env["portaudio"]:
 
   "./port_audio_test_node.cpp",
   ]
-  module_env.add_source_files(env.modules_sources, sources)
+
+module_env.add_source_files(env.modules_sources, sources)
