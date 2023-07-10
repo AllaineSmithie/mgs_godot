@@ -91,7 +91,7 @@ void ImageFramesLoader::cleanup() {
 
 // ImageFrames
 
-Ref<Resource> ResourceFormatLoaderImageFrames::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_no_subresource_cache) {
+Ref<Resource> ResourceFormatLoaderImageFrames::load(const String& p_path, const String& p_original_path, Error* r_error, bool p_use_sub_threads, float* r_progress, CacheMode p_cache_mode) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	if (!f.is_valid()) {
 		if (r_error) {
@@ -158,7 +158,7 @@ String ResourceFormatLoaderImageFrames::get_resource_type(const String &p_path) 
 
 // AnimatedTexture
 
-Ref<Resource> ResourceFormatLoaderAnimatedTexture::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_no_subresource_cache) {
+Ref<Resource> ResourceFormatLoaderImageFrames::load(const String& p_path, const String& p_original_path, Error* r_error, bool p_use_sub_threads, float* r_progress, CacheMode p_cache_mode) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	if (!f.is_valid()) {
 		if (r_error) {
@@ -180,7 +180,9 @@ Ref<Resource> ResourceFormatLoaderAnimatedTexture::load(const String &p_path, co
 	Ref<AnimatedTexture> atex;
 	atex.instantiate();
 
-	uint32_t tex_flags = f->get_32();
+	//uint32_t tex_flags = f->get_32();
+	// flush unused bytes
+	f->get_32();
 	uint32_t frame_count = f->get_32();
 
 	uint32_t width = f->get_32();
@@ -223,7 +225,7 @@ String ResourceFormatLoaderAnimatedTexture::get_resource_type(const String &p_pa
 
 // SpriteFrames
 
-Ref<Resource> ResourceFormatLoaderSpriteFrames::load(const String &p_path, const String &p_original_path, Error *r_error, bool p_no_subresource_cache) {
+Ref<Resource> ResourceFormatLoaderImageFrames::load(const String& p_path, const String& p_original_path, Error* r_error, bool p_use_sub_threads, float* r_progress, CacheMode p_cache_mode) {
 	Ref<FileAccess> f = FileAccess::open(p_path, FileAccess::READ);
 	if (!f.is_valid()) {
 		if (r_error) {
@@ -245,7 +247,9 @@ Ref<Resource> ResourceFormatLoaderSpriteFrames::load(const String &p_path, const
 	Ref<SpriteFrames> sframes;
 	sframes.instantiate();
 
-	uint32_t tex_flags = f->get_32();
+	//uint32_t tex_flags = f->get_32();
+	// flush unused bytes
+	f->get_32();
 	uint32_t frame_count = f->get_32();
 
 	uint32_t width = f->get_32();

@@ -2360,6 +2360,10 @@ void DisplayServerX11::window_set_mode(WindowMode p_mode, WindowID p_window) {
 		case WINDOW_MODE_WINDOWED: {
 			//do nothing
 		} break;
+		case WINDOW_MODE_HIDDEN: {
+			//minimize without enabled
+			_set_wm_minimized(p_window, false);
+		} break;
 		case WINDOW_MODE_MINIMIZED: {
 			_set_wm_minimized(p_window, false);
 		} break;
@@ -2389,6 +2393,10 @@ void DisplayServerX11::window_set_mode(WindowMode p_mode, WindowID p_window) {
 	switch (p_mode) {
 		case WINDOW_MODE_WINDOWED: {
 			//do nothing
+		} break;
+		case WINDOW_MODE_HIDDEN: {
+			//minimize without enabled
+			_set_wm_minimized(p_window, false);
 		} break;
 		case WINDOW_MODE_MINIMIZED: {
 			_set_wm_minimized(p_window, true);
