@@ -78,7 +78,7 @@ for f in sourceFiles:
 
     if not "/**" in s:
         printError(f, "no doxygen /** block")
-    
+
     if not "@file" in s:
         printError(f, "no doxygen @file tag")
 
