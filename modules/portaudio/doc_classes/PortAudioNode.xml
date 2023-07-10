@@ -57,7 +57,7 @@
 		</method>
 	</methods>
 	<members>
-		<member name="data" type="PoolByteArray" setter="set_data" getter="get_data" default="PoolByteArray(  )">
+		<member name="data" type="PackedByteArray" setter="set_data" getter="get_data" default="PackedByteArray(  )">
 		</member>
 		<member name="frames_per_buffer" type="int" setter="set_frames_per_buffer" getter="get_frames_per_buffer" default="0">
 		</member>
@@ -70,9 +70,9 @@
 	</members>
 	<signals>
 		<signal name="audio_callback">
-			<param index="0" name="input_buffer" type="PoolRealArray">
+			<param index="0" name="input_buffer" type="PackedRealArray">
 			</param>
-			<param index="1" name="output_buffer" type="PoolRealArray">
+			<param index="1" name="output_buffer" type="PackedRealArray">
 			</param>
 			<param index="2" name="frames_per_buffer" type="int">
 			</param>
