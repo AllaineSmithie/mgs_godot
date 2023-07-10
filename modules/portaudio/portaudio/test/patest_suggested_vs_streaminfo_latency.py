@@ -75,11 +75,11 @@ def setDisplayRangeSeconds(maxSeconds):
 
 compositeTestFramesPerBufferValues = [0]
 # powers of two
-for i in range (1,11):
+for i in range (1, 11):
     compositeTestFramesPerBufferValues.append(pow(2, i))
 
 # multiples of 50
-for i in range (1,20):
+for i in range (1, 20):
     compositeTestFramesPerBufferValues.append(i * 50)
 
 # 10ms buffer sizes
