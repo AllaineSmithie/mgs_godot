@@ -103,7 +103,7 @@ class ResourceImporterMidiFile : public ResourceImporter {
 public:
 	virtual String get_importer_name() const override { return "midifile"; }
 	virtual String get_visible_name() const override { return "MidiFile"; }
-	virtual void get_recognized_extensions(List<String> *p_extensions) const;
+	virtual void get_recognized_extensions(List<String> *p_extensions) const override;
 	virtual String get_save_extension() const override { return "mdf"; }
 	virtual String get_resource_type() const override { return "MidiFile"; }
 

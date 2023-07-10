@@ -1322,7 +1322,7 @@ TSFDEF tsf* tsf_load(struct tsf_stream* stream)
 	TSF_FREE(fontSamples);
 	return res; 
 	
-	return NULL;
+	//return NULL;
 }
 
 TSFDEF tsf* tsf_copy(tsf* f)
