@@ -39,9 +39,9 @@
 #include "editor/editor_undo_redo_manager.h"
 #include "editor/gui/editor_spin_slider.h"
 #include "editor/gui/scene_tree_editor.h"
-#include "editor/scene_tree_dock.h"
 #include "editor/inspector_dock.h"
 #include "editor/plugins/animation_player_editor_plugin.h"
+#include "editor/scene_tree_dock.h"
 #include "scene/animation/animation_player.h"
 #include "scene/animation/tween.h"
 #include "scene/gui/check_box.h"
@@ -3399,7 +3399,7 @@ void AnimationTrackEditor::_root_removed() {
 	root = nullptr;
 }
 
-void AnimationTrackEditor::_node_created(Node* p_node) {
+void AnimationTrackEditor::_node_created(Node *p_node) {
 	if (add_node_pending) {
 		add_node_pending = false;
 		_new_track_node_selected(p_node->get_path());
@@ -4445,7 +4445,7 @@ void AnimationTrackEditor::_update_tracks() {
 			for (int j = 0; j < track_edit_plugins.size(); j++) {
 				//track_edit = track_edit_plugins.write[j]->create_midi_track_edit();
 				//if (track_edit) {
-					break;
+				break;
 				//}
 			}
 		}
@@ -4454,7 +4454,7 @@ void AnimationTrackEditor::_update_tracks() {
 			for (int j = 0; j < track_edit_plugins.size(); j++) {
 				//track_edit = track_edit_plugins.write[j]->create_video_track_edit();
 				//if (track_edit) {
-					break;
+				break;
 				//}
 			}
 		}
@@ -4746,35 +4746,34 @@ void AnimationTrackEditor::_cancel_add_node_pending() {
 void AnimationTrackEditor::_add_child_node_pressed() {
 	if (pick_track != nullptr)
 		pick_track->hide();
-	
+
 	SceneTreeDock::get_singleton()->grab_click_focus();
 	SceneTreeDock::get_singleton()->get_tree_editor()->set_selected(root);
-	switch (adding_track_type)
-	{
-	case Animation::TYPE_AUDIO:
-		SceneTreeDock::get_singleton()->open_add_child_dialog("Audio");
-		add_node_pending = true;
-		break;
-	case Animation::TYPE_MIDI:
-		SceneTreeDock::get_singleton()->open_add_child_dialog("Midi");
-		add_node_pending = true;
-		break;
-	case Animation::TYPE_VIDEO:
-		SceneTreeDock::get_singleton()->open_add_child_dialog("Video");
-		add_node_pending = true;
-		break;
-	case Animation::TYPE_VALUE: ///< Set a value in a property, can be interpolated.
-	case Animation::TYPE_POSITION_3D: ///< Position 3D track
-	case Animation::TYPE_ROTATION_3D: ///< Rotation 3D track
-	case Animation::TYPE_SCALE_3D: ///< Scale 3D track
-	case Animation::TYPE_BLEND_SHAPE: ///< Blend Shape track
-	case Animation::TYPE_METHOD: ///< Call any method on a specific node.
-	case Animation::TYPE_BEZIER: ///< Bezier curve
-	case Animation::TYPE_ANIMATION:
-		SceneTreeDock::get_singleton()->open_add_child_dialog("");
-		add_node_pending = true;
-	default:
-		break;
+	switch (adding_track_type) {
+		case Animation::TYPE_AUDIO:
+			SceneTreeDock::get_singleton()->open_add_child_dialog("Audio");
+			add_node_pending = true;
+			break;
+		case Animation::TYPE_MIDI:
+			SceneTreeDock::get_singleton()->open_add_child_dialog("Midi");
+			add_node_pending = true;
+			break;
+		case Animation::TYPE_VIDEO:
+			SceneTreeDock::get_singleton()->open_add_child_dialog("Video");
+			add_node_pending = true;
+			break;
+		case Animation::TYPE_VALUE: ///< Set a value in a property, can be interpolated.
+		case Animation::TYPE_POSITION_3D: ///< Position 3D track
+		case Animation::TYPE_ROTATION_3D: ///< Rotation 3D track
+		case Animation::TYPE_SCALE_3D: ///< Scale 3D track
+		case Animation::TYPE_BLEND_SHAPE: ///< Blend Shape track
+		case Animation::TYPE_METHOD: ///< Call any method on a specific node.
+		case Animation::TYPE_BEZIER: ///< Bezier curve
+		case Animation::TYPE_ANIMATION:
+			SceneTreeDock::get_singleton()->open_add_child_dialog("");
+			add_node_pending = true;
+		default:
+			break;
 	}
 }
 
