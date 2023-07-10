@@ -111,6 +111,9 @@ void AudioStreamPlayer3D::_calc_output_vol(const Vector3 &source_dir, real_t tig
 		case AudioServer::SPEAKER_SURROUND_71:
 			speaker_count = 7;
 			break;
+		case AudioServer::SPEAKER_MULTIOUT:
+			speaker_count = 256;
+			break;
 	}
 
 	Spcap spcap(speaker_count, speaker_directions); //TODO: should only be created/recreated once the speaker mode / speaker positions changes
@@ -133,6 +136,10 @@ void AudioStreamPlayer3D::_calc_output_vol(const Vector3 &source_dir, real_t tig
 		case AudioServer::SPEAKER_MODE_STEREO:
 			output.write[0].r = volumes[1]; // front-right
 			output.write[0].l = volumes[0]; // front-left
+			break;
+		case AudioServer::SPEAKER_MULTIOUT:
+			output.write[0].r = volumes[1]; // first right channel for now
+			output.write[0].l = volumes[0]; // first left channel for now
 			break;
 	}
 }
