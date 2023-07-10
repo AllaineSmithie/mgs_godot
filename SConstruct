@@ -366,7 +366,7 @@ if selected_platform in ["linux", "bsd", "x11"]:
 env_base["platform"] = selected_platform
 
 if env_base["platform"] == "web" or env_base["platform"] == "android":
-    env_base["portaudio"] = 0
+    env_base["portaudio"] = False
 elif env_base["portaudio"]:
     env_base.Append(CPPDEFINES=["PORT_AUDIO"])
 
