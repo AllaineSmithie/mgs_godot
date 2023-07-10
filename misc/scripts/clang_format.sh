@@ -31,6 +31,10 @@ for f in $files; do
         continue
     elif [[ "$f" == "platform/android/java/lib/src/org/godotengine/godot/utils/ProcessPhoenix"* ]]; then
         continue
+    elif [[ "$f" == "core/libgodot/"* ]]; then
+        continue
+    elif [[ "$f" == "modules/"* ]]; then
+        continue
     fi
 
     python misc/scripts/copyright_headers.py "$f"
