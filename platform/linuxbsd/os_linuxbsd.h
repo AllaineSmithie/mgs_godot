@@ -53,7 +53,7 @@
 #include <core/libgodot/libgodot_audio_driver.h>
 #endif
 #ifdef PORT_AUDIO
- #include "drivers/portaudio/port_audio_virtual_driver.h"
+ #include <drivers/portaudio/port_audio_virtual_driver.h>
 #endif
 
 class OS_LinuxBSD : public OS_Unix {

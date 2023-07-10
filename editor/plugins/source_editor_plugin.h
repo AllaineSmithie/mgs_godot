@@ -125,8 +125,8 @@ public:
 	virtual String get_name() const override { return "Edit"; }
 	bool has_main_screen() const override { return true; }
 	virtual void make_visible(bool p_visible) override;
-	void set_window_layout(Ref<ConfigFile> p_layout);
-	void get_window_layout(Ref<ConfigFile> p_layout);
+	void set_window_layout(Ref<ConfigFile> p_layout) override;
+	void get_window_layout(Ref<ConfigFile> p_layout) override;
 	virtual void edit(Object* p_object) override;
 	virtual bool handles(Object* p_object) const override;
 
