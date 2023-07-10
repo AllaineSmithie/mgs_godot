@@ -2383,6 +2383,8 @@ void Animation::track_set_key_transition(int p_track, int p_key_idx, real_t p_tr
 		} break;
 		case TYPE_BEZIER:
 		case TYPE_AUDIO:
+		case TYPE_MIDI:
+		case TYPE_VIDEO:
 		case TYPE_ANIMATION: {
 			// they don't use transition
 		} break;
@@ -3019,6 +3021,10 @@ void Animation::track_get_key_indices_in_range(int p_track, double p_time, doubl
 							_track_get_key_indices_in_range(ad->values, from_time, anim_end, p_indices, is_backward);
 						}
 					} break;
+					case TYPE_MIDI:
+						break;
+					case TYPE_VIDEO:
+						break;
 					case TYPE_ANIMATION: {
 						const AnimationTrack *an = static_cast<const AnimationTrack *>(t);
 						if (!is_backward) {
@@ -3119,6 +3125,10 @@ void Animation::track_get_key_indices_in_range(int p_track, double p_time, doubl
 						_track_get_key_indices_in_range(ad->values, 0, from_time, p_indices, true);
 						_track_get_key_indices_in_range(ad->values, 0, to_time, p_indices, false);
 					} break;
+					case TYPE_MIDI:
+						break;
+					case TYPE_VIDEO:
+						break;
 					case TYPE_ANIMATION: {
 						const AnimationTrack *an = static_cast<const AnimationTrack *>(t);
 						_track_get_key_indices_in_range(an->values, 0, from_time, p_indices, true);
