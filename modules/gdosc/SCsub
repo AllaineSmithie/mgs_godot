@@ -4,13 +4,13 @@ Import("env_modules")
 
 env_osc = env_modules.Clone()
 
-ip_path = 'oscpack/ip/posix'
+ip_path = "oscpack/ip/posix"
 
 if platform == "windows":
-	ip_path = 'oscpack/ip/win32'
+	ip_path = "oscpack/ip/win32"
 
 
-env_osc.Append(CPPPATH=['.', 'src/', 'oscpack/', 'oscpack/osc/', 'oscpack/ip/', ip_path])
+env_osc.Append(CPPPATH=[".", "src/", "oscpack/", "oscpack/osc/", "oscpack/ip/", ip_path])
 
 if platform == "windows":
 	env_osc.Append(LIBS=["ws2_32", "wsock32", "winmm"])
