@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+import matplotlib
+
 """
 
 Run and graph the results of patest_suggested_vs_streaminfo_latency.c
