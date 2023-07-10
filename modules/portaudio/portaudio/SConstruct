@@ -199,15 +199,12 @@ def buildConfigH(target, source, env):
     return 0
 
 # Define the builder for the config header
-env.Append(BUILDERS={"portaudioConfig": env.Builder(
-            action=Action(buildConfigH), target_factory=env.fs.File)})
+env.Append(BUILDERS={"portaudioConfig": env.Builder(action=Action(buildConfigH), target_factory=env.fs.File)})
 
-confH = env.portaudioConfig(File("portaudio_config.h", "include"),
-        File("portaudio.h", "include"))
+confH = env.portaudioConfig(File("portaudio_config.h", "include"), File("portaudio.h", "include"))
 env.Default(confH)
 env.Install(os.path.join(includeDir, "portaudio"), confH)
 
 for api in hostApis:
     if api in hostApiHeaders:
-        env.Install(os.path.join(includeDir, "portaudio"),
-                File(hostApiHeaders[api], "include"))
+        env.Install(os.path.join(includeDir, "portaudio"), File(hostApiHeaders[api], "include"))
