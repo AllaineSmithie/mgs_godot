@@ -26,7 +26,7 @@ String ResourceImporterSpriteFrames::get_save_extension() const {
 	return "sframes";
 }
 
-bool ResourceImporterSpriteFrames::get_option_visibility(const String& p_path, const String &p_option, const HashMap<StringName, Variant> &p_options) const {
+bool ResourceImporterSpriteFrames::get_option_visibility(const String &p_path, const String &p_option, const HashMap<StringName, Variant> &p_options) const {
 	return true;
 }
 
@@ -38,7 +38,7 @@ String ResourceImporterSpriteFrames::get_preset_name(int p_idx) const {
 	return "";
 }
 
-void ResourceImporterSpriteFrames::get_import_options(const String& p_path, List<ImportOption> *r_options, int p_preset) const {
+void ResourceImporterSpriteFrames::get_import_options(const String &p_path, List<ImportOption> *r_options, int p_preset) const {
 	//r_options->push_back(ImportOption(PropertyInfo(Variant::INT, "flags/repeat", PROPERTY_HINT_ENUM, "Disabled,Enabled,Mirrored"), 0));
 	//r_options->push_back(ImportOption(PropertyInfo(Variant::BOOL, "flags/filter"), false));
 	//r_options->push_back(ImportOption(PropertyInfo(Variant::BOOL, "flags/mipmaps"), false));
@@ -47,7 +47,7 @@ void ResourceImporterSpriteFrames::get_import_options(const String& p_path, List
 	r_options->push_back(ImportOption(PropertyInfo(Variant::INT, "max_frames", PROPERTY_HINT_RANGE, "0, 4096, 1"), 0));
 }
 
-Error ResourceImporterSpriteFrames::import(const String& p_source_file, const String& p_save_path, const HashMap<StringName, Variant>& p_options, List<String>* r_platform_variants, List<String>* r_gen_files = nullptr, Variant* r_metadata = nullptr) {
+Error ResourceImporterSpriteFrames::import(const String &p_source_file, const String &p_save_path, const HashMap<StringName, Variant> &p_options, List<String> *r_platform_variants, List<String> *r_gen_files = nullptr, Variant *r_metadata = nullptr) {
 	int max_frames = p_options["max_frames"];
 	//int repeat = p_options["flags/repeat"];
 	//bool filter = p_options["flags/filter"];
