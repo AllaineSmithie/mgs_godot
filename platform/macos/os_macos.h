@@ -35,7 +35,7 @@
 #include "joypad_macos.h"
 
 #if LIBRARY_ENABLED
- #include "core/libgodot/libgodot.h"
+#include "core/libgodot/libgodot.h"
 #endif
 #include "core/input/input.h"
 #import "drivers/coreaudio/audio_driver_coreaudio.h"
@@ -43,6 +43,9 @@
 #include "drivers/unix/os_unix.h"
 #include "servers/audio_server.h"
 
+#if PORT_AUDIO
+#include <drivers/portaudio/port_audio_virtual_driver.h>
+#endif
 class OS_MacOS : public OS_Unix {
 	JoypadMacOS *joypad_macos = nullptr;
 
@@ -56,7 +59,6 @@ class OS_MacOS : public OS_Unix {
 	MIDIDriverCoreMidi midi_driver;
 #endif
 #if PORT_AUDIO
-#include <drivers/portaudio/port_audio_virtual_driver.h>
 	PortAudioVirtualDriver port_audio_audio_driver;
 #endif
 #endif
