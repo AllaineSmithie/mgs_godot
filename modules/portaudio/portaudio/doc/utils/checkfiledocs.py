@@ -72,12 +72,12 @@ def printError(f, message):
 
 for f in sourceFiles:
     if not doxygenHtmlDocFileName(os.path.basename(f)) in docFiles:
-        printError( f, "no doxygen generated doc page" )
+        printError(f, "no doxygen generated doc page")
 
     s = file(f, "rt").read()
 
     if not "/**" in s:
-        printError(f, "no doxygen /** block")  
+        printError(f, "no doxygen /** block")
     
     if not "@file" in s:
         printError(f, "no doxygen @file tag")
