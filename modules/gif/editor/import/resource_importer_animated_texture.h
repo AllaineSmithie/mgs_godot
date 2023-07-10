@@ -28,8 +28,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef RESOURCE_IMPORTED_ANIMATED_TEXTURE_H
-#define RESOURCE_IMPORTED_ANIMATED_TEXTURE_H
+#ifndef RESOURCE_IMPORTER_ANIMATED_TEXTURE_H
+#define RESOURCE_IMPORTER_ANIMATED_TEXTURE_H
 
 #include "core/io/resource_importer.h"
 
@@ -51,4 +51,4 @@ public:
 	virtual Error import(const String &p_source_file, const String &p_save_path, const HashMap<StringName, Variant> &p_options, List<String> *r_platform_variants, List<String> *r_gen_files = nullptr, Variant *r_metadata = nullptr) override;
 };
 
-#endif // RESOURCE_IMPORTED_ANIMATED_TEXTURE_H
+#endif // RESOURCE_IMPORTER_ANIMATED_TEXTURE_H
