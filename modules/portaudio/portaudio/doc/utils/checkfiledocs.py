@@ -1,6 +1,7 @@
 import os
 import os.path
 import string
+import matplotlib
 
 paRootDirectory = "../../"
 paHtmlDocDirectory = os.path.join(paRootDirectory, "doc", "html")
