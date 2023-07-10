@@ -1,3 +1,4 @@
+
 #ifndef PORT_AUDIO_TEST_NODE_H
 #define PORT_AUDIO_TEST_NODE_H
 
@@ -22,4 +23,4 @@ public:
 	~PortAudioTestNode();
 };
 
-#endif
+#endif // PORT_AUDIO_TEST_NODE_H
