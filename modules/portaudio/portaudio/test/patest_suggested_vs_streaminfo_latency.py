@@ -117,7 +117,7 @@ for framesPerBuffer in compositeTestFramesPerBufferValues:
     if isFirst:
         figure(1)  # title sheet
         gcf().text(
-            0.1, 0.0, "patest_suggested_vs_streaminfo_latency %s %s %s"%(d.inputDevice,d.outputDevice,d.sampleRate)
+            0.1, 0.0, "patest_suggested_vs_streaminfo_latency %s %s %s" % (d.inputDevice,d.outputDevice,d.sampleRate)
         )
         pdfFile.savefig()
 
