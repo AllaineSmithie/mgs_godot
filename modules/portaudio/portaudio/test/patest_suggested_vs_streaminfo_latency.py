@@ -75,11 +75,11 @@ def setDisplayRangeSeconds(maxSeconds):
 
 compositeTestFramesPerBufferValues = [0]
 # powers of two
-for i in range (1, 11):
+for i in range(1, 11):
     compositeTestFramesPerBufferValues.append(pow(2, i))
 
 # multiples of 50
-for i in range (1, 20):
+for i in range(1, 20):
     compositeTestFramesPerBufferValues.append(i * 50)
 
 # 10ms buffer sizes
@@ -119,10 +119,9 @@ for framesPerBuffer in compositeTestFramesPerBufferValues:
         gcf().text(
             0.1,
             0.0,
-           "patest_suggested_vs_streaminfo_latency\n%s\n%s\n%s\n"%(d.inputDevice,d.outputDevice,d.sampleRate)
+            "patest_suggested_vs_streaminfo_latency\n%s\n%s\n%s\n"%(d.inputDevice,d.outputDevice,d.sampleRate)
         )
         pdfFile.savefig()
-
 
     figure(2)  # composite plot, includes all compositeTestFramesPerBufferValues
 
@@ -135,7 +134,7 @@ for framesPerBuffer in compositeTestFramesPerBufferValues:
     plot(d.suggestedLatency, d.fullDuplexInputLatency)
 
     if framesPerBuffer in individualPlotFramesPerBufferValues:  # individual plots
-        figure( 3 + individualPlotFramesPerBufferValues.index(framesPerBuffer) )
+        figure(3 + individualPlotFramesPerBufferValues.index(framesPerBuffer))
 
         plot(d.suggestedLatency, d.suggestedLatency, label="Suggested latency")
         plot(d.suggestedLatency, d.halfDuplexOutputLatency, label="Half-duplex output latency")
@@ -147,24 +146,24 @@ for framesPerBuffer in compositeTestFramesPerBufferValues:
             framesPerBufferText = "paFramesPerBufferUnspecified"
         else:
             framesPerBufferText = str(framesPerBuffer)
-        setFigureTitleAndAxisLabels("user frames per buffer: "+str(framesPerBufferText))
+        setFigureTitleAndAxisLabels("user frames per buffer: " + str(framesPerBufferText))
         setDisplayRangeSeconds(2.2)
         pdfFile.savefig()
         setDisplayRangeSeconds(0.1)
-        setFigureTitleAndAxisLabels("user frames per buffer: "+str(framesPerBufferText)+" (detail)")
+        setFigureTitleAndAxisLabels("user frames per buffer: " + str(framesPerBufferText)+" (detail)")
         pdfFile.savefig()
 
     isFirst = False
 
 figure(2)
 setFigureTitleAndAxisLabels(
-    "composite of frames per buffer values:\n"+str(compositeTestFramesPerBufferValues)
+    "composite of frames per buffer values:\n" + str(compositeTestFramesPerBufferValues)
 )
 setDisplayRangeSeconds(2.2)
 pdfFile.savefig()
 setDisplayRangeSeconds(0.1)
 setFigureTitleAndAxisLabels(
-    "composite of frames per buffer values:\n"+str(compositeTestFramesPerBufferValues)+" (detail)"
+    "composite of frames per buffer values:\n" + str(compositeTestFramesPerBufferValues)+" (detail)"
 )
 pdfFile.savefig()
 
