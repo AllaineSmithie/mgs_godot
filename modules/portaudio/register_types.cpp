@@ -14,12 +14,10 @@
 #include "./port_audio_test_node.h"
 static PortAudio *port_audio = nullptr;
 #endif
-#endif
 
 void initialize_portaudio_module(ModuleInitializationLevel p_level) {
 	// Singleton
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SERVERS) {
-#ifdef PORT_AUDIO
 #ifndef LIBRARY_ENABLED
 		port_audio = memnew(PortAudio);
 		GDREGISTER_CLASS(PortAudio);
@@ -33,16 +31,14 @@ void initialize_portaudio_module(ModuleInitializationLevel p_level) {
 		// Nodes
 		GDREGISTER_CLASS(PortAudioTestNode);
 #endif
-#endif
 	}
 }
 
 void uninitialize_portaudio_module(ModuleInitializationLevel p_level) {
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SERVERS) {
-#ifdef PORT_AUDIO
 #ifndef LIBRARY_ENABLED
 		memdelete(port_audio);
 #endif
-#endif
 	}
 }
+#endif
