@@ -6,7 +6,7 @@ set -uo pipefail
 
 # Apply black.
 echo -e "Formatting Python files..."
-PY_FILES=$(git ls-files -- '*SConstruct' '*SCsub' '*.py' ':!:.git/*' ':!:thirdparty/*')
+PY_FILES=$(git ls-files -- '*SConstruct' '*SCsub' '*.py' ':!:.git/*' ':!:thirdparty/*' ':!:modules/portaudio*')
 black -l 120 $PY_FILES
 
 diff=$(git diff --color)
