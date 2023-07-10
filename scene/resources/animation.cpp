@@ -88,6 +88,10 @@ bool Animation::_set(const StringName &p_name, const Variant &p_value) {
 				add_track(TYPE_AUDIO);
 			} else if (type == "animation") {
 				add_track(TYPE_ANIMATION);
+			} else if (type == "midi") {
+				add_track(TYPE_MIDI);
+			} else if (type == "video") {
+				add_track(TYPE_VIDEO);
 			} else {
 				return false;
 			}
@@ -496,6 +500,12 @@ bool Animation::_get(const StringName &p_name, Variant &r_ret) const {
 				case TYPE_AUDIO:
 					r_ret = "audio";
 					break;
+				case TYPE_MIDI:
+					r_ret = "midi";
+					break;
+				case TYPE_VIDEO:
+					r_ret = "video";
+					break;
 				case TYPE_ANIMATION:
 					r_ret = "animation";
 					break;
@@ -889,6 +899,13 @@ int Animation::add_track(TrackType p_type, int p_at_pos) {
 			tracks.insert(p_at_pos, memnew(AudioTrack));
 
 		} break;
+		case TYPE_MIDI: {
+			// do nothing for now
+
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
+		} break;
 		case TYPE_ANIMATION: {
 			tracks.insert(p_at_pos, memnew(AnimationTrack));
 
@@ -949,6 +966,13 @@ void Animation::remove_track(int p_track) {
 			AudioTrack *ad = static_cast<AudioTrack *>(t);
 			_clear(ad->values);
 
+		} break;
+		case TYPE_MIDI: {
+			// do nothing for now
+
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
 		} break;
 		case TYPE_ANIMATION: {
 			AnimationTrack *an = static_cast<AnimationTrack *>(t);
@@ -1435,6 +1459,13 @@ void Animation::track_remove_key(int p_track, int p_idx) {
 			ad->values.remove_at(p_idx);
 
 		} break;
+		case TYPE_MIDI: {
+			// do nothing for now
+
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
+		} break;
 		case TYPE_ANIMATION: {
 			AnimationTrack *an = static_cast<AnimationTrack *>(t);
 			ERR_FAIL_INDEX(p_idx, an->values.size());
@@ -1607,6 +1638,14 @@ int Animation::track_find_key(int p_track, double p_time, FindMode p_find_mode) 
 			return k;
 
 		} break;
+		case TYPE_MIDI: {
+			// do nothing for now
+			return -1;
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
+			return -1;
+		} break;
 		case TYPE_ANIMATION: {
 			AnimationTrack *at = static_cast<AnimationTrack *>(t);
 			int k = _find(at->values, p_time);
@@ -1724,6 +1763,13 @@ int Animation::track_insert_key(int p_track, double p_time, const Variant &p_key
 			ret = _insert(p_time, at->values, ak);
 
 		} break;
+		case TYPE_MIDI: {
+			// do nothing for now
+
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
+		} break;
 		case TYPE_ANIMATION: {
 			AnimationTrack *at = static_cast<AnimationTrack *>(t);
 
@@ -1790,6 +1836,14 @@ int Animation::track_get_key_count(int p_track) const {
 		case TYPE_AUDIO: {
 			AudioTrack *at = static_cast<AudioTrack *>(t);
 			return at->values.size();
+		} break;
+		case TYPE_MIDI: {
+			// do nothing for now
+			return 0;
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
+			return 0;
 		} break;
 		case TYPE_ANIMATION: {
 			AnimationTrack *at = static_cast<AnimationTrack *>(t);
@@ -1864,6 +1918,14 @@ Variant Animation::track_get_key_value(int p_track, int p_key_idx) const {
 			k["stream"] = at->values[p_key_idx].value.stream;
 			return k;
 
+		} break;
+		case TYPE_MIDI: {
+			// do nothing for now
+			return Variant();
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
+			return Variant();
 		} break;
 		case TYPE_ANIMATION: {
 			AnimationTrack *at = static_cast<AnimationTrack *>(t);
@@ -1953,6 +2015,14 @@ double Animation::track_get_key_time(int p_track, int p_key_idx) const {
 			ERR_FAIL_INDEX_V(p_key_idx, at->values.size(), -1);
 			return at->values[p_key_idx].time;
 
+		} break;
+		case TYPE_MIDI: {
+			// do nothing for now
+			return 0.0;
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
+			return 0.0;
 		} break;
 		case TYPE_ANIMATION: {
 			AnimationTrack *at = static_cast<AnimationTrack *>(t);
@@ -2046,6 +2116,14 @@ void Animation::track_set_key_time(int p_track, int p_key_idx, double p_time) {
 			_insert(p_time, at->values, key);
 			return;
 		}
+		case TYPE_MIDI: {
+			// do nothing for now
+			return;
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
+			return;
+		} break;
 		case TYPE_ANIMATION: {
 			AnimationTrack *at = static_cast<AnimationTrack *>(t);
 			ERR_FAIL_INDEX(p_key_idx, at->values.size());
@@ -2114,6 +2192,12 @@ real_t Animation::track_get_key_transition(int p_track, int p_key_idx) const {
 		} break;
 		case TYPE_AUDIO: {
 			return 1; //audio does not really use transitions
+		} break;
+		case TYPE_MIDI: {
+			return 1; //midi does not really use transitions
+		} break;
+		case TYPE_VIDEO: {
+			return 1; //do nothing for now
 		} break;
 		case TYPE_ANIMATION: {
 			return 1; //animation does not really use transitions
@@ -3102,6 +3186,12 @@ void Animation::track_get_key_indices_in_range(int p_track, double p_time, doubl
 						_track_get_key_indices_in_range(ad->values, from_time, length, p_indices, false);
 						_track_get_key_indices_in_range(ad->values, to_time, length, p_indices, true);
 					} break;
+					case TYPE_MIDI: {
+						// do nothing for now
+					} break;
+					case TYPE_VIDEO: {
+						// do nothing for now
+					} break;
 					case TYPE_ANIMATION: {
 						const AnimationTrack *an = static_cast<const AnimationTrack *>(t);
 						_track_get_key_indices_in_range(an->values, from_time, length, p_indices, false);
@@ -3167,6 +3257,12 @@ void Animation::track_get_key_indices_in_range(int p_track, double p_time, doubl
 		case TYPE_AUDIO: {
 			const AudioTrack *ad = static_cast<const AudioTrack *>(t);
 			_track_get_key_indices_in_range(ad->values, from_time, to_time, p_indices, is_backward);
+		} break;
+		case TYPE_MIDI: {
+			// do nothing for now
+		} break;
+		case TYPE_VIDEO: {
+			// do nothing for now
 		} break;
 		case TYPE_ANIMATION: {
 			const AnimationTrack *an = static_cast<const AnimationTrack *>(t);
@@ -3918,6 +4014,8 @@ void Animation::_bind_methods() {
 	BIND_ENUM_CONSTANT(TYPE_METHOD);
 	BIND_ENUM_CONSTANT(TYPE_BEZIER);
 	BIND_ENUM_CONSTANT(TYPE_AUDIO);
+	BIND_ENUM_CONSTANT(TYPE_MIDI);
+	BIND_ENUM_CONSTANT(TYPE_VIDEO);
 	BIND_ENUM_CONSTANT(TYPE_ANIMATION);
 
 	BIND_ENUM_CONSTANT(INTERPOLATION_NEAREST);
