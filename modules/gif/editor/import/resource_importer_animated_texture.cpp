@@ -48,7 +48,7 @@ void ResourceImporterAnimatedTexture::get_import_options(const String& p_path, L
 	r_options->push_back(ImportOption(PropertyInfo(Variant::INT, "max_frames", PROPERTY_HINT_RANGE, vformat("0, %d, 1", AnimatedTexture::MAX_FRAMES)), 0));
 }
 
-Error ResourceImporterAnimatedTexture::import(const String &p_source_file, const String &p_save_path, const HashMap<StringName, Variant> &p_options, List<String> *r_platform_variants, List<String> *r_gen_files, Variant *r_metadata) {
+Error ResourceImporterAnimatedTexture::import(const String& p_source_file, const String& p_save_path, const HashMap<StringName, Variant>& p_options, List<String>* r_platform_variants, List<String>* r_gen_files = nullptr, Variant* r_metadata = nullptr) {
 	int max_frames = p_options["max_frames"];
 	//int repeat = p_options["flags/repeat"];
 	//bool filter = p_options["flags/filter"];
