@@ -45,7 +45,7 @@
 #ifndef TSF_INCLUDE_TSF_INL
 #define TSF_INCLUDE_TSF_INL
 
-#pragma warning(push, 0)
+#pragma warning(disable, 4996)
 
 #ifdef __cplusplus
 extern "C" {
