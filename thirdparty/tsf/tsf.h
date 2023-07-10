@@ -45,6 +45,8 @@
 #ifndef TSF_INCLUDE_TSF_INL
 #define TSF_INCLUDE_TSF_INL
 
+#pragma warning(push, 0)
+
 #ifdef __cplusplus
 extern "C" {
 #  define CPP_DEFAULT0 = 0
@@ -1902,5 +1904,5 @@ TSFDEF float tsf_channel_get_tuning(tsf* f, int channel)
 #ifdef __cplusplus
 }
 #endif
-
+#pragma warning(pop)
 #endif //TSF_IMPLEMENTATION
