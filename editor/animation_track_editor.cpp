@@ -365,6 +365,10 @@ bool AnimationTrackKeyEdit::_set(const StringName &p_name, const Variant &p_valu
 				return true;
 			}
 		} break;
+		case Animation::TYPE_MIDI: {
+		} break;
+		case Animation::TYPE_VIDEO: {
+		} break;
 		case Animation::TYPE_ANIMATION: {
 			if (name == "animation") {
 				StringName anim_name = p_value;
@@ -488,6 +492,10 @@ bool AnimationTrackKeyEdit::_get(const StringName &p_name, Variant &r_ret) const
 			}
 
 		} break;
+		case Animation::TYPE_MIDI: {
+		} break;
+		case Animation::TYPE_VIDEO: {
+		} break;
 		case Animation::TYPE_ANIMATION: {
 			if (name == "animation") {
 				r_ret = animation->animation_track_get_key_animation(track, key);
@@ -589,6 +597,10 @@ void AnimationTrackKeyEdit::_get_property_list(List<PropertyInfo> *p_list) const
 			p_list->push_back(PropertyInfo(Variant::FLOAT, PNAME("start_offset"), PROPERTY_HINT_RANGE, "0,3600,0.0001,or_greater"));
 			p_list->push_back(PropertyInfo(Variant::FLOAT, PNAME("end_offset"), PROPERTY_HINT_RANGE, "0,3600,0.0001,or_greater"));
 
+		} break;
+		case Animation::TYPE_MIDI: {
+		} break;
+		case Animation::TYPE_VIDEO: {
 		} break;
 		case Animation::TYPE_ANIMATION: {
 			String animations;
@@ -916,6 +928,10 @@ bool AnimationMultiTrackKeyEdit::_set(const StringName &p_name, const Variant &p
 						update_obj = true;
 					}
 				} break;
+				case Animation::TYPE_MIDI: {
+				} break;
+				case Animation::TYPE_VIDEO: {
+				} break;
 				case Animation::TYPE_ANIMATION: {
 					if (name == "animation") {
 						StringName anim_name = p_value;
@@ -1059,6 +1075,10 @@ bool AnimationMultiTrackKeyEdit::_get(const StringName &p_name, Variant &r_ret) 
 					}
 
 				} break;
+				case Animation::TYPE_MIDI: {
+				} break;
+				case Animation::TYPE_VIDEO: {
+				} break;
 				case Animation::TYPE_ANIMATION: {
 					if (name == "animation") {
 						r_ret = animation->animation_track_get_key_animation(track, key);
@@ -1187,6 +1207,10 @@ void AnimationMultiTrackKeyEdit::_get_property_list(List<PropertyInfo> *p_list) 
 				p_list->push_back(PropertyInfo(Variant::OBJECT, "stream", PROPERTY_HINT_RESOURCE_TYPE, "AudioStream"));
 				p_list->push_back(PropertyInfo(Variant::FLOAT, "start_offset", PROPERTY_HINT_RANGE, "0,3600,0.0001,or_greater"));
 				p_list->push_back(PropertyInfo(Variant::FLOAT, "end_offset", PROPERTY_HINT_RANGE, "0,3600,0.0001,or_greater"));
+			} break;
+			case Animation::TYPE_MIDI: {
+			} break;
+			case Animation::TYPE_VIDEO: {
 			} break;
 			case Animation::TYPE_ANIMATION: {
 				if (key_ofs_map.size() > 1) {
@@ -2598,6 +2622,10 @@ String AnimationTrackEdit::get_tooltip(const Point2 &p_pos) const {
 					text += TTR("Start (s):") + " " + rtos(so) + "\n";
 					float eo = animation->audio_track_get_key_end_offset(track, key_idx);
 					text += TTR("End (s):") + " " + rtos(eo) + "\n";
+				} break;
+				case Animation::TYPE_MIDI: {
+				} break;
+				case Animation::TYPE_VIDEO: {
 				} break;
 				case Animation::TYPE_ANIMATION: {
 					String name = animation->animation_track_get_key_animation(track, key_idx);
@@ -4819,6 +4847,10 @@ void AnimationTrackEditor::_new_track_node_selected(NodePath p_path) {
 			undo_redo->commit_action();
 
 		} break;
+		case Animation::TYPE_MIDI: {
+		} break;
+		case Animation::TYPE_VIDEO: {
+		} break;
 		case Animation::TYPE_ANIMATION: {
 			if (!node->is_class("AnimationPlayer")) {
 				EditorNode::get_singleton()->show_warning(TTR("Animation tracks can only point to AnimationPlayer nodes."));
@@ -5063,6 +5095,10 @@ void AnimationTrackEditor::_insert_key_from_track(float p_ofs, int p_track) {
 			undo_redo->add_do_method(animation.ptr(), "track_insert_key", p_track, p_ofs, ak);
 			undo_redo->add_undo_method(animation.ptr(), "track_remove_key_at_time", p_track, p_ofs);
 			undo_redo->commit_action();
+		} break;
+		case Animation::TYPE_MIDI: {
+		} break;
+		case Animation::TYPE_VIDEO: {
 		} break;
 		case Animation::TYPE_ANIMATION: {
 			StringName anim = "[stop]";
@@ -5705,6 +5741,12 @@ void AnimationTrackEditor::_edit_menu_pressed(int p_option) {
 					case Animation::TYPE_AUDIO:
 						track_type = TTR("Audio");
 						break;
+					case Animation::TYPE_MIDI: {
+						track_type = TTR("Midi");
+					} break;
+					case Animation::TYPE_VIDEO: {
+						track_type = TTR("Video");
+					} break;
 					default: {
 					};
 				}

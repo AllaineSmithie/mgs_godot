@@ -661,6 +661,12 @@ bool AnimationNodeBlendTreeEditor::_update_filters(const Ref<AnimationNode> &ano
 					case Animation::TrackType::TYPE_AUDIO: {
 						track_type_name = TTR("Audio Clips");
 					} break;
+					case Animation::TrackType::TYPE_MIDI: {
+						track_type_name = TTR("Midi Clips");
+					} break;
+					case Animation::TrackType::TYPE_VIDEO: {
+						track_type_name = TTR("Video Clips");
+					} break;
 					case Animation::TrackType::TYPE_METHOD: {
 						track_type_name = TTR("Functions");
 					} break;
