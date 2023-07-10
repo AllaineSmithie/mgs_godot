@@ -16,8 +16,8 @@
 		<method name="sleep">
 			<return type="void">
 			</return>
-			<argument index="0" name="ms" type="int">
-			</argument>
+			<param index="0" name="ms" type="int">
+			</param>
 			<description>
 			</description>
 		</method>
