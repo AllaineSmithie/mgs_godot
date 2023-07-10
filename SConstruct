@@ -365,10 +365,9 @@ if selected_platform in ["linux", "bsd", "x11"]:
 # It should always be re-set after calling `opts.Update()` otherwise it uses the original input value.
 env_base["platform"] = selected_platform
 
-if env_base["platform"] == "web":
+if env_base["platform"] == "web" or env_base["platform"] == "android":
     env_base["portaudio"] = False
-
-if env_base["portaudio"]:
+elif env_base["portaudio"]:
     env_base.Append(CPPDEFINES=["PORT_AUDIO"])
 
 # Add platform-specific options.
