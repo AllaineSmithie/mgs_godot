@@ -26,7 +26,3 @@
 [submodule "thirdparty/hueplusplus"]
 	path = thirdparty/hueplusplus
 	url = https://github.com/enwi/hueplusplus.git
-[submodule "modules/portaudio"]
-	path = modules/portaudio
-	url = https://github.com/AllaineSmithie/portaudio.git
-	branch = godot-4
