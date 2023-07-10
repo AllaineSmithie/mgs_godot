@@ -822,6 +822,10 @@ bool AnimationTree::_update_caches(AnimationPlayer *player) {
 						track = track_audio;
 
 					} break;
+					case Animation::TYPE_MIDI: {
+					} break;
+					case Animation::TYPE_VIDEO: {
+					} break;
 					case Animation::TYPE_ANIMATION: {
 						TrackCacheAnimation *track_animation = memnew(TrackCacheAnimation);
 
@@ -1085,6 +1089,10 @@ void AnimationTree::_process_graph(double p_delta) {
 						PlayingAudioTrackInfo &track_info = L.value;
 						track_info.volume = 0.0;
 					}
+				} break;
+				case Animation::TYPE_MIDI: {
+				} break;
+				case Animation::TYPE_VIDEO: {
 				} break;
 				default: {
 				} break;
@@ -1628,6 +1636,10 @@ void AnimationTree::_process_graph(double p_delta) {
 						}
 
 					} break;
+					case Animation::TYPE_MIDI: {
+					} break;
+					case Animation::TYPE_VIDEO: {
+					} break;
 					case Animation::TYPE_ANIMATION: {
 						if (Math::is_zero_approx(blend)) {
 							continue; // Nothing to blend.
@@ -1836,6 +1848,10 @@ void AnimationTree::_process_graph(double p_delta) {
 					for (uint32_t erase_idx = 0; erase_idx < erase_maps.size(); erase_idx++) {
 						t->playing_streams.erase(erase_maps[erase_idx]);
 					}
+				} break;
+				case Animation::TYPE_MIDI: {
+				} break;
+				case Animation::TYPE_VIDEO: {
 				} break;
 				default: {
 				} //the rest don't matter

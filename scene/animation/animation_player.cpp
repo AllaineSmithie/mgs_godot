@@ -917,6 +917,10 @@ void AnimationPlayer::_animation_process_animation(AnimationData *p_anim, double
 				}
 
 			} break;
+			case Animation::TYPE_MIDI: {
+			} break;
+			case Animation::TYPE_VIDEO: {
+			} break;
 			case Animation::TYPE_ANIMATION: {
 				if (is_stopping) {
 					continue;
