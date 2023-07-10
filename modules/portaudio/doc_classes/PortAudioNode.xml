@@ -70,16 +70,16 @@
 	</members>
 	<signals>
 		<signal name="audio_callback">
-			<argument index="0" name="input_buffer" type="PoolRealArray">
-			</argument>
-			<argument index="1" name="output_buffer" type="PoolRealArray">
-			</argument>
-			<argument index="2" name="frames_per_buffer" type="int">
-			</argument>
-			<argument index="3" name="time_info" type="Dictionary">
-			</argument>
-			<argument index="4" name="status_flags" type="int">
-			</argument>
+			<param index="0" name="input_buffer" type="PoolRealArray">
+			</param>
+			<param index="1" name="output_buffer" type="PoolRealArray">
+			</param>
+			<param index="2" name="frames_per_buffer" type="int">
+			</param>
+			<param index="3" name="time_info" type="Dictionary">
+			</param>
+			<param index="4" name="status_flags" type="int">
+			</param>
 			<description>
 			</description>
 		</signal>
