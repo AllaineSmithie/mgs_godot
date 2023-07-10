@@ -41,6 +41,7 @@ def loadCsvData(dataFileName):
 
     class R(object):
         pass
+
     result = R()
     result.params = params
     for s in params.split(","):
@@ -56,12 +57,14 @@ def loadCsvData(dataFileName):
     result.fullDuplexInputLatency = data[4]
     return result
 
+
 def setFigureTitleAndAxisLabels(framesPerBufferString):
     title("PortAudio suggested (requested) vs. resulting (reported) stream latency\n" + framesPerBufferString)
     ylabel("PaStreamInfo::{input,output}Latency (s)")
     xlabel("Pa_OpenStream suggestedLatency (s)")
     grid(True)
     legend(loc="upper left")
+
 
 def setDisplayRangeSeconds(maxSeconds):
     xlim(0, maxSeconds)
@@ -73,7 +76,7 @@ def setDisplayRangeSeconds(maxSeconds):
 compositeTestFramesPerBufferValues = [0]
 # powers of two
 for i in range (1,11):
-    compositeTestFramesPerBufferValues.append(pow(2,i))
+    compositeTestFramesPerBufferValues.append(pow(2, i))
 
 # multiples of 50
 for i in range (1,20):
