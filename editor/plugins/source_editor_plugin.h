@@ -1,4 +1,15 @@
-#pragma once
+/**************************************************************************/
+/*  source_editor_plugin.h                                                */
+/**************************************************************************/
+/*                         This file is part of:                          */
+/*                             Metro Gaya System                          */
+/*                        https://deadline-entertainment.com              */
+/**************************************************************************/
+/* Copyright (c) 2022-present Deadline Entertainment					  */
+/**************************************************************************/
+
+#ifndef SOURCE_EDITOR_PLUGIN_H
+#define SOURCE_EDITOR_PLUGIN_H
 
 #include "editor/editor_interface.h"
 #include "editor/editor_node.h"
@@ -150,3 +161,5 @@ public:
 	SourceEditorPlugin();
 	~SourceEditorPlugin();
 };
+
+#endif // SOURCE_EDITOR_PLUGIN_H

@@ -1,3 +1,12 @@
+/**************************************************************************/
+/*  source_editor_plugin.cpp                                              */
+/**************************************************************************/
+/*                         This file is part of:                          */
+/*                             Metro Gaya System                          */
+/*                        https://deadline-entertainment.com              */
+/**************************************************************************/
+/* Copyright (c) 2022-present Deadline Entertainment					  */
+/**************************************************************************/
 
 #include "source_editor_plugin.h"
 #include "editor/editor_command_palette.h"
