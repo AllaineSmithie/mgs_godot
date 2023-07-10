@@ -2,7 +2,7 @@
 /*  libgodot_audio_driver.h                                               */
 /**************************************************************************/
 /*                         This file is part of:                          */
-/*                             Metro Gaya Syste,                          */
+/*                             Metro Gaya System                          */
 /*                        https://deadline-entertainment.com              */
 /**************************************************************************/
 /* Copyright (c) 2022-present Deadline Entertainment All rights reserved. */
