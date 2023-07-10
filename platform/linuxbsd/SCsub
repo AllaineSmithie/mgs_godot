@@ -18,7 +18,7 @@ if env["use_sowrap"]:
 
 if env["x11"]:
     common_linuxbsd += SConscript("x11/SCsub")
-    
+
 if env["portaudio"]:
     SConscript("portaudio/SCsub")
 
