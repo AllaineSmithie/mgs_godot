@@ -156,9 +156,7 @@ for framesPerBuffer in compositeTestFramesPerBufferValues:
     isFirst = False
 
 figure(2)
-setFigureTitleAndAxisLabels(
-    "composite of frames per buffer values:\n" + str(compositeTestFramesPerBufferValues)
-)
+setFigureTitleAndAxisLabels("composite of frames per buffer values:\n" + str(compositeTestFramesPerBufferValues))
 setDisplayRangeSeconds(2.2)
 pdfFile.savefig()
 setDisplayRangeSeconds(0.1)
