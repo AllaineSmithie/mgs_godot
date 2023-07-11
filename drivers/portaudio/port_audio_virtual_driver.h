@@ -31,6 +31,8 @@
 #ifndef PORT_AUDIO_VIRTUAL_DRIVER_H
 #define PORT_AUDIO_VIRTUAL_DRIVER_H
 
+#ifdef PORT_AUDIO
+
 #include "servers/audio_server.h"
 #include "virtual_audio_driver.h"
 
@@ -91,5 +93,7 @@ public:
 	PortAudioVirtualDriver();
 	~PortAudioVirtualDriver() {}
 };
+
+#endif // PORT_AUDIO
 
 #endif // PORT_AUDIO_VIRTUAL_DRIVER_H
