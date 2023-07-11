@@ -33,6 +33,22 @@ jobs:
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
 
+      - name: Compilation Debug (arm32)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} arch=arm32
+          platform: android
+          target: template_debug
+          tests: false
+
+      - name: Compilation Debug (arm64)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} arch=arm64
+          platform: android
+          target: template_debug
+          tests: false
+
       - name: Compilation (arm32)
         uses: ./.github/actions/godot-build
         with:
