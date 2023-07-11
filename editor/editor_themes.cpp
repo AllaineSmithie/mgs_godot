@@ -445,35 +445,28 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	// Please use alphabetical order if you're adding a new theme here
 	// (after "Custom")
 
-	if (preset == "Custom")
-	{
+	if (preset == "Custom") {
 		accent_color = EDITOR_GET("interface/theme/accent_color");
 		base_color = EDITOR_GET("interface/theme/base_color");
 		contrast = EDITOR_GET("interface/theme/contrast");
-	}
-	else if (preset == "Gray")
-	{
-		preset_accent_color = Color(0.65, 0.0, 0.003);
+	} else if (preset == "Gray") {
+		preset_accent_color = Color(0.74, 0.18, 0.2);
 		preset_base_color = Color(0.24, 0.24, 0.24);
 		preset_contrast = 0.35;
 		icon_saturation = 0.3;
 		relationship_line_opacity = 0.01;
 		border_size = 0;
 		corner_radius = 3;
-	}
-	else if (preset == "Dark")
-	{
-		preset_accent_color = Color(0.56, 0.0, 0.01);
+	} else if (preset == "Dark") {
+		preset_accent_color = Color(0.74, 0.18, 0.2);
 		preset_base_color = Color(0.16, 0.16, 0.16);
 		preset_contrast = 0.65;
 		icon_saturation = 0.3;
 		relationship_line_opacity = 0.01;
 		border_size = 0;
 		corner_radius = 3;
-	}
-	else if (preset == "Light")
-	{
-		preset_accent_color = Color(0.65, 0.0, 0.003);
+	} else if (preset == "Light") {
+		preset_accent_color = Color(0.74, 0.18, 0.2);
 		preset_base_color = Color(0.75, 0.75, 0.75);
 		relationship_line_opacity = 0.01;
 		preset_draw_extra_borders = true;
@@ -482,10 +475,8 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 		border_size = 2;
 		corner_radius = 6;
 		// A negative contrast rate looks better for light themes, since it better follows the natural order of UI "elevation".
-	}
-	else if (preset == "Black (OLED)")
-	{
-		preset_accent_color = Color(0.56, 0.0, 0.01);
+	} else if (preset == "Black (OLED)") {
+		preset_accent_color = Color(0.49, 0.1, 0.12);
 		preset_base_color = Color(0, 0, 0);
 		icon_saturation = 0.3;
 		// The contrast rate value is irrelevant on a fully black theme.
@@ -494,10 +485,8 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 		preset_draw_extra_borders = true;
 		border_size = 0;
 		corner_radius = 3;
-	}
-	else
-	{ // Default
-		preset_accent_color = Color(0.56, 0.0, 0.01);
+	} else { // Default
+		preset_accent_color = Color(0.74, 0.18, 0.2);
 		preset_base_color = Color(0.16, 0.16, 0.16);
 		preset_contrast = default_contrast;
 		icon_saturation = 0.3;
@@ -549,7 +538,7 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	const Color contrast_color_1 = base_color.lerp(mono_color, MAX(contrast, default_contrast));
 	const Color contrast_color_2 = base_color.lerp(mono_color, MAX(contrast * 1.5, default_contrast * 1.5));
 
-	const Color font_color = mono_color.lerp(base_color, 0.115/*0.0775*/);
+	const Color font_color = mono_color.lerp(base_color, 0.115 /*0.0775*/);
 	const Color font_hover_color = mono_color.lerp(base_color, 0.15);
 	const Color font_focus_color = mono_color.lerp(base_color, 0.15);
 	const Color font_hover_pressed_color = font_hover_color.lerp(accent_color, 0.74);
@@ -560,7 +549,6 @@ Ref<Theme> create_editor_theme(const Ref<Theme> p_theme) {
 	const Color selection_color = accent_color * Color(1, 1, 1, 0.4);
 	const Color disabled_color = mono_color.inverted().lerp(base_color, 0.7);
 	const Color disabled_bg_color = mono_color.inverted().lerp(base_color, 0.9);
-
 
 	const Color icon_normal_color = Color(1, 1, 1);
 	Color icon_hover_color = icon_normal_color * (dark_theme ? 1.15 : 1.45);
