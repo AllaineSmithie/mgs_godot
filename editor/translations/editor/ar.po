@@ -78,23 +78,16 @@
 # Hamed Mohammed Almuslhi <wbk7777@hotmail.com>, 2023.
 # KhalilBenGaied <grozz1@yahoo.com>, 2023.
 # بسام العوفي <co-able@hotmail.com>, 2023.
-<<<<<<< HEAD
-=======
 # Abdulkarim <abwkhaldalhwsawy@gmail.com>, 2023.
 # Rémi Verschelde <remi@godotengine.org>, 2023.
 # Omran Alsaedi <Omran2222@outlook.sa>, 2023.
 # Android Prime <abodinagdat16@gmail.com>, 2023.
->>>>>>> 4.1
 msgid ""
 msgstr ""
 "Project-Id-Version: Godot Engine editor interface\n"
 "Report-Msgid-Bugs-To: https://github.com/godotengine/godot\n"
 "POT-Creation-Date: \n"
-<<<<<<< HEAD
-"PO-Revision-Date: 2023-04-01 01:47+0000\n"
-=======
 "PO-Revision-Date: 2023-07-05 13:48+0000\n"
->>>>>>> 4.1
 "Last-Translator: بسام العوفي <co-able@hotmail.com>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/godot-engine/"
 "godot/ar/>\n"
@@ -104,11 +97,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-<<<<<<< HEAD
-"X-Generator: Weblate 4.17-dev\n"
-=======
 "X-Generator: Weblate 5.0-dev\n"
->>>>>>> 4.1
 
 msgid "Unset"
 msgstr "غير محدد"
@@ -2989,15 +2978,12 @@ msgstr "صيغة الملف المطلوب غير معروفة:"
 msgid "Error while saving."
 msgstr "خطأ خلال الحفظ."
 
-<<<<<<< HEAD
-=======
 msgid "Can't open file '%s'. The file could have been moved or deleted."
 msgstr "لا يمكن فتح الملف '%s'.الملف قد يكون نُقل أو حُذف."
 
 msgid "Error while parsing file '%s'."
 msgstr "خطأ خلال تحليل الملف '%s'."
 
->>>>>>> 4.1
 msgid "Scene file '%s' appears to be invalid/corrupt."
 msgstr "يبدو أن ملف المشهد '%s' غير صالح/ تالف."
 
@@ -7374,8 +7360,6 @@ msgstr "سابق"
 msgid "Post"
 msgstr "لاحق"
 
-<<<<<<< HEAD
-=======
 msgid "Sun Direction"
 msgstr "اتجاه الشمس"
 
@@ -7395,7 +7379,6 @@ msgstr ""
 msgid "Preview Environment"
 msgstr "معاينة البيئة"
 
->>>>>>> 4.1
 msgid "Tonemap"
 msgstr "خريطة تناغم الألوان"
 
@@ -8618,8 +8601,6 @@ msgstr "البلاط"
 msgid "Yes"
 msgstr "نعم"
 
-<<<<<<< HEAD
-=======
 msgid "Add new patterns in the TileMap editing mode."
 msgstr "أضف عينات جديدة من خريطة-البلاط."
 
@@ -8629,7 +8610,6 @@ msgstr "طقم-البلاط"
 msgid "TileMap"
 msgstr "خريطة-البلاط"
 
->>>>>>> 4.1
 msgid "Error"
 msgstr "خطأ"
 

@@ -5,13 +5,8 @@ on:
 # Global Settings
 env:
   # Used for the cache key. Add version suffix to force clean build.
-<<<<<<< HEAD
-  GODOT_BASE_BRANCH: master
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes debug_symbols=no portaudio=no
-=======
   GODOT_BASE_BRANCH: '4.1'
   SCONSFLAGS: verbose=yes warnings=extra werror=yes debug_symbols=no
->>>>>>> 4.1
   EM_VERSION: 3.1.18
   EM_CACHE_FOLDER: "emsdk-cache"
 

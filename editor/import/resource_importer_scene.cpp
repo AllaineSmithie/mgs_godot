@@ -32,11 +32,8 @@
 
 #include "core/error/error_macros.h"
 #include "core/io/resource_saver.h"
-<<<<<<< HEAD
-=======
 #include "editor/editor_node.h"
 #include "editor/editor_settings.h"
->>>>>>> 4.1
 #include "editor/import/scene_import_settings.h"
 #include "scene/3d/area_3d.h"
 #include "scene/3d/collision_shape_3d.h"
