@@ -252,7 +252,8 @@ Node *MeshMergeMaterialRepack::_merge_list(MeshMergeState p_mesh_merge_state, in
 	HashMap<int32_t, MaterialImageCache> material_image_cache;
 
 	MergeState state = {
-		p_root, atlas,
+		p_root,
+		atlas,
 		mesh_items,
 		mesh_to_index_to_material,
 		uv_groups,
@@ -265,7 +266,6 @@ Node *MeshMergeMaterialRepack::_merge_list(MeshMergeState p_mesh_merge_state, in
 		texture_atlas,
 		material_image_cache,
 	};
-
 
 #ifdef TOOLS_ENABLED
 	EditorProgress progress_scene_merge("gen_get_source_material", TTR("Get source material"), state.material_cache.size());
@@ -1217,15 +1217,15 @@ float MeshMergeMaterialRepack::ClippedTriangle::area() {
 	return m_area;
 }
 
-MeshMergeMaterialRepack::Triangle::Triangle(const Vector2 &v0, const Vector2 &v1, const Vector2 &v2, const Vector3 &t0, const Vector3 &t1, const Vector3 &t2) {
+MeshMergeMaterialRepack::Triangle::Triangle(const Vector2 &p_v0, const Vector2 &p_v1, const Vector2 &p_v2, const Vector3 &p_t0, const Vector3 &p_t1, const Vector3 &p_t2) {
 	// Init vertices.
-	this->v1 = v0;
-	this->v2 = v2;
-	this->v3 = v1;
+	this->v1 = p_v0;
+	this->v2 = p_v2;
+	this->v3 = p_v1;
 	// Set barycentric coordinates.
-	this->t1 = t0;
-	this->t2 = t2;
-	this->t3 = t1;
+	this->t1 = p_t0;
+	this->t2 = p_t2;
+	this->t3 = p_t1;
 	// make sure every triangle is front facing.
 	flipBackface();
 	// Compute deltas.
