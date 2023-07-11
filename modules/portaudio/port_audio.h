@@ -227,5 +227,6 @@ public:
 VARIANT_ENUM_CAST(PortAudio::PortAudioError);
 VARIANT_ENUM_CAST(PortAudio::PortAudioCallbackResult);
 
-#endif // PORT_AUIDO
+#endif // PORT_AUDIO
+
 #endif
