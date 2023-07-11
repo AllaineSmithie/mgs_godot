@@ -32,9 +32,6 @@
 
 #include "core/config/project_settings.h"
 #include "core/os/os.h"
-#if PORT_AUDIO
-#include <modules/portaudio/port_audio.h>
-#endif
 
 PortAudioVirtualDriver *PortAudioVirtualDriver::singleton = nullptr;
 
