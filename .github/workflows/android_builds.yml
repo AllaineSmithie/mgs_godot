@@ -15,58 +15,7 @@ concurrency:
 jobs:
   android-template:
     runs-on: "ubuntu-20.04"
-    name: ${{ matrix.name }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Debug (arm32)
-            cache-name: android-debugarm32
-            target: template_debug
-            # Skip debug symbols, they're way too big with MSVC.
-            sconsflags: ${{ env.SCONSFLAGS }} arch=arm32
-
-          - name: Debug (arm64)
-            cache-name: android-debugarm64
-            target: template_debug
-            # Skip debug symbols, they're way too big with MSVC.
-            sconsflags: ${{ env.SCONSFLAGS }} arch=arm64
-
-          - name: Debug (x86_32)
-            cache-name: android-debugx8632
-            target: template_debug
-            # Skip debug symbols, they're way too big with MSVC.
-            sconsflags: ${{ env.SCONSFLAGS }} arch=x86_32
-
-          - name: Debug (x86_64)
-            cache-name: android-debugx8664
-            target: template_debug
-            # Skip debug symbols, they're way too big with MSVC.
-            sconsflags: ${{ env.SCONSFLAGS }} arch=x86_64
-
-          - name: Release (arm32)
-            cache-name: android-releasearm32
-            target: template_release
-            # Skip debug symbols, they're way too big with MSVC.
-            sconsflags: ${{ env.SCONSFLAGS }} arch=arm32
-
-          - name: Release (arm64)
-            cache-name: android-releasearm64
-            target: template_release
-            # Skip debug symbols, they're way too big with MSVC.
-            sconsflags: ${{ env.SCONSFLAGS }} arch=arm64
-
-          - name: Release (x86_32)
-            cache-name: android-releasex8632
-            target: template_release
-            # Skip debug symbols, they're way too big with MSVC.
-            sconsflags: ${{ env.SCONSFLAGS }} arch=x86_32
-
-          - name: Release (x86_64)
-            cache-name: android-releasex8664
-            target: template_release
-            # Skip debug symbols, they're way too big with MSVC.
-            sconsflags: ${{ env.SCONSFLAGS }} arch=x86_64
+    name: Template (target=template_release)
 
     steps:
       - uses: actions/checkout@v3
@@ -84,12 +33,68 @@ jobs:
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
 
-      - name: Compilation
+      - name: Compilation Debug (arm32)
         uses: ./.github/actions/godot-build
         with:
-          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+          sconsflags: ${{ env.SCONSFLAGS }} arch=arm32
           platform: android
-          target: ${{ matrix.target }}
+          target: template_debug
+          tests: false
+
+      - name: Compilation Debug (arm64)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} arch=arm64
+          platform: android
+          target: template_debug
+          tests: false
+
+      - name: Compilation Debug (x86_32)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} arch=x86_32
+          platform: android
+          target: template_debug
+          tests: false
+
+      - name: Compilation Debug (x86_32)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} arch=x86_64
+          platform: android
+          target: template_debug
+          tests: false
+
+      - name: Compilation (arm32)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} arch=arm32
+          platform: android
+          target: template_release
+          tests: false
+
+      - name: Compilation (arm64)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} arch=arm64
+          platform: android
+          target: template_release
+          tests: false
+
+      - name: Compilation (x86_32)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} arch=x86_32
+          platform: android
+          target: template_release
+          tests: false
+
+      - name: Compilation (x86_64)
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} arch=x86_64
+          platform: android
+          target: template_release
           tests: false
 
       - name: Generate Godot templates
