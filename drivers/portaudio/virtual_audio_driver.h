@@ -14,6 +14,8 @@ public:
 	virtual void stop() = 0;
 	virtual void set_stream_resolution(const int p_bytes_per_sample) = 0;
 	virtual void frames_per_buffer_changed() = 0;
+	VirtualAudioDriver() {}
+	virtual ~VirtualAudioDriver() {}
 	//Semaphore semaphore;
 };
 
