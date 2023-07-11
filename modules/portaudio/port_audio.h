@@ -2,22 +2,19 @@
 #define PORT_AUDIO_H
 
 #ifdef PORT_AUDIO
+
 #include "port_audio_stream.h"
 
 #include "core/io/stream_peer.h"
 #include "core/object/object.h"
-#include "drivers/portaudio/virtual_audio_driver.h"
 #include "port_audio_callback_data.h"
 #include "servers/audio_server.h"
 
 #include <map>
 
-class PortAudioVirtualDriver;
-
 class PortAudio : public Object {
 	GDCLASS(PortAudio, Object);
 
-	friend class PortAudioVirtualDriver;
 	friend class EditorNode;
 	Ref<PortAudioStream> main_stream;
 
@@ -48,8 +45,7 @@ public:
 		INVALID_FUNC_REF = -3,
 		STREAM_NOT_FOUND = -4,
 		STREAM_USER_DATA_NOT_FOUND = -5,
-		// PortAudio Library Error
-		NO_ERROR = 0,
+		NO_ERROR = 0, // PortAudio Library Error
 		NOT_INITIALIZED = -10000,
 		UNANTICIPATED_HOST_ERROR,
 		INVALID_CHANNEL_COUNT,
@@ -144,12 +140,7 @@ private:
 	void editor_node_register_signal(Object *p_ref);
 	void on_project_settings_changed_editor();
 
-	PortAudio::PortAudioCallbackResult internal_server_stream(const Ref<PortAudioCallbackData> &p_data);
-
-	void init_main_stream();
-	PortAudio::PortAudioError start_main_stream();
-	PortAudio::PortAudioError stop_main_stream();
-	PortAudio::PortAudioError finish_main_stream();
+	PortAudioCallbackResult internal_server_stream(const Ref<PortAudioCallbackData> &p_data);
 
 protected:
 	static void _bind_methods();
@@ -164,6 +155,10 @@ public:
 	SafeFlag pause_main_stream;
 	static PortAudio *get_singleton();
 
+	void init_main_stream();
+	PortAudioError start_main_stream();
+	PortAudioError stop_main_stream();
+	PortAudioError finish_main_stream();
 	int get_main_stream_input_buffer(int32_t *r_buffer, int buffer_size);
 	//const PackedInt32Array& get_main_stream_input_buffer();
 	void push_main_stream_buffer(int32_t *p_buffer, int buffer_size);
@@ -177,10 +172,10 @@ public:
 	//int get_main_stream_sample_size() const;
 	String get_version_text();
 	Dictionary get_version_info();
-	String get_error_text(PortAudio::PortAudioError p_error);
+	String get_error_text(PortAudioError p_error);
 
-	PortAudio::PortAudioError initialize();
-	PortAudio::PortAudioError terminate();
+	PortAudioError initialize();
+	PortAudioError terminate();
 
 	int get_host_api_count();
 	int get_default_host_api();
@@ -199,29 +194,29 @@ public:
 	void show_asio_control_panel();
 
 	Dictionary get_device_info(int p_device_index);
-	PortAudio::PortAudioError open_audio_server_stream(Ref<PortAudioStream> p_stream, PortAudioStreamParameter::PortAudioSampleFormat p_sample_format, Variant p_user_data);
-	PortAudio::PortAudioError is_format_supported(Ref<PortAudioStreamParameter> p_input_stream_parameter, Ref<PortAudioStreamParameter> p_output_stream_parameter, double p_sample_rate);
-	PortAudio::PortAudioError open_stream(Ref<PortAudioStream> p_stream, Callable p_audio_callback, Variant p_user_data);
-	PortAudio::PortAudioError open_default_stream(Ref<PortAudioStream> p_stream, PortAudioStreamParameter::PortAudioSampleFormat p_sample_format, Callable p_audio_callback, Variant p_user_data);
-	PortAudio::PortAudioError close_stream(Ref<PortAudioStream> p_stream);
-	PortAudio::PortAudioError set_stream_finished_callback(Ref<PortAudioStream> p_stream, Callable p_stream_finished_callback);
-	PortAudio::PortAudioError start_stream(Ref<PortAudioStream> p_stream);
-	PortAudio::PortAudioError stop_stream(Ref<PortAudioStream> p_stream);
-	PortAudio::PortAudioError abort_stream(Ref<PortAudioStream> p_stream);
-	PortAudio::PortAudioError is_stream_stopped(Ref<PortAudioStream> p_stream);
-	PortAudio::PortAudioError is_stream_active(Ref<PortAudioStream> p_stream);
+	PortAudioError open_audio_server_stream(Ref<PortAudioStream> p_stream, PortAudioStreamParameter::PortAudioSampleFormat p_sample_format, Variant p_user_data);
+	PortAudioError is_format_supported(Ref<PortAudioStreamParameter> p_input_stream_parameter, Ref<PortAudioStreamParameter> p_output_stream_parameter, double p_sample_rate);
+	PortAudioError open_stream(Ref<PortAudioStream> p_stream, Callable p_audio_callback, Variant p_user_data);
+	PortAudioError open_default_stream(Ref<PortAudioStream> p_stream, PortAudioStreamParameter::PortAudioSampleFormat p_sample_format, Callable p_audio_callback, Variant p_user_data);
+	PortAudioError close_stream(Ref<PortAudioStream> p_stream);
+	PortAudioError set_stream_finished_callback(Ref<PortAudioStream> p_stream, Callable p_stream_finished_callback);
+	PortAudioError start_stream(Ref<PortAudioStream> p_stream);
+	PortAudioError stop_stream(Ref<PortAudioStream> p_stream);
+	PortAudioError abort_stream(Ref<PortAudioStream> p_stream);
+	PortAudioError is_stream_stopped(Ref<PortAudioStream> p_stream);
+	PortAudioError is_stream_active(Ref<PortAudioStream> p_stream);
 	Dictionary get_stream_info(Ref<PortAudioStream> p_stream);
 	double get_stream_time(Ref<PortAudioStream> p_stream);
 	double get_stream_cpu_load(Ref<PortAudioStream> p_stream);
-	PortAudio::PortAudioError read_stream(Ref<PortAudioStream> p_stream, PackedByteArray p_buffer, uint64_t p_frames);
-	PortAudio::PortAudioError write_stream(Ref<PortAudioStream> p_stream, PackedByteArray p_buffer, uint64_t p_frames);
+	PortAudioError read_stream(Ref<PortAudioStream> p_stream, PackedByteArray p_buffer, uint64_t p_frames);
+	PortAudioError write_stream(Ref<PortAudioStream> p_stream, PackedByteArray p_buffer, uint64_t p_frames);
 	int64_t get_stream_read_available(Ref<PortAudioStream> p_stream);
 	int64_t get_stream_write_available(Ref<PortAudioStream> p_stream);
-	PortAudio::PortAudioError get_sample_size(PortAudioStreamParameter::PortAudioSampleFormat p_sample_format);
+	PortAudioError get_sample_size(PortAudioStreamParameter::PortAudioSampleFormat p_sample_format);
 	void sleep(unsigned int p_ms);
 
-	PortAudio::PortAudioError util_device_index_to_host_api_index(int p_device_index);
-	PortAudio::PortAudioError util_enable_exclusive_mode(Ref<PortAudioStreamParameter> p_stream_parameter);
+	PortAudioError util_device_index_to_host_api_index(int p_device_index);
+	PortAudioError util_enable_exclusive_mode(Ref<PortAudioStreamParameter> p_stream_parameter);
 	void util_insert_buffer(Ref<StreamPeerBuffer> p_source, int p_source_offset, Ref<StreamPeerBuffer> p_destination, int p_destination_offset, int p_length);
 	void util_write_buffer(Ref<StreamPeerBuffer> p_source, Ref<StreamPeerBuffer> p_destination, int p_length);
 

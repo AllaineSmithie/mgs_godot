@@ -33,8 +33,6 @@
 
 #ifdef PORT_AUDIO
 
-#include "modules/portaudio/port_audio.h"
-
 #include "servers/audio_server.h"
 #include "virtual_audio_driver.h"
 

@@ -30,6 +30,7 @@
 
 #include "port_audio_virtual_driver.h"
 
+#include "modules/portaudio/port_audio.h"
 #include "core/config/project_settings.h"
 #include "core/os/os.h"
 
