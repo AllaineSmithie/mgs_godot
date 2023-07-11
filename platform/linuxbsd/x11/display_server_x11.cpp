@@ -2864,11 +2864,11 @@ void DisplayServerX11::cursor_set_custom_image(const Ref<Resource> &p_cursor, Cu
 			cursors[p_shape] = XcursorImageLoadCursor(x11_display, cursor_img[p_shape]);
 		}
 
+		cursors_cache.erase(p_shape);
+
 		CursorShape c = current_cursor;
 		current_cursor = CURSOR_MAX;
 		cursor_set_shape(c);
-
-		cursors_cache.erase(p_shape);
 	}
 }
 
@@ -5457,7 +5457,9 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 	}
 #else
 #ifdef XKB_ENABLED
-	xkb_loaded = true;
+	bool xkb_loaded = true;
+	xkb_loaded_v05p = true;
+	xkb_loaded_v08p = true;
 #endif
 #endif
 
@@ -5484,6 +5486,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 
 	r_error = OK;
 
+#ifdef SOWRAP_ENABLED
 	{
 		if (!XcursorImageCreate || !XcursorImageLoadCursor || !XcursorImageDestroy || !XcursorGetDefaultSize || !XcursorGetTheme || !XcursorLibraryLoadImage) {
 			// There's no API to check version, check if functions are available instead.
@@ -5492,6 +5495,7 @@ DisplayServerX11::DisplayServerX11(const String &p_rendering_driver, WindowMode 
 			return;
 		}
 	}
+#endif
 
 	for (int i = 0; i < CURSOR_MAX; i++) {
 		cursors[i] = None;

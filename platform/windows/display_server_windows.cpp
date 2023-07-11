@@ -1609,7 +1609,7 @@ void DisplayServerWindows::window_request_attention(WindowID p_window) {
 	FLASHWINFO info;
 	info.cbSize = sizeof(FLASHWINFO);
 	info.hwnd = wd.hWnd;
-	info.dwFlags = FLASHW_TRAY;
+	info.dwFlags = FLASHW_ALL;
 	info.dwTimeout = 0;
 	info.uCount = 2;
 	FlashWindowEx(&info);
@@ -1918,11 +1918,11 @@ void DisplayServerWindows::cursor_set_custom_image(const Ref<Resource> &p_cursor
 		}
 		cursors[p_shape] = nullptr;
 
+		cursors_cache.erase(p_shape);
+
 		CursorShape c = cursor_shape;
 		cursor_shape = CURSOR_MAX;
 		cursor_set_shape(c);
-
-		cursors_cache.erase(p_shape);
 	}
 }
 
@@ -3348,7 +3348,7 @@ LRESULT DisplayServerWindows::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARA
 						SetCapture(hWnd);
 					}
 				} else {
-					if (--pressrc <= 0) {
+					if (--pressrc <= 0 || last_button_state.is_empty()) {
 						if (mouse_mode != MOUSE_MODE_CAPTURED) {
 							ReleaseCapture();
 						}
@@ -3944,7 +3944,9 @@ DisplayServer::WindowID DisplayServerWindows::_create_window(WindowMode p_mode, 
 	WindowRect.top += offset.y;
 	WindowRect.bottom += offset.y;
 
-	AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);
+	if (p_mode != WINDOW_MODE_FULLSCREEN && p_mode != WINDOW_MODE_EXCLUSIVE_FULLSCREEN) {
+		AdjustWindowRectEx(&WindowRect, dwStyle, FALSE, dwExStyle);
+	}
 
 	WindowID id = window_id_counter;
 	{

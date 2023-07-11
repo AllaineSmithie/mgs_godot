@@ -2469,9 +2469,15 @@ void GDScriptAnalyzer::reduce_assignment(GDScriptParser::AssignmentNode *p_assig
 
 	GDScriptParser::DataType assignee_type = p_assignment->assignee->get_datatype();
 
-	if (assignee_type.is_constant || (p_assignment->assignee->type == GDScriptParser::Node::SUBSCRIPT && static_cast<GDScriptParser::SubscriptNode *>(p_assignment->assignee)->base->is_constant)) {
+	if (assignee_type.is_constant) {
 		push_error("Cannot assign a new value to a constant.", p_assignment->assignee);
 		return;
+	} else if (p_assignment->assignee->type == GDScriptParser::Node::SUBSCRIPT && static_cast<GDScriptParser::SubscriptNode *>(p_assignment->assignee)->base->is_constant) {
+		const GDScriptParser::DataType &base_type = static_cast<GDScriptParser::SubscriptNode *>(p_assignment->assignee)->base->datatype;
+		if (base_type.kind != GDScriptParser::DataType::SCRIPT && base_type.kind != GDScriptParser::DataType::CLASS) { // Static variables.
+			push_error("Cannot assign a new value to a constant.", p_assignment->assignee);
+			return;
+		}
 	} else if (assignee_type.is_read_only) {
 		push_error("Cannot assign a new value to a read-only property.", p_assignment->assignee);
 		return;
@@ -3091,16 +3097,6 @@ void GDScriptAnalyzer::reduce_call(GDScriptParser::CallNode *p_call, bool p_is_a
 	bool is_constructor = (base_type.is_meta_type || (p_call->callee && p_call->callee->type == GDScriptParser::Node::IDENTIFIER)) && p_call->function_name == SNAME("new");
 
 	if (get_function_signature(p_call, is_constructor, base_type, p_call->function_name, return_type, par_types, default_arg_count, method_flags)) {
-		// If the method is implemented in the class hierarchy, the virtual flag will not be set for that MethodInfo and the search stops there.
-		// MethodInfo's above the class that defines the method might still have the virtual flag set.
-		if (method_flags.has_flag(METHOD_FLAG_VIRTUAL)) {
-			if (p_call->is_super) {
-				push_error(vformat(R"*(Cannot call the parent class' virtual function "%s()" because it hasn't been defined.)*", p_call->function_name), p_call);
-			} else {
-				push_error(vformat(R"*(Cannot call virtual function "%s()" because it hasn't been defined.)*", p_call->function_name), p_call);
-			}
-		}
-
 		// If the function require typed arrays we must make literals be typed.
 		for (const KeyValue<int, GDScriptParser::ArrayNode *> &E : arrays) {
 			int index = E.key;
@@ -3366,7 +3362,7 @@ void GDScriptAnalyzer::reduce_identifier_from_base(GDScriptParser::IdentifierNod
 		base = *p_base;
 	}
 
-	const StringName &name = p_identifier->name;
+	StringName name = p_identifier->name;
 
 	if (base.kind == GDScriptParser::DataType::ENUM) {
 		if (base.is_meta_type) {
@@ -3461,10 +3457,16 @@ void GDScriptAnalyzer::reduce_identifier_from_base(GDScriptParser::IdentifierNod
 		get_class_node_current_scope_classes(base_class, &script_classes);
 	}
 
+	bool is_constructor = base.is_meta_type && p_identifier->name == SNAME("new");
+
 	for (GDScriptParser::ClassNode *script_class : script_classes) {
 		if (p_base == nullptr && script_class->identifier && script_class->identifier->name == name) {
 			reduce_identifier_from_base_set_class(p_identifier, script_class->get_datatype());
 			return;
+		}
+
+		if (is_constructor) {
+			name = "_init";
 		}
 
 		if (script_class->has_member(name)) {
@@ -3516,7 +3518,7 @@ void GDScriptAnalyzer::reduce_identifier_from_base(GDScriptParser::IdentifierNod
 				} break;
 
 				case GDScriptParser::ClassNode::Member::FUNCTION: {
-					if (is_base && !base.is_meta_type) {
+					if (is_base && (!base.is_meta_type || member.function->is_static)) {
 						p_identifier->set_datatype(make_callable_type(member.function->info));
 						return;
 					}
@@ -3545,6 +3547,10 @@ void GDScriptAnalyzer::reduce_identifier_from_base(GDScriptParser::IdentifierNod
 	const StringName &native = base.native_type;
 
 	if (class_exists(native)) {
+		if (is_constructor) {
+			name = "_init";
+		}
+
 		MethodInfo method_info;
 		if (ClassDB::has_property(native, name)) {
 			StringName getter_name = ClassDB::get_property_getter(native, name);
@@ -4518,7 +4524,16 @@ GDScriptParser::DataType GDScriptAnalyzer::type_from_variant(const Variant &p_va
 	result.builtin_type = p_value.get_type();
 	result.type_source = GDScriptParser::DataType::ANNOTATED_EXPLICIT; // Constant has explicit type.
 
-	if (p_value.get_type() == Variant::OBJECT) {
+	if (p_value.get_type() == Variant::ARRAY) {
+		const Array &array = p_value;
+		if (array.get_typed_script()) {
+			result.set_container_element_type(type_from_metatype(make_script_meta_type(array.get_typed_script())));
+		} else if (array.get_typed_class_name()) {
+			result.set_container_element_type(type_from_metatype(make_native_meta_type(array.get_typed_class_name())));
+		} else if (array.get_typed_builtin() != Variant::NIL) {
+			result.set_container_element_type(type_from_metatype(make_builtin_meta_type((Variant::Type)array.get_typed_builtin())));
+		}
+	} else if (p_value.get_type() == Variant::OBJECT) {
 		// Object is treated as a native type, not a builtin type.
 		result.kind = GDScriptParser::DataType::NATIVE;
 
@@ -4945,6 +4960,17 @@ GDScriptParser::DataType GDScriptAnalyzer::get_operation_type(Variant::Operator 
 }
 
 GDScriptParser::DataType GDScriptAnalyzer::get_operation_type(Variant::Operator p_operation, const GDScriptParser::DataType &p_a, const GDScriptParser::DataType &p_b, bool &r_valid, const GDScriptParser::Node *p_source) {
+	if (p_operation == Variant::OP_AND || p_operation == Variant::OP_OR) {
+		// Those work for any type of argument and always return a boolean.
+		// They don't use the Variant operator since they have short-circuit semantics.
+		r_valid = true;
+		GDScriptParser::DataType result;
+		result.type_source = GDScriptParser::DataType::ANNOTATED_INFERRED;
+		result.kind = GDScriptParser::DataType::BUILTIN;
+		result.builtin_type = Variant::BOOL;
+		return result;
+	}
+
 	Variant::Type a_type = p_a.builtin_type;
 	Variant::Type b_type = p_b.builtin_type;
 
@@ -4963,11 +4989,21 @@ GDScriptParser::DataType GDScriptAnalyzer::get_operation_type(Variant::Operator 
 		}
 	}
 
-	Variant::ValidatedOperatorEvaluator op_eval = Variant::get_validated_operator_evaluator(p_operation, a_type, b_type);
+	GDScriptParser::DataType result;
 	bool hard_operation = p_a.is_hard_type() && p_b.is_hard_type();
+
+	if (p_operation == Variant::OP_ADD && a_type == Variant::ARRAY && b_type == Variant::ARRAY) {
+		if (p_a.has_container_element_type() && p_b.has_container_element_type() && p_a.get_container_element_type() == p_b.get_container_element_type()) {
+			r_valid = true;
+			result = p_a;
+			result.type_source = hard_operation ? GDScriptParser::DataType::ANNOTATED_INFERRED : GDScriptParser::DataType::INFERRED;
+			return result;
+		}
+	}
+
+	Variant::ValidatedOperatorEvaluator op_eval = Variant::get_validated_operator_evaluator(p_operation, a_type, b_type);
 	bool validated = op_eval != nullptr;
 
-	GDScriptParser::DataType result;
 	if (validated) {
 		r_valid = true;
 		result.type_source = hard_operation ? GDScriptParser::DataType::ANNOTATED_INFERRED : GDScriptParser::DataType::INFERRED;

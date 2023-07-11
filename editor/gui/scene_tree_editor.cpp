@@ -357,35 +357,31 @@ void SceneTreeEditor::_add_nodes(Node *p_node, TreeItem *p_parent) {
 		}
 	}
 
-	// Display the node name in all tooltips so that long node names can be previewed
-	// without having to rename them.
-	if (p_node == get_scene_node() && p_node->get_scene_inherited_state().is_valid()) {
-		item->add_button(0, get_theme_icon(SNAME("InstanceOptions"), SNAME("EditorIcons")), BUTTON_SUBSCENE, false, TTR("Open in Editor"));
+	{
+		// Display the node name in all tooltips so that long node names can be previewed
+		// without having to rename them.
+		String tooltip = String(p_node->get_name());
 
-		String tooltip = String(p_node->get_name()) + "\n" + TTR("Inherits:") + " " + p_node->get_scene_inherited_state()->get_path() + "\n" + TTR("Type:") + " " + p_node->get_class();
-		if (!p_node->get_editor_description().is_empty()) {
-			tooltip += "\n\n" + p_node->get_editor_description();
+		if (p_node == get_scene_node() && p_node->get_scene_inherited_state().is_valid()) {
+			item->add_button(0, get_theme_icon(SNAME("InstanceOptions"), SNAME("EditorIcons")), BUTTON_SUBSCENE, false, TTR("Open in Editor"));
+			tooltip += String("\n" + TTR("Inherits:") + " " + p_node->get_scene_inherited_state()->get_path());
+		} else if (p_node != get_scene_node() && !p_node->get_scene_file_path().is_empty() && can_open_instance) {
+			item->add_button(0, get_theme_icon(SNAME("InstanceOptions"), SNAME("EditorIcons")), BUTTON_SUBSCENE, false, TTR("Open in Editor"));
+			tooltip += String("\n" + TTR("Instance:") + " " + p_node->get_scene_file_path());
 		}
 
-		item->set_tooltip_text(0, tooltip);
-	} else if (p_node != get_scene_node() && !p_node->get_scene_file_path().is_empty() && can_open_instance) {
-		item->add_button(0, get_theme_icon(SNAME("InstanceOptions"), SNAME("EditorIcons")), BUTTON_SUBSCENE, false, TTR("Open in Editor"));
+		StringName custom_type = EditorNode::get_singleton()->get_object_custom_type_name(p_node);
+		tooltip += String("\n" + TTR("Type:") + " " + (custom_type != StringName() ? String(custom_type) : p_node->get_class()));
 
-		String tooltip = String(p_node->get_name()) + "\n" + TTR("Instance:") + " " + p_node->get_scene_file_path() + "\n" + TTR("Type:") + " " + p_node->get_class();
 		if (!p_node->get_editor_description().is_empty()) {
-			tooltip += "\n\n" + p_node->get_editor_description();
-		}
+			const PackedInt32Array boundaries = TS->string_get_word_breaks(p_node->get_editor_description(), "", 80);
+			tooltip += "\n";
 
-		item->set_tooltip_text(0, tooltip);
-	} else {
-		StringName type = EditorNode::get_singleton()->get_object_custom_type_name(p_node);
-		if (type == StringName()) {
-			type = p_node->get_class();
-		}
-
-		String tooltip = String(p_node->get_name()) + "\n" + TTR("Type:") + " " + type;
-		if (!p_node->get_editor_description().is_empty()) {
-			tooltip += "\n\n" + p_node->get_editor_description();
+			for (int i = 0; i < boundaries.size(); i += 2) {
+				const int start = boundaries[i];
+				const int end = boundaries[i + 1];
+				tooltip += "\n" + p_node->get_editor_description().substr(start, end - start + 1).rstrip("\n");
+			}
 		}
 
 		item->set_tooltip_text(0, tooltip);
@@ -1030,11 +1026,18 @@ void SceneTreeEditor::_renamed() {
 		}
 	}
 
-	if (n->is_unique_name_in_owner() && get_tree()->get_edited_scene_root()->get_node_or_null("%" + new_name) != nullptr) {
-		error->set_text(TTR("Another node already uses this unique name in the scene."));
-		error->popup_centered();
-		which->set_text(0, n->get_name());
-		return;
+	if (n->is_unique_name_in_owner()) {
+		Node *existing = get_tree()->get_edited_scene_root()->get_node_or_null("%" + new_name);
+		if (existing == n) {
+			which->set_text(0, n->get_name());
+			return;
+		}
+		if (existing != nullptr) {
+			error->set_text(TTR("Another node already uses this unique name in the scene."));
+			error->popup_centered();
+			which->set_text(0, n->get_name());
+			return;
+		}
 	}
 
 	_rename_node(n, new_name);
@@ -1111,9 +1114,15 @@ void SceneTreeEditor::_update_selection(TreeItem *item) {
 	}
 
 	if (editor_selection->is_selected(n)) {
-		item->select(0);
+		if (!item->is_selected(0)) {
+			item->select(0);
+		}
 	} else {
-		item->deselect(0);
+		if (item->is_selected(0)) {
+			TreeItem *previous_cursor_item = tree->get_selected();
+			item->deselect(0);
+			previous_cursor_item->set_as_cursor(0);
+		}
 	}
 
 	TreeItem *c = item->get_first_child();

@@ -38,6 +38,13 @@
 				Returns the navigation map [RID] the requested [param agent] is currently assigned to.
 			</description>
 		</method>
+		<method name="agent_get_paused" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="agent" type="RID" />
+			<description>
+				Returns [code]true[/code] if the specified [param agent] is paused.
+			</description>
+		</method>
 		<method name="agent_get_use_3d_avoidance" qualifiers="const">
 			<return type="bool" />
 			<param index="0" name="agent" type="RID" />
@@ -134,6 +141,14 @@
 				Sets the maximum distance to other agents this agent takes into account in the navigation. The larger this number, the longer the running time of the simulation. If the number is too low, the simulation will not be safe.
 			</description>
 		</method>
+		<method name="agent_set_paused">
+			<return type="void" />
+			<param index="0" name="agent" type="RID" />
+			<param index="1" name="paused" type="bool" />
+			<description>
+				If [param paused] is true the specified [param agent] will not be processed, e.g. calculate avoidance velocities or receive avoidance callbacks.
+			</description>
+		</method>
 		<method name="agent_set_position">
 			<return type="void" />
 			<param index="0" name="agent" type="RID" />
@@ -196,7 +211,7 @@
 			<return type="void" />
 			<param index="0" name="navigation_mesh" type="NavigationMesh" />
 			<param index="1" name="source_geometry_data" type="NavigationMeshSourceGeometryData3D" />
-			<param index="2" name="callback" type="Callable" />
+			<param index="2" name="callback" type="Callable" default="Callable()" />
 			<description>
 				Bakes the provided [param navigation_mesh] with the data from the provided [param source_geometry_data]. After the process is finished the optional [param callback] will be called.
 			</description>
@@ -567,6 +582,13 @@
 				Returns the navigation map [RID] the requested [param obstacle] is currently assigned to.
 			</description>
 		</method>
+		<method name="obstacle_get_paused" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="obstacle" type="RID" />
+			<description>
+				Returns [code]true[/code] if the specified [param obstacle] is paused.
+			</description>
+		</method>
 		<method name="obstacle_get_use_3d_avoidance" qualifiers="const">
 			<return type="bool" />
 			<param index="0" name="obstacle" type="RID" />
@@ -604,6 +626,14 @@
 			<param index="1" name="map" type="RID" />
 			<description>
 				Assigns the [param obstacle] to a navigation map.
+			</description>
+		</method>
+		<method name="obstacle_set_paused">
+			<return type="void" />
+			<param index="0" name="obstacle" type="RID" />
+			<param index="1" name="paused" type="bool" />
+			<description>
+				If [param paused] is true the specified [param obstacle] will not be processed, e.g. affect avoidance velocities.
 			</description>
 		</method>
 		<method name="obstacle_set_position">
@@ -651,10 +681,11 @@
 			<param index="0" name="navigation_mesh" type="NavigationMesh" />
 			<param index="1" name="source_geometry_data" type="NavigationMeshSourceGeometryData3D" />
 			<param index="2" name="root_node" type="Node" />
-			<param index="3" name="callback" type="Callable" />
+			<param index="3" name="callback" type="Callable" default="Callable()" />
 			<description>
 				Parses the [SceneTree] for source geometry according to the properties of [param navigation_mesh]. Updates the provided [param source_geometry_data] resource with the resulting data. The resource can then be used to bake a navigation mesh with [method bake_from_source_geometry_data]. After the process is finished the optional [param callback] will be called.
 				[b]Note:[/b] This function needs to run on the main thread or with a deferred call as the SceneTree is not thread-safe.
+				[b]Performance:[/b] While convenient, reading data arrays from [Mesh] resources can affect the frame rate negatively. The data needs to be received from the GPU, stalling the [RenderingServer] in the process. For performance prefer the use of e.g. collision shapes or creating the data arrays entirely in code.
 			</description>
 		</method>
 		<method name="query_path" qualifiers="const">

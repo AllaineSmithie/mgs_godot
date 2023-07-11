@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 short_name = "mgs"
 name = "Metro Gaya System"
 major = 0
@@ -8,3 +9,15 @@ module_config = ""
 year = 2023
 website = "https://deadline-entertainment.com"
 docs = "0.1"
+=======
+short_name = "godot"
+name = "Godot Engine"
+major = 4
+minor = 1
+patch = 1
+status = "rc"
+module_config = ""
+year = 2023
+website = "https://godotengine.org"
+docs = "4.1"
+>>>>>>> 4.1

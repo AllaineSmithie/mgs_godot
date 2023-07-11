@@ -456,7 +456,9 @@ bool SceneTree::physics_process(double p_time) {
 
 	flush_transform_notifications();
 
-	MainLoop::physics_process(p_time);
+	if (MainLoop::physics_process(p_time)) {
+		_quit = true;
+	}
 	physics_process_time = p_time;
 
 	emit_signal(SNAME("physics_frame"));
@@ -484,7 +486,9 @@ bool SceneTree::physics_process(double p_time) {
 bool SceneTree::process(double p_time) {
 	root_lock++;
 
-	MainLoop::process(p_time);
+	if (MainLoop::process(p_time)) {
+		_quit = true;
+	}
 
 	process_time = p_time;
 
@@ -928,18 +932,18 @@ void SceneTree::_process_group(ProcessGroup *p_group, bool p_physics) {
 		}
 
 		if (p_physics) {
-			if (n->is_physics_processing()) {
-				n->notification(Node::NOTIFICATION_PHYSICS_PROCESS);
-			}
 			if (n->is_physics_processing_internal()) {
 				n->notification(Node::NOTIFICATION_INTERNAL_PHYSICS_PROCESS);
 			}
-		} else {
-			if (n->is_processing()) {
-				n->notification(Node::NOTIFICATION_PROCESS);
+			if (n->is_physics_processing()) {
+				n->notification(Node::NOTIFICATION_PHYSICS_PROCESS);
 			}
+		} else {
 			if (n->is_processing_internal()) {
 				n->notification(Node::NOTIFICATION_INTERNAL_PROCESS);
+			}
+			if (n->is_processing()) {
+				n->notification(Node::NOTIFICATION_PROCESS);
 			}
 		}
 	}
@@ -1048,13 +1052,13 @@ void SceneTree::_process(bool p_physics) {
 		if (p_physics) {
 			if (!pg->physics_nodes.is_empty()) {
 				process_valid = true;
-			} else if (pg->owner != nullptr && pg->owner->data.process_thread_messages.has_flag(Node::FLAG_PROCESS_THREAD_MESSAGES_PHYSICS) && pg->call_queue.has_messages()) {
+			} else if ((pg == &default_process_group || (pg->owner != nullptr && pg->owner->data.process_thread_messages.has_flag(Node::FLAG_PROCESS_THREAD_MESSAGES_PHYSICS))) && pg->call_queue.has_messages()) {
 				process_valid = true;
 			}
 		} else {
 			if (!pg->nodes.is_empty()) {
 				process_valid = true;
-			} else if (pg->owner != nullptr && pg->owner->data.process_thread_messages.has_flag(Node::FLAG_PROCESS_THREAD_MESSAGES) && pg->call_queue.has_messages()) {
+			} else if ((pg == &default_process_group || (pg->owner != nullptr && pg->owner->data.process_thread_messages.has_flag(Node::FLAG_PROCESS_THREAD_MESSAGES))) && pg->call_queue.has_messages()) {
 				process_valid = true;
 			}
 		}

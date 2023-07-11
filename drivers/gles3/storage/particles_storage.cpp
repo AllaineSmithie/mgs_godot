@@ -271,13 +271,13 @@ void ParticlesStorage::particles_set_fractional_delta(RID p_particles, bool p_en
 
 void ParticlesStorage::particles_set_trails(RID p_particles, bool p_enable, double p_length) {
 	if (p_enable) {
-		WARN_PRINT_ONCE("The OpenGL 3 renderer does not support particle trails");
+		WARN_PRINT_ONCE_ED("The GL Compatibility rendering backend does not support particle trails.");
 	}
 }
 
 void ParticlesStorage::particles_set_trail_bind_poses(RID p_particles, const Vector<Transform3D> &p_bind_poses) {
 	if (p_bind_poses.size() != 0) {
-		WARN_PRINT_ONCE("The OpenGL 3 renderer does not support particle trails");
+		WARN_PRINT_ONCE_ED("The GL Compatibility rendering backend does not support particle trails.");
 	}
 }
 
@@ -341,12 +341,12 @@ void ParticlesStorage::particles_restart(RID p_particles) {
 
 void ParticlesStorage::particles_set_subemitter(RID p_particles, RID p_subemitter_particles) {
 	if (p_subemitter_particles.is_valid()) {
-		WARN_PRINT_ONCE("The OpenGL 3 renderer does not support particle sub emitters");
+		WARN_PRINT_ONCE_ED("The GL Compatibility rendering backend does not support particle sub-emitters.");
 	}
 }
 
 void ParticlesStorage::particles_emit(RID p_particles, const Transform3D &p_transform, const Vector3 &p_velocity, const Color &p_color, const Color &p_custom, uint32_t p_emit_flags) {
-	WARN_PRINT_ONCE("The OpenGL 3 renderer does not support manually emitting particles");
+	WARN_PRINT_ONCE_ED("The GL Compatibility rendering backend does not support manually emitting particles.");
 }
 
 void ParticlesStorage::particles_request_process(RID p_particles) {
@@ -613,7 +613,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 						attr.extents[2] = extents.z;
 					} break;
 					case RS::PARTICLES_COLLISION_TYPE_VECTOR_FIELD_ATTRACT: {
-						WARN_PRINT_ONCE("Vector field particle attractors are not available in the OpenGL2 renderer.");
+						WARN_PRINT_ONCE_ED("Vector field particle attractors are not available in the GL Compatibility rendering backend.");
 					} break;
 					default: {
 					}
@@ -646,7 +646,7 @@ void ParticlesStorage::_particles_process(Particles *p_particles, double p_delta
 						col.extents[2] = extents.z;
 					} break;
 					case RS::PARTICLES_COLLISION_TYPE_SDF_COLLIDE: {
-						WARN_PRINT_ONCE("SDF Particle Colliders are not available in the OpenGL 3 renderer.");
+						WARN_PRINT_ONCE_ED("SDF Particle Colliders are not available in the GL Compatibility rendering backend.");
 					} break;
 					case RS::PARTICLES_COLLISION_TYPE_HEIGHTFIELD_COLLIDE: {
 						if (collision_heightmap_texture != 0) { //already taken
@@ -820,12 +820,11 @@ void ParticlesStorage::_particles_update_buffers(Particles *particles) {
 		particles->num_attrib_arrays_cache = 5 + userdata_count + (xform_size - 2);
 		particles->process_buffer_stride_cache = sizeof(float) * 4 * particles->num_attrib_arrays_cache;
 
-		int process_data_amount = 4 * particles->num_attrib_arrays_cache * total_amount;
-		float *data = memnew_arr(float, process_data_amount);
+		PackedByteArray data;
+		data.resize_zeroed(particles->process_buffer_stride_cache * total_amount);
 
-		for (int i = 0; i < process_data_amount; i++) {
-			data[i] = 0;
-		}
+		PackedByteArray instance_data;
+		instance_data.resize_zeroed(particles->instance_buffer_size_cache);
 
 		{
 			glGenVertexArrays(1, &particles->front_vertex_array);
@@ -834,7 +833,7 @@ void ParticlesStorage::_particles_update_buffers(Particles *particles) {
 			glGenBuffers(1, &particles->front_instance_buffer);
 
 			glBindBuffer(GL_ARRAY_BUFFER, particles->front_process_buffer);
-			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, particles->front_process_buffer, particles->process_buffer_stride_cache * total_amount, data, GL_DYNAMIC_COPY, "Particles front process buffer");
+			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, particles->front_process_buffer, particles->process_buffer_stride_cache * total_amount, data.ptr(), GL_DYNAMIC_COPY, "Particles front process buffer");
 
 			for (uint32_t j = 0; j < particles->num_attrib_arrays_cache; j++) {
 				glEnableVertexAttribArray(j);
@@ -843,7 +842,7 @@ void ParticlesStorage::_particles_update_buffers(Particles *particles) {
 			glBindVertexArray(0);
 
 			glBindBuffer(GL_ARRAY_BUFFER, particles->front_instance_buffer);
-			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, particles->front_instance_buffer, particles->instance_buffer_size_cache, nullptr, GL_DYNAMIC_COPY, "Particles front instance buffer");
+			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, particles->front_instance_buffer, particles->instance_buffer_size_cache, instance_data.ptr(), GL_DYNAMIC_COPY, "Particles front instance buffer");
 		}
 
 		{
@@ -853,7 +852,7 @@ void ParticlesStorage::_particles_update_buffers(Particles *particles) {
 			glGenBuffers(1, &particles->back_instance_buffer);
 
 			glBindBuffer(GL_ARRAY_BUFFER, particles->back_process_buffer);
-			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, particles->back_process_buffer, particles->process_buffer_stride_cache * total_amount, data, GL_DYNAMIC_COPY, "Particles back process buffer");
+			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, particles->back_process_buffer, particles->process_buffer_stride_cache * total_amount, data.ptr(), GL_DYNAMIC_COPY, "Particles back process buffer");
 
 			for (uint32_t j = 0; j < particles->num_attrib_arrays_cache; j++) {
 				glEnableVertexAttribArray(j);
@@ -862,11 +861,9 @@ void ParticlesStorage::_particles_update_buffers(Particles *particles) {
 			glBindVertexArray(0);
 
 			glBindBuffer(GL_ARRAY_BUFFER, particles->back_instance_buffer);
-			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, particles->back_instance_buffer, particles->instance_buffer_size_cache, nullptr, GL_DYNAMIC_COPY, "Particles back instance buffer");
+			GLES3::Utilities::get_singleton()->buffer_allocate_data(GL_ARRAY_BUFFER, particles->back_instance_buffer, particles->instance_buffer_size_cache, instance_data.ptr(), GL_DYNAMIC_COPY, "Particles back instance buffer");
 		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		memdelete_arr(data);
 	}
 }
 
@@ -1304,7 +1301,7 @@ void ParticlesStorage::particles_collision_set_attractor_attenuation(RID p_parti
 }
 
 void ParticlesStorage::particles_collision_set_field_texture(RID p_particles_collision, RID p_texture) {
-	WARN_PRINT_ONCE("The OpenGL 3 renderer does not support SDF collisions in 3D particle shaders");
+	WARN_PRINT_ONCE_ED("The GL Compatibility rendering backend does not support SDF collisions in 3D particle shaders");
 }
 
 void ParticlesStorage::particles_collision_height_field_update(RID p_particles_collision) {

@@ -181,7 +181,7 @@ void GPUParticles3D::set_trail_enabled(bool p_enabled) {
 }
 
 void GPUParticles3D::set_trail_lifetime(double p_seconds) {
-	ERR_FAIL_COND(p_seconds < 0.001);
+	ERR_FAIL_COND(p_seconds < 0.01);
 	trail_lifetime = p_seconds;
 	RS::get_singleton()->particles_set_trails(particles, trail_enabled, trail_lifetime);
 }
@@ -363,6 +363,10 @@ PackedStringArray GPUParticles3D::get_configuration_warnings() const {
 		}
 	}
 
+	if (sub_emitter != NodePath() && OS::get_singleton()->get_current_rendering_method() == "gl_compatibility") {
+		warnings.push_back(RTR("Particle sub-emitters are only available when using the Forward+ or Mobile rendering backends."));
+	}
+
 	return warnings;
 }
 
@@ -409,6 +413,7 @@ void GPUParticles3D::set_sub_emitter(const NodePath &p_path) {
 	if (is_inside_tree() && sub_emitter != NodePath()) {
 		_attach_sub_emitter();
 	}
+	update_configuration_warnings();
 }
 
 NodePath GPUParticles3D::get_sub_emitter() const {
