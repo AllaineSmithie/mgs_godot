@@ -1,6 +1,10 @@
 def can_build(env, platform):
     if platform == "web" or platform == "android":
         return False
+    # temporarily disable linux build as buildpipeline
+    # seems to break
+    if platform == "linuxbsd":
+        return False
     return True
 
 
