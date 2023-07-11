@@ -8,7 +8,7 @@ set -uo pipefail
 if [ $# -eq 0 ]; then
     # Loop through all code files tracked by Git.
     files=$(git ls-files -- '*.c' '*.h' '*.cpp' '*.hpp' '*.cc' '*.hh' '*.cxx' '*.m' '*.mm' '*.inc' '*.java' '*.glsl' \
-                ':!:.git/*' ':!:thirdparty/*' ':!:*/thirdparty/*' ':!:platform/android/java/lib/src/com/google/*' \
+                ':!:.git/*' ':!:thirdparty/*' ':!:drivers/portaudio*' ':!:*/thirdparty/*' ':!:platform/android/java/lib/src/com/google/*' \
                 ':!:*-so_wrap.*' ':!:tests/python_build/*')
 else
     # $1 should be a file listing file paths to process. Used in CI.
