@@ -229,4 +229,4 @@ VARIANT_ENUM_CAST(PortAudio::PortAudioCallbackResult);
 
 #endif // PORT_AUDIO
 
-#endif
+#endif // PORT_AUDIO_H
