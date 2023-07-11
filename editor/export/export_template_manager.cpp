@@ -228,7 +228,7 @@ void ExportTemplateManager::_refresh_mirrors() {
 		return;
 	}
 	is_refreshing_mirrors = true;
-	VERSION_FULL_CONFIG;
+
 	String current_version = "4.1.1.stable"; // VERSION_FULL_CONFIG;
 	const String mirrors_metadata_url = "https://godotengine.org/mirrorlist/" + current_version + ".json";
 	request_mirrors->request(mirrors_metadata_url);
