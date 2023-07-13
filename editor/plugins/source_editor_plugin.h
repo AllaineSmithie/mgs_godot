@@ -126,7 +126,6 @@ class SourceEditorPlugin : public EditorPlugin {
 	SourceEditor *source_editor = nullptr;
 	WindowWrapper *source_window_wrapper = nullptr;
 	String last_editor;
-
 protected:
 	void _notification(int p_what);
 
@@ -134,7 +133,7 @@ public:
 	_FORCE_INLINE_ static SourceEditorPlugin *get_singleton() { return singleton; }
 
 	SourceEditor *get_spatial_editor() { return source_editor; }
-	virtual String get_name() const override { return "Edit"; }
+	virtual String get_name() const override { return "TimelineEdit"; }
 	bool has_main_screen() const override { return true; }
 	virtual void make_visible(bool p_visible) override;
 	void set_window_layout(Ref<ConfigFile> p_layout) override;

@@ -1,3 +1,3 @@
 @echo off
 
-scons vsproj=yes taget=editor
+scons vsproj=yes taget=editor production=yes optimize=speed

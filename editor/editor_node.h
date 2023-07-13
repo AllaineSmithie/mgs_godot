@@ -221,6 +221,7 @@ private:
 
 		EDITOR_SCREENSHOT,
 		EDITOR_OPEN_SCREENSHOT,
+		EDITOR_OPEN_INTERFACE_MANAGER,
 
 		HELP_SEARCH,
 		HELP_COMMAND_PALETTE,
@@ -348,6 +349,7 @@ private:
 	PopupMenu *project_menu = nullptr;
 	PopupMenu *debug_menu = nullptr;
 	PopupMenu *settings_menu = nullptr;
+	PopupMenu *devices_menu = nullptr;
 	PopupMenu *help_menu = nullptr;
 	PopupMenu *tool_menu = nullptr;
 	PopupMenu *export_as_menu = nullptr;

@@ -803,10 +803,10 @@ void EditorNode::_notification(int p_what) {
 			help_menu->set_item_icon(help_menu->get_item_index(HELP_ABOUT), gui_base->get_theme_icon(SNAME("Godot"), SNAME("EditorIcons")));
 			help_menu->set_item_icon(help_menu->get_item_index(HELP_SUPPORT_GODOT_DEVELOPMENT), gui_base->get_theme_icon(SNAME("Heart"), SNAME("EditorIcons")));
 
-			for (int i = 0; i < main_editor_buttons.size(); i++) {
+			/*for (int i = 0; i < main_editor_buttons.size(); i++) {
 				main_editor_buttons.write[i]->add_theme_font_override("font", gui_base->get_theme_font(SNAME("main_button_font"), SNAME("EditorFonts")));
 				main_editor_buttons.write[i]->add_theme_font_size_override("font_size", gui_base->get_theme_font_size(SNAME("main_button_font_size"), SNAME("EditorFonts")));
-			}
+			}*/
 
 			HashSet<String> updated_textfile_extensions;
 			bool extensions_match = true;
@@ -3182,7 +3182,7 @@ void EditorNode::select_editor_by_name(const String &p_name) {
 	ERR_FAIL_MSG("The editor name '" + p_name + "' was not found.");
 }
 
-// Redneck Jack 08.04.23
+// Redneck Jack 08.04.23 and 12.07.23
 void EditorNode::add_editor_plugin(EditorPlugin *p_editor, bool p_config_changed, bool p_second_panel) {
 	if (p_editor->has_main_screen()) {
 		Button *tb = memnew(Button);
@@ -3190,7 +3190,13 @@ void EditorNode::add_editor_plugin(EditorPlugin *p_editor, bool p_config_changed
 		tb->set_toggle_mode(true);
 		tb->connect("pressed", callable_mp(singleton, &EditorNode::editor_select).bind(singleton->main_editor_buttons.size()));
 		tb->set_name(p_editor->get_name());
-		tb->set_text(p_editor->get_name());
+		//tb->set_text(p_editor->get_name());
+		Ref<StyleBoxEmpty> style_box_empty;
+		style_box_empty.instantiate();
+		tb->add_theme_style_override("normal", style_box_empty);
+		tb->add_theme_style_override("pressed", style_box_empty);
+		tb->set_tooltip_text(p_editor->get_name());
+		tb->set_text("");
 
 		Ref<Texture2D> icon = p_editor->get_icon();
 		if (icon.is_valid()) {
@@ -3200,9 +3206,11 @@ void EditorNode::add_editor_plugin(EditorPlugin *p_editor, bool p_config_changed
 		} else if (singleton->gui_base->has_theme_icon(p_editor->get_name(), SNAME("EditorIcons"))) {
 			tb->set_icon(singleton->gui_base->get_theme_icon(p_editor->get_name(), SNAME("EditorIcons")));
 		}
+		tb->set_icon_alignment(HORIZONTAL_ALIGNMENT_CENTER);
+		tb->set_vertical_icon_alignment(VERTICAL_ALIGNMENT_TOP);
 
-		tb->add_theme_font_override("font", singleton->gui_base->get_theme_font(SNAME("main_button_font"), SNAME("EditorFonts")));
-		tb->add_theme_font_size_override("font_size", singleton->gui_base->get_theme_font_size(SNAME("main_button_font_size"), SNAME("EditorFonts")));
+		//tb->add_theme_font_override("font", singleton->gui_base->get_theme_font(SNAME("main_button_font"), SNAME("EditorFonts")));
+		//tb->add_theme_font_size_override("font_size", singleton->gui_base->get_theme_font_size(SNAME("main_button_font_size"), SNAME("EditorFonts")));
 
 		singleton->main_editor_buttons.push_back(tb);
 		if (!p_second_panel)
@@ -6587,6 +6595,7 @@ void EditorNode::_feature_profile_changed() {
 		import_tabs->set_tab_hidden(import_tabs->get_tab_idx_from_control(ImportDock::get_singleton()), fs_dock_disabled || profile->is_feature_disabled(EditorFeatureProfile::FEATURE_IMPORT_DOCK));
 		history_tabs->set_tab_hidden(history_tabs->get_tab_idx_from_control(history_dock), profile->is_feature_disabled(EditorFeatureProfile::FEATURE_HISTORY_DOCK));
 
+		main_editor_buttons[EDITOR_SOURCEEDITOR]->set_visible(true);
 		main_editor_buttons[EDITOR_3D]->set_visible(!profile->is_feature_disabled(EditorFeatureProfile::FEATURE_3D));
 		main_editor_buttons[EDITOR_SCRIPT]->set_visible(!profile->is_feature_disabled(EditorFeatureProfile::FEATURE_SCRIPT));
 		if (AssetLibraryEditorPlugin::is_available()) {
@@ -6602,6 +6611,7 @@ void EditorNode::_feature_profile_changed() {
 		node_tabs->set_tab_hidden(node_tabs->get_tab_idx_from_control(NodeDock::get_singleton()), false);
 		fs_tabs->set_tab_hidden(fs_tabs->get_tab_idx_from_control(FileSystemDock::get_singleton()), false);
 		history_tabs->set_tab_hidden(history_tabs->get_tab_idx_from_control(history_dock), false);
+		main_editor_buttons[EDITOR_SOURCEEDITOR]->set_visible(true);
 		main_editor_buttons[EDITOR_3D]->set_visible(true);
 		main_editor_buttons[EDITOR_SCRIPT]->set_visible(true);
 		if (AssetLibraryEditorPlugin::is_available()) {
@@ -7465,6 +7475,8 @@ EditorNode::EditorNode() {
 	}
 
 	main_editor_button_hb = memnew(HBoxContainer);
+	main_editor_button_hb->add_theme_constant_override("Separation", 0);
+	//main_editor_button_hb->set_alignment(BoxContainer::ALIGNMENT_CENTER);
 	title_bar->add_child(main_editor_button_hb);
 
 	// Options are added and handled by DebuggerEditorPlugin.
@@ -7523,6 +7535,18 @@ EditorNode::EditorNode() {
 	settings_menu->add_item(TTR("Configure FBX Importer..."), SETTINGS_MANAGE_FBX_IMPORTER);
 #endif
 
+	devices_menu = memnew(PopupMenu);
+	devices_menu->set_name(TTR("Devices"));
+	main_menu->add_child(devices_menu);
+
+	devices_menu->connect("id_pressed", callable_mp(this, &EditorNode::_menu_option));
+
+	ED_SHORTCUT_AND_COMMAND("editor/editor_devices", TTR("Devices Menu"), Key::F10);
+	ED_SHORTCUT_OVERRIDE("editor/editor_devices", "macos", KeyModifierMask::ALT | Key::F10);
+	devices_menu->add_item(TTR("Interface Manager..."), SETTINGS_EDITOR_CONFIG_FOLDER);
+	devices_menu->add_separator();
+	devices_menu->add_item(TTR("Setup..."));
+	
 	help_menu = memnew(PopupMenu);
 	help_menu->set_name(TTR("Help"));
 	main_menu->add_child(help_menu);
@@ -8090,12 +8114,14 @@ EditorNode::EditorNode() {
 	ED_SHORTCUT_AND_COMMAND("editor/editor_2d", TTR("Open 2D Editor"), KeyModifierMask::CTRL | Key::F1);
 	ED_SHORTCUT_AND_COMMAND("editor/editor_3d", TTR("Open 3D Editor"), KeyModifierMask::CTRL | Key::F2);
 	ED_SHORTCUT_AND_COMMAND("editor/editor_script", TTR("Open Script Editor"), KeyModifierMask::CTRL | Key::F3);
-	ED_SHORTCUT_AND_COMMAND("editor/editor_assetlib", TTR("Open Asset Library"), KeyModifierMask::CTRL | Key::F4);
+	ED_SHORTCUT_AND_COMMAND("editor/editor_source", TTR("Open Source Editor"), KeyModifierMask::CTRL | Key::F4);
+	ED_SHORTCUT_AND_COMMAND("editor/editor_assetlib", TTR("Open Asset Library"), KeyModifierMask::CTRL | Key::F5);
 
 	ED_SHORTCUT_OVERRIDE("editor/editor_2d", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_1);
 	ED_SHORTCUT_OVERRIDE("editor/editor_3d", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_2);
 	ED_SHORTCUT_OVERRIDE("editor/editor_script", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_3);
-	ED_SHORTCUT_OVERRIDE("editor/editor_assetlib", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_4);
+	ED_SHORTCUT_OVERRIDE("editor/editor_source", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_4);
+	ED_SHORTCUT_OVERRIDE("editor/editor_assetlib", "macos", KeyModifierMask::META | KeyModifierMask::CTRL | Key::KEY_5);
 
 	ED_SHORTCUT_AND_COMMAND("editor/editor_next", TTR("Open the next Editor"));
 	ED_SHORTCUT_AND_COMMAND("editor/editor_prev", TTR("Open the previous Editor"));

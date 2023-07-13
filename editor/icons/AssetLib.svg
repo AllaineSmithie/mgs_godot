@@ -1,1 +1,244 @@
-<svg height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="#e0e0e0" stroke-linejoin="round" stroke-width="2"><path d="m8 1v9l4-4"/><path d="m8 10-4-4"/><path d="m2 10v4h12v-4" stroke-linecap="round"/></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="28"
+   width="128"
+   version="1.1"
+   id="svg51475"
+   sodipodi:docname="AssetLib.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:vectornator="http://vectornator.io">
+  <sodipodi:namedview
+     id="namedview51477"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="2"
+     inkscape:cx="-42.25"
+     inkscape:cy="83.5"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g51469" />
+  <defs
+     id="defs51453">
+    <linearGradient
+       gradientTransform="matrix(1.00466,0,0,1.00712,-3861.34,-1001.52)"
+       gradientUnits="userSpaceOnUse"
+       id="b"
+       x1="3843.4299"
+       x2="5098.6699"
+       y1="1100.1899"
+       y2="1100.1899">
+      <stop
+         offset="0"
+         id="stop51397"
+         style="stop-color:#000000;stop-opacity:0;" />
+      <stop
+         offset="0.0422004"
+         stop-color="#716d6d"
+         id="stop51399"
+         style="stop-color:#292828;stop-opacity:1;" />
+      <stop
+         offset="0.55747354"
+         stop-color="#5d5c5c"
+         id="stop51401"
+         style="stop-color:#292828;stop-opacity:1;" />
+      <stop
+         offset="1"
+         id="stop51405"
+         style="stop-color:#000000;stop-opacity:0;" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="matrix(0.56781289,0,0,0.59163917,-977.28887,-766.80388)"
+       gradientUnits="userSpaceOnUse"
+       id="c"
+       x1="2672.1201"
+       x2="2964"
+       y1="1651.97"
+       y2="1651.97">
+      <stop
+         offset=".165"
+         stop-color="#f03030"
+         id="stop51408" />
+      <stop
+         offset="1"
+         id="stop51410" />
+      <stop
+         offset="1"
+         stop-color="#fff"
+         id="stop51412" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="matrix(0.5678,0,0,0.59164,-977.261,-762.595)"
+       gradientUnits="userSpaceOnUse"
+       id="d"
+       x1="2670"
+       x2="2956.75"
+       y1="1489.38"
+       y2="1489.38">
+      <stop
+         offset=".165"
+         stop-color="#f03030"
+         id="stop51415" />
+      <stop
+         offset="1"
+         id="stop51417" />
+      <stop
+         offset="1"
+         stop-color="#fff"
+         id="stop51419" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="matrix(0.56219,0,0,0.56617,-964.094,-723.933)"
+       gradientUnits="userSpaceOnUse"
+       id="e"
+       x1="2729.0601"
+       x2="2902.8999"
+       y1="1529.95"
+       y2="1529.9301">
+      <stop
+         offset=".165"
+         stop-color="#f03030"
+         id="stop51422" />
+      <stop
+         offset="1"
+         id="stop51424" />
+      <stop
+         offset="1"
+         stop-color="#fff"
+         id="stop51426" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="matrix(0.58181,0,0,0.60182,-1018,-776.53)"
+       gradientUnits="userSpaceOnUse"
+       id="f"
+       x1="2741.1599"
+       x2="2897.25"
+       y1="1492.1801"
+       y2="1492.34">
+      <stop
+         offset=".165"
+         stop-color="#f03030"
+         id="stop51429" />
+      <stop
+         offset="1"
+         id="stop51431" />
+      <stop
+         offset="1"
+         stop-color="#fff"
+         id="stop51433" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="matrix(0.56409,0,0,0.58654,-969.882,-755.229)"
+       gradientUnits="userSpaceOnUse"
+       id="g"
+       x1="2741.6599"
+       x2="2896.9099"
+       y1="1458.67"
+       y2="1458.67">
+      <stop
+         offset=".165"
+         stop-color="#f03030"
+         id="stop51436" />
+      <stop
+         offset="1"
+         id="stop51438" />
+      <stop
+         offset="1"
+         stop-color="#fff"
+         id="stop51440" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="matrix(0.5678,0,0,0.59164,-980.136,-762.846)"
+       gradientUnits="userSpaceOnUse"
+       id="h"
+       x1="2723.25"
+       x2="2914.1201"
+       y1="1565.88"
+       y2="1565.88">
+      <stop
+         offset=".165"
+         stop-color="#f03030"
+         id="stop51443" />
+      <stop
+         offset="1"
+         id="stop51445" />
+      <stop
+         offset="1"
+         stop-color="#fff"
+         id="stop51447" />
+    </linearGradient>
+    <clipPath
+       id="a">
+      <path
+         d="M 0,0 H 1244.42 V 310.68 H 0 Z"
+         id="path51450" />
+    </clipPath>
+  </defs>
+  <g
+     clip-path="url(#a)"
+     vectornator:layerName="Ebene 5"
+     style="clip-rule:evenodd;fill-rule:nonzero;stroke-linecap:round;stroke-linejoin:round"
+     transform="matrix(0.10285916,0,0,0.11587486,0,-4)"
+     id="g51473">
+    <g
+       vectornator:layerName="Gruppieren 2"
+       stroke-linejoin="round"
+       id="g51471">
+      <path
+         d="M 0,34.519999 V 276.15999 c 42.216513,-1.276 988.47721,1.48825 1040.2574,0 128.9821,-56.01617 189.536,-116.49235 204.1626,-241.639991 0,0 -821.908,1.885 -1244.42,0 z"
+         fill="url(#b)"
+         stroke="#000000"
+         stroke-width="10"
+         vectornator:layerName="Rechteck"
+         style="fill:url(#b);stroke-width:9.15975594;stroke-dasharray:none"
+         id="path51455"
+         sodipodi:nodetypes="ccccc" />
+      <g
+         vectornator:layerName="Gruppieren 1"
+         stroke="#ffffff"
+         stroke-width="5.5"
+         id="g51469"
+         transform="matrix(0.87981633,0,0,1.0015488,34.408559,-0.10693068)">
+        <path
+           d="m 252.77287,177.01978 9.72226,69.03991 h 213.88954 l 9.72225,-69.03991 z m 38.88901,17.25998 h 155.55603 v 17.25997 H 291.66188 Z"
+           fill="url(#c)"
+           style="fill:url(#c);stroke-width:9.15986;stroke-dasharray:none"
+           id="path51457"
+           sodipodi:nodetypes="cccccccccc" />
+        <path
+           d="m 258.50801,103.56 v 17.25999 H 479.3723 V 103.56 Z"
+           fill="url(#e)"
+           opacity="0.971"
+           style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:9.15976;stroke-dasharray:none;paint-order:fill markers stroke"
+           id="path51461"
+           sodipodi:nodetypes="ccccc" />
+        <path
+           d="m 263.165,69.039712 v 17.259999 l 210.87316,5.7e-4 V 69.040282 Z"
+           fill="url(#f)"
+           opacity="0.971"
+           style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:9.15976;stroke-dasharray:none"
+           id="path51463"
+           sodipodi:nodetypes="ccccc" />
+        <path
+           d="m 255,138.07999 v 17.26 h 228.90829 v -17.26 z"
+           fill="url(#h)"
+           opacity="0.971"
+           style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:9.15976;stroke-dasharray:none"
+           id="path51467"
+           sodipodi:nodetypes="ccccc" />
+      </g>
+    </g>
+  </g>
+</svg>

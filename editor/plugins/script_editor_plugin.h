@@ -555,6 +555,7 @@ class ScriptEditorPlugin : public EditorPlugin {
 	WindowWrapper *window_wrapper = nullptr;
 
 	String last_editor;
+	Ref<Texture2D> icon;
 
 	void _focus_another_editor();
 
@@ -566,6 +567,7 @@ protected:
 
 public:
 	virtual String get_name() const override { return "Script"; }
+	virtual const Ref<Texture2D> get_icon() const { return icon; }
 	bool has_main_screen() const override { return true; }
 	virtual void edit(Object *p_object) override;
 	virtual bool handles(Object *p_object) const override;

@@ -4271,6 +4271,8 @@ ScriptEditorPlugin::ScriptEditorPlugin() {
 	window_wrapper->hide();
 	window_wrapper->connect("window_visibility_changed", callable_mp(this, &ScriptEditorPlugin::_window_visibility_changed));
 
+	icon = EditorNode::get_singleton()->get_gui_base()->get_theme_icon("ScriptEditor", SNAME("EditorIcons"));
+
 	EDITOR_GET("text_editor/behavior/files/auto_reload_scripts_on_external_change");
 	ScriptServer::set_reload_scripts_on_save(EDITOR_DEF("text_editor/behavior/files/auto_reload_and_parse_scripts_on_save", true));
 	EDITOR_DEF("text_editor/behavior/files/open_dominant_script_on_scene_change", true);
